@@ -1,0 +1,828 @@
+[
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "get_asgi_application",
+        "importPath": "django.core.asgi",
+        "description": "django.core.asgi",
+        "isExtraImport": true,
+        "detail": "django.core.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "re_path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "static",
+        "importPath": "django.conf.urls.static",
+        "description": "django.conf.urls.static",
+        "isExtraImport": true,
+        "detail": "django.conf.urls.static",
+        "documentation": {}
+    },
+    {
+        "label": "serve",
+        "importPath": "django.views.static",
+        "description": "django.views.static",
+        "isExtraImport": true,
+        "detail": "django.views.static",
+        "documentation": {}
+    },
+    {
+        "label": "get_wsgi_application",
+        "importPath": "django.core.wsgi",
+        "description": "django.core.wsgi",
+        "isExtraImport": true,
+        "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "QueryDict",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "escape",
+        "importPath": "django.utils.html",
+        "description": "django.utils.html",
+        "isExtraImport": true,
+        "detail": "django.utils.html",
+        "documentation": {}
+    },
+    {
+        "label": "api_view",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {}
+    },
+    {
+        "label": "OpenAI",
+        "importPath": "openai",
+        "description": "openai",
+        "isExtraImport": true,
+        "detail": "openai",
+        "documentation": {}
+    },
+    {
+        "label": "get_object_or_404",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.asgi",
+        "description": "auto_bid_backend.auto_bid_backend.asgi",
+        "peekOfCode": "application = get_asgi_application()",
+        "detail": "auto_bid_backend.auto_bid_backend.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\nPUBLIC_URL = '/public/'\n# Define the directory where public files will be stored\nPUBLIC_ROOT = os.path.join(BASE_DIR, 'output')\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Add the configuration to the STATICFILES_DIRS\nSTATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "PUBLIC_URL",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "PUBLIC_URL = '/public/'\n# Define the directory where public files will be stored\nPUBLIC_ROOT = os.path.join(BASE_DIR, 'output')\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Add the configuration to the STATICFILES_DIRS\nSTATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]\n# Quick-start development settings - unsuitable for production",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "PUBLIC_ROOT",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "PUBLIC_ROOT = os.path.join(BASE_DIR, 'output')\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Add the configuration to the STATICFILES_DIRS\nSTATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MEDIA_URL",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "MEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Add the configuration to the STATICFILES_DIRS\nSTATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-(#vyc*^d#+96rv)oph#h5^*b@-*y2#^o(gqfi=tnkdwxbrhpu2'",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MEDIA_ROOT",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "MEDIA_ROOT = os.path.join(BASE_DIR, 'media')\n# Add the configuration to the STATICFILES_DIRS\nSTATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-(#vyc*^d#+96rv)oph#h5^*b@-*y2#^o(gqfi=tnkdwxbrhpu2'\n# SECURITY WARNING: don't run with debug turned on in production!",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATICFILES_DIRS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "STATICFILES_DIRS = [\n    ('public', PUBLIC_ROOT),\n]\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-(#vyc*^d#+96rv)oph#h5^*b@-*y2#^o(gqfi=tnkdwxbrhpu2'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECRET_KEY",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "SECRET_KEY = 'django-insecure-(#vyc*^d#+96rv)oph#h5^*b@-*y2#^o(gqfi=tnkdwxbrhpu2'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEBUG",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "DEBUG = True\nALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ALLOWED_HOSTS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'resume_api.apps.ResumeApiConfig',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "INSTALLED_APPS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'resume_api.apps.ResumeApiConfig',\n    'corsheaders'\n]",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MIDDLEWARE",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n    'corsheaders.middleware.CorsMiddleware',\n]",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ROOT_URLCONF",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ROOT_URLCONF = 'auto_bid_backend.urls'\nTEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.debug',\n                'django.template.context_processors.request',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TEMPLATES",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "TEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.debug',\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "WSGI_APPLICATION",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASES",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation\n# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators\nAUTH_PASSWORD_VALIDATORS = [\n    {",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_PASSWORD_VALIDATORS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "AUTH_PASSWORD_VALIDATORS = [\n    {\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',\n    },",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LANGUAGE_CODE",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_ZONE",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_I18N",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_TZ",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATIC_URL",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_AUTO_FIELD",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "OPENAI_API_KEY",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_ALL_ORIGINS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "CORS_ALLOW_ALL_ORIGINS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.urls",
+        "description": "auto_bid_backend.auto_bid_backend.urls",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/', include('resume_api.urls')),\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\nif settings.DEBUG:\n    urlpatterns += [\n        re_path(r'^public/(?P<path>.*)$', serve, {\n            'document_root': settings.PUBLIC_ROOT,\n        }),\n    ]",
+        "detail": "auto_bid_backend.auto_bid_backend.urls",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.wsgi",
+        "description": "auto_bid_backend.auto_bid_backend.wsgi",
+        "peekOfCode": "application = get_wsgi_application()",
+        "detail": "auto_bid_backend.auto_bid_backend.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.migrations.0001_initial",
+        "description": "auto_bid_backend.resume_api.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='JobDescription',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),\n                ('job_url', models.TextField()),",
+        "detail": "auto_bid_backend.resume_api.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "ResumeApiConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.apps",
+        "description": "auto_bid_backend.resume_api.apps",
+        "peekOfCode": "class ResumeApiConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'resume_api'",
+        "detail": "auto_bid_backend.resume_api.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Resume",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.models",
+        "description": "auto_bid_backend.resume_api.models",
+        "peekOfCode": "class Resume(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)\n    personal_information = models.JSONField()\n    profile = models.JSONField()\n    experience = models.JSONField()\n    skills = models.JSONField()\n    hide_text = models.TextField()\n    def __str__(self):\n        return self.personal_information.get(\"name\", \"No Name\")\nclass JobDescription(models.Model):",
+        "detail": "auto_bid_backend.resume_api.models",
+        "documentation": {}
+    },
+    {
+        "label": "JobDescription",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.models",
+        "description": "auto_bid_backend.resume_api.models",
+        "peekOfCode": "class JobDescription(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)\n    job_url = models.TextField()\n    title = models.TextField()\n    description = models.TextField()\n    def __str__(self):\n        return f\"Job Description {self.id}\"",
+        "detail": "auto_bid_backend.resume_api.models",
+        "documentation": {}
+    },
+    {
+        "label": "ResumeSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.serializers",
+        "description": "auto_bid_backend.resume_api.serializers",
+        "peekOfCode": "class ResumeSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Resume\n        fields = '__all__'\nclass JobDescriptionSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = JobDescription\n        fields = '__all__'",
+        "detail": "auto_bid_backend.resume_api.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "JobDescriptionSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.serializers",
+        "description": "auto_bid_backend.resume_api.serializers",
+        "peekOfCode": "class JobDescriptionSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = JobDescription\n        fields = '__all__'",
+        "detail": "auto_bid_backend.resume_api.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.resume_api.urls",
+        "description": "auto_bid_backend.resume_api.urls",
+        "peekOfCode": "urlpatterns = [\n    path('generate-resume/', views.generate_resume, name='generate-resume'),\n    path('resumes/', views.resumes, name='resumes'),\n    path('resumes/<uuid:resume_id>/', views.resume_detail, name='resume-detail'),\n    path('delete-resumes/', views.delete_resumes, name='delete-resumes'),\n]",
+        "detail": "auto_bid_backend.resume_api.urls",
+        "documentation": {}
+    },
+    {
+        "label": "generate_resume",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def generate_resume(request):\n    job_description_text = request.data.get('job_description')\n    job_url = request.data.get('job_url', '')\n    title = request.data.get('title', '')\n    resume_id = request.data.get('resume_id', None)\n    resume_pdf_path = None  # Define early to ensure it's in scope for the finally block\n    try:\n        origin_resume = get_origin_resume(resume_id)\n        resume_data = generate_resume_data(title, job_description_text, origin_resume)\n        # Save the job description and generated resume to the database",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "sanitize_for_filename",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def sanitize_for_filename(s):\n    \"\"\"\n    Sanitizes a string for use in a filename by removing or replacing\n    characters that are illegal or problematic in file paths.\n    \"\"\"\n    # Replace newlines and slashes with a space or underscore\n    s = re.sub(r'[\\n/]', '_', s)\n    # Remove problematic characters\n    s = re.sub(r'[<>:\"\\\\|?*]', '', s)\n    # Optional: Remove leading/trailing whitespace",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "serialize_resume",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def serialize_resume(resume):\n    # Assuming 'resume' is a Django model instance of Resume\n    # Adjust fields as necessary\n    return {\n        \"id\": str(resume.id),\n        \"personal_information\": resume.personal_information,\n        \"profile\": resume.profile,\n        \"experience\": resume.experience,\n        \"skills\": resume.skills,\n        \"hide_text\": resume.hide_text,",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_origin_resume",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def get_origin_resume(resume_id):\n    if resume_id:\n        resume = Resume.objects.get(id=resume_id)\n    else:\n        resume = Resume.objects.first() if Resume.objects.exists() else None\n    if resume:\n        # Manually serialize the Resume instance\n        return serialize_resume(resume)\n    return None\ndef escape_latex_special_chars(text):",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "escape_latex_special_chars",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def escape_latex_special_chars(text):\n    \"\"\"\n    Escapes LaTeX special characters in the given text.\n    \"\"\"\n    # List of LaTeX special characters that need to be escaped\n    # Backslash must be first to not double-escape other escaped characters\n    special_chars = ['\\\\', '&', '%', '$', '#', '_', '{', '}', '~', '^']\n    # Dictionary to specify the escape sequence for each special character\n    escape_sequences = {'~': '\\\\textasciitilde{}', '^': '\\\\textasciicircum{}'}\n    # Escape each special character",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "escape_json_values",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def escape_json_values(obj):\n    \"\"\"\n    Recursively escape all string values in a JSON object.\n    \"\"\"\n    if isinstance(obj, dict):\n        return {k: escape_json_values(v) for k, v in obj.items()}\n    elif isinstance(obj, list):\n        return [escape_json_values(elem) for elem in obj]\n    elif isinstance(obj, str):\n        return escape_latex_special_chars(obj)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "process_json",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def process_json(input_json):\n    \"\"\"\n    Takes a JSON object (as a string or dict), escapes all LaTeX special characters in its string values,\n    and returns the updated JSON object.\n    \"\"\"\n    if isinstance(input_json, str):\n        # Parse the JSON string into a Python object\n        input_obj = json.loads(input_json)\n    else:\n        input_obj = input_json",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "generate_resume_data",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def generate_resume_data(title, job_description, origin_resume):\n    client = OpenAI(api_key=settings.OPENAI_API_KEY)\n    prompt = (f\"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name \"\n              f\"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score.\"\n              f\"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%.\"\n              f\"Only provide JSON code. Don't mention explain.\"\n              )\n    chat_completion = client.chat.completions.create(\n        messages=[\n            {\"role\": \"user\", \"content\": prompt}",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "save_resume_data_to_db",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def save_resume_data_to_db(resume_data):\n    resume_data_without_id = {key: value for key, value in resume_data.items() if key != 'id'}\n    return Resume.objects.create(**resume_data_without_id)\ndef generate_pdf_from_resume_data(resume_data, title):\n    # Paths for the LaTeX template and output directory\n    template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')\n    output_dir = os.path.join(settings.BASE_DIR, 'output')\n    os.makedirs(output_dir, exist_ok=True)\n    cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.cls')\n    shutil.copy(cls_path, output_dir)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "generate_pdf_from_resume_data",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def generate_pdf_from_resume_data(resume_data, title):\n    # Paths for the LaTeX template and output directory\n    template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')\n    output_dir = os.path.join(settings.BASE_DIR, 'output')\n    os.makedirs(output_dir, exist_ok=True)\n    cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.cls')\n    shutil.copy(cls_path, output_dir)\n    personal_info = resume_data['personal_information']\n    profile = resume_data['profile']\n    experience = format_experience_section(resume_data['experience'])",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "serve_pdf_response",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def serve_pdf_response(pdf_path):\n    pdf_url = os.path.join(settings.STATIC_URL, 'pdfs', os.path.basename(pdf_path))\n    return Response({'message': 'Resume PDF generated successfully', 'url': pdf_url}, status=status.HTTP_200_OK)\n    # with open(pdf_path, 'rb') as pdf_file:\n    #     response = HttpResponse(pdf_file.read(), content_type='application/pdf')\n    #     response['Content-Disposition'] = 'attachment; filename=\"generated_resume.pdf\"'\n    #     return response\ndef cleanup_generated_files(pdf_path):\n    if pdf_path and os.path.exists(pdf_path):\n        os.remove(pdf_path)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "cleanup_generated_files",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def cleanup_generated_files(pdf_path):\n    if pdf_path and os.path.exists(pdf_path):\n        os.remove(pdf_path)\n        tex_path = pdf_path.replace('.pdf', '.tex')\n        if os.path.exists(tex_path):\n            os.remove(tex_path)\n# Function to format the experience section\ndef format_experience_section(experiences):\n    formatted = \"\"\n    for exp in experiences:",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "format_experience_section",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def format_experience_section(experiences):\n    formatted = \"\"\n    for exp in experiences:\n        formatted += f\"\\\\begin{{subsection}}{{{exp['title']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\\n\"\n        for responsibility in exp['responsibilities']:\n            formatted += f\"\\\\item {responsibility}\\n\"\n        formatted += \"\\\\end{subsection}\\n\\n\"\n    return formatted\n# Function to format the education section\ndef format_education_section(education):",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "format_education_section",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def format_education_section(education):\n    formatted = \"\"\n    for edu in education:\n        formatted += f\"\\\\begin{{subsectionnobullet}}{{{edu['degree']}}}{{{edu['institution']}}}{{{edu['duration']}}}{{}}\\n\\\\italicitem{{}}\\\\end{{subsectionnobullet}}\\n\\n\"\n    return formatted\n# Function to format the education section\n# Function to format skills section for sectiontable in LaTeX\ndef format_skills_section(skills):\n    formatted_skills = \"\"\n    for category, skill_list in skills.items():",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "format_skills_section",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def format_skills_section(skills):\n    formatted_skills = \"\"\n    for category, skill_list in skills.items():\n        formatted_skills += \"\\\\entry{\" + category.replace(\"programmingLangage\", \"Programming Languages\").title() + \"}\\n\"\n        formatted_skills += f\"{{{', '.join(skill_list)}}}\"  # Assuming no description for each skill\n    return formatted_skills\n@api_view(['GET', 'POST'])\ndef resumes(request):\n    if request.method == 'GET':\n        resumes = Resume.objects.all()",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "resumes",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def resumes(request):\n    if request.method == 'GET':\n        resumes = Resume.objects.all()\n        resumes_data = [{\n            \"id\": str(resume.id),\n            \"personal_information\": resume.personal_information,\n            \"profile\": resume.profile,\n            \"experience\": resume.experience,\n            \"skills\": resume.skills,\n            \"hide_text\": resume.hide_text,",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "resume_detail",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def resume_detail(request, resume_id):\n    resume = get_object_or_404(Resume, id=resume_id)\n    if request.method == 'GET':\n        resume_data = {\n            \"id\": str(resume.id),\n            \"personal_information\": resume.personal_information,\n            \"profile\": resume.profile,\n            \"experience\": resume.experience,\n            \"skills\": resume.skills,\n            \"hide_text\": resume.hide_text,",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "delete_resumes",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def delete_resumes(request):\n    resume_ids = request.data.get('ids', [])\n    if not resume_ids:\n        return Response({'error': 'No resume IDs provided.'}, status=status.HTTP_400_BAD_REQUEST)\n    try:\n        # Filter resumes by the provided IDs and delete them\n        Resume.objects.filter(id__in=resume_ids).delete()\n        return Response({'message': 'Resumes deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)\n    except Exception as e:\n        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "auto_bid_backend.manage",
+        "description": "auto_bid_backend.manage",
+        "peekOfCode": "def main():\n    \"\"\"Run administrative tasks.\"\"\"\n    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'auto_bid_backend.settings')\n    try:\n        from django.core.management import execute_from_command_line\n    except ImportError as exc:\n        raise ImportError(\n            \"Couldn't import Django. Are you sure it's installed and \"\n            \"available on your PYTHONPATH environment variable? Did you \"\n            \"forget to activate a virtual environment?\"",
+        "detail": "auto_bid_backend.manage",
+        "documentation": {}
+    },
+    {
+        "label": "escape_latex_special_chars",
+        "kind": 2,
+        "importPath": "auto_bid_backend.test",
+        "description": "auto_bid_backend.test",
+        "peekOfCode": "def escape_latex_special_chars(text):\n    \"\"\"\n    Escapes LaTeX special characters in the given text.\n    \"\"\"\n    special_chars = ['\\\\', '&', '%', '$', '#', '_', '{', '}', '~', '^']\n    escape_sequences = {'~': '\\\\textasciitilde{}', '^': '\\\\textasciicircum{}'}\n    for char in special_chars:\n        if char in escape_sequences:\n            text = text.replace(char, escape_sequences[char])\n        else:",
+        "detail": "auto_bid_backend.test",
+        "documentation": {}
+    },
+    {
+        "label": "escape_json_values",
+        "kind": 2,
+        "importPath": "auto_bid_backend.test",
+        "description": "auto_bid_backend.test",
+        "peekOfCode": "def escape_json_values(obj):\n    \"\"\"\n    Recursively escape all string values in a JSON object.\n    \"\"\"\n    if isinstance(obj, dict):\n        return {k: escape_json_values(v) for k, v in obj.items()}\n    elif isinstance(obj, list):\n        return [escape_json_values(elem) for elem in obj]\n    elif isinstance(obj, str):\n        return escape_latex_special_chars(obj)",
+        "detail": "auto_bid_backend.test",
+        "documentation": {}
+    },
+    {
+        "label": "process_json",
+        "kind": 2,
+        "importPath": "auto_bid_backend.test",
+        "description": "auto_bid_backend.test",
+        "peekOfCode": "def process_json(input_json):\n    \"\"\"\n    Takes a JSON object (as a string or dict), escapes all LaTeX special characters in its string values,\n    and returns the updated JSON object.\n    \"\"\"\n    if isinstance(input_json, str):\n        # Parse the JSON string into a Python object\n        input_obj = json.loads(input_json)\n    else:\n        input_obj = input_json",
+        "detail": "auto_bid_backend.test",
+        "documentation": {}
+    },
+    {
+        "label": "input_json",
+        "kind": 5,
+        "importPath": "auto_bid_backend.test",
+        "description": "auto_bid_backend.test",
+        "peekOfCode": "input_json = {\n    \"text\": \"This & that should be escaped, along with $, %, and #.\",\n    \"nested\": {\"key\": \"Value with a tilde ~ and caret ^ symbols.\"}\n}\nescaped_json_string = process_json(input_json)\nprint(escaped_json_string)",
+        "detail": "auto_bid_backend.test",
+        "documentation": {}
+    },
+    {
+        "label": "escaped_json_string",
+        "kind": 5,
+        "importPath": "auto_bid_backend.test",
+        "description": "auto_bid_backend.test",
+        "peekOfCode": "escaped_json_string = process_json(input_json)\nprint(escaped_json_string)",
+        "detail": "auto_bid_backend.test",
+        "documentation": {}
+    }
+]

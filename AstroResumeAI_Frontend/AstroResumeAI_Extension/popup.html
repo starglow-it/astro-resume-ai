@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="libs/materialize/css/materialize.css" rel="stylesheet">
+    <title>Job Scraper</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 300px;
+            min-height: 400px;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h5 class="center-align">Job Scraper</h5>
+        <div class="input-field">
+            <input id="titleSelector" type="text">
+            <label for="titleSelector">Title Selector</label>
+        </div>
+        <div class="input-field">
+            <input id="descriptionSelector" type="text">
+            <label for="descriptionSelector">Description Selector</label>
+        </div>
+        <div class="input-field">
+            <select id="resumeSelect">
+              <option value="" disabled selected>Select a resume</option>
+            </select>
+            <label>Choose your resume</label>
+          </div>
+        <button id="save" class="btn waves-effect waves-light" type="button">Save Selectors</button>
+        <button id="startScrape" class="btn waves-effect waves-light" type="button" style="margin-top: 20px;" disabled>Start Scraping</button>
+    </div>
+    <script src="./libs/materialize/js/materialize.min.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
