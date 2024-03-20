@@ -1,6 +1,9 @@
 // ** React Imports
 import { ChangeEvent, MouseEvent, ReactNode, useState } from 'react'
 
+// ** Axios Imports
+import Axios from 'axios';
+
 // ** Next Imports
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -21,6 +24,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import FormHelperText from '@mui/material/FormHelperText';
 
 // ** Icons Imports
 import Google from 'mdi-material-ui/Google'
@@ -40,8 +44,12 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 interface State {
+  email: string
   password: string
-  showPassword: boolean
+}
+
+interface Errors {
+  [key: string]: string[]
 }
 
 // ** Styled Components
@@ -65,9 +73,13 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const LoginPage = () => {
   // ** State
   const [values, setValues] = useState<State>({
+    email: '',
     password: '',
-    showPassword: false
   })
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const [errors, setErrors] = useState<Errors>({});
 
   // ** Hook
   const theme = useTheme()
@@ -78,11 +90,29 @@ const LoginPage = () => {
   }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setShowPassword(!showPassword);
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const response = await Axios.post('http://localhost:8000/auth/login/', values);
+
+      console.log(response.data);
+
+      router.push('/')
+    } catch (error) {
+      if (Axios.isAxiosError(error) && error.response) {
+        setErrors(error.response.data);
+      } else {
+        console.error('Unexpected error occurred: ', error);
+      }
+    }
   }
 
   return (
@@ -168,16 +198,17 @@ const LoginPage = () => {
             </Typography>
             <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} />
-            <FormControl fullWidth>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} value={values.email} onChange={handleChange('email')} error={!!errors?.email} helperText={errors?.email} />
+
+            <FormControl fullWidth error={!!errors?.password}>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
                 value={values.password}
                 id='auth-login-password'
                 onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -186,11 +217,14 @@ const LoginPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
+                      {showPassword ? <EyeOutline /> : <EyeOffOutline />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
+              {errors?.password && (
+                <FormHelperText>{errors.password}</FormHelperText>
+              )}
             </FormControl>
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
@@ -200,12 +234,15 @@ const LoginPage = () => {
                 <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
               </Link>
             </Box>
+            {errors?.message && (
+              <FormHelperText error>{errors?.message}</FormHelperText>
+            )}
             <Button
               fullWidth
+              type="submit"
               size='large'
               variant='contained'
               sx={{ marginBottom: 7 }}
-              onClick={() => router.push('/')}
             >
               Login
             </Button>
