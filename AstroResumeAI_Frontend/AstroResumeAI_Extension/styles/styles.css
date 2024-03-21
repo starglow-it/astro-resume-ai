@@ -1,0 +1,108 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 300px;
+    min-height: 400px;
+}
+
+.container {
+    padding: 20px;
+}
+
+#login-board {
+    display: block;
+}
+
+#register-board {
+    display: none;
+}
+
+.auth-header-text {
+    color: rgb(133, 132, 132);
+    font-size: 14px;
+    text-align: center;
+}
+
+.remember-me-container {
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.remember-me-column {
+    padding: 0px;
+}
+
+.remember-me-text {
+    padding-left: 30px;
+}
+
+.forgot-password-text {
+    font-size: 14px;
+    color: #804BDF;
+    cursor: pointer;
+    transition: color .3s;
+}
+
+.forgot-password-text:hover {
+    color: #c6b0ee;
+}
+
+.auth-btn {
+    width: 100%;
+}
+
+.create-account-btn:hover {
+    color: #c6b0ee;
+}
+
+.create-account-btn {
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    color: #804BDF;
+    transition: color .3s;
+}
+
+.or-container {
+    position: relative;
+    text-align: center;
+}
+
+.or-typography {
+    font-size: 14px;
+}
+
+.or-typography:before {
+    content: '';
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    background-color: rgb(133, 132, 132);;
+    height: 1px;
+    width: 100px;
+}
+
+.or-typography:after {
+    content: '';
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    background-color: rgb(133, 132, 132);;
+    height: 1px;
+    width: 100px;
+}
+
+#main-board {
+    display: none;
+}
+
+.preloader-wrapper.small {
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+}
+
+.spinner-white {
+    border-color: white;
+}
