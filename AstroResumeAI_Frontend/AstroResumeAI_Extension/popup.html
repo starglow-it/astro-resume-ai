@@ -1,41 +1,78 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://code.jquery.com">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="libs/materialize/css/materialize.css" rel="stylesheet">
+    <link href="styles/styles.css" rel="stylesheet">
     <title>Job Scraper</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 300px;
-            min-height: 400px;
-        }
-        .container {
-            padding: 20px;
-        }
-    </style>
 </head>
+
 <body>
     <div class="container">
-        <h5 class="center-align">Job Scraper</h5>
-        <div class="input-field">
-            <input id="titleSelector" type="text">
-            <label for="titleSelector">Title Selector</label>
+        <h5 class="center-align">Astro AI</h5>
+        <div id="login-board">
+            <p class="auth-header-text">Please sign-in to your account and start the adventure.</p>
+            <p id="login-error-msg" class="error-text"></p>
+            <div class="input-field">
+                <input id="login-email" placeholder="Email" type="text">
+            </div>
+            <div class="input-field">
+                <input id="login-password" placeholder="Password" type="text">
+            </div>
+            <div class="row remember-me-container">
+                <p>
+                    <label>
+                        <input type="checkbox" id="remember-me" class="remember-me-checkbox" />
+                        <span class="remember-me-text">Remember Me</span>
+                    </label>
+                </p>
+                <p class="flow-text forgot-password-text">Forgot Password?</p>
+            </div>
+            <button id="login-btn" class="waves-effect waves-light btn auth-btn">LOGIN</button>
+            <p id="sign-up-instead" class="flow-text create-account-btn">Create an account</p>
+            <div class="or-container">
+                <span class="or-typography">or</span>
+            </div>
         </div>
-        <div class="input-field">
-            <input id="descriptionSelector" type="text">
-            <label for="descriptionSelector">Description Selector</label>
+        <div id="main-board">
+            <div class="input-field">
+                <input id="titleSelector" placeholder="Job Title" type="text">
+            </div>
+            <textarea id="descriptionSelector" class="job-description-content"></textarea>
+            <button id="scan-job-content" class="scan-job-btn btn waves-effect waves-light" type="button">SCAN
+                JOB</button>
+            <div id="support">
+                <p class="support-text flow-text">Please support to get job content</p>
+                <button id="support-btn" class="support-btn btn waves-effect waves-light red" type="button">SUPPORT</button>
+            </div>
+            <div class="input-field resume-select-wrapper col s12">
+                <select id="resume-select" class="resume-select">
+                    <option value="" disabled selected>Choose your resume</option>
+                </select>
+                <label>Your resume</label>
+            </div>
+            <p id="generate-resume-error-msg" class="error-text"></p>
+            <button id="generate-resume-btn" class="generate-resume-btn btn waves-effect waves-light"
+                type="button">GENERATE RESUME
+            </button>
+            <button id="download-resume-btn" class="download-resume-btn btn waves-effect waves-light"
+                type="button" disabled>DOWNLOAD</button>
+
+            <!-- <div class="input-field">
+                <select id="resumeSelect">
+                    <option value="" disabled selected>Select a resume</option>
+                </select>
+                <label>Choose your resume</label>
+            </div> -->
+
+            <!-- <button id="save" class="btn waves-effect waves-light" type="button">Save Selectors</button> -->
         </div>
-        <div class="input-field">
-            <select id="resumeSelect">
-              <option value="" disabled selected>Select a resume</option>
-            </select>
-            <label>Choose your resume</label>
-          </div>
-        <button id="save" class="btn waves-effect waves-light" type="button">Save Selectors</button>
-        <button id="startScrape" class="btn waves-effect waves-light" type="button" style="margin-top: 20px;" disabled>Start Scraping</button>
     </div>
     <script src="./libs/materialize/js/materialize.min.js"></script>
-    <script src="popup.js"></script>
+    <script src="./customJs/custom.js" type="module"></script>
+    <script src="popup.js" type="module"></script>
 </body>
+
 </html>
