@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.storage.sync.get('isAuthenticated', function (data) {
     const isAuthenticated = data.isAuthenticated;
 
-    if (isAuthenticated) {
+    if (isAuthenticated && false) {
       handleLogInSuccess();
     }
   });
@@ -80,16 +80,15 @@ document.getElementById("login-btn").addEventListener('click', async function ()
   `;
 
     try {
-      // const response = await fetch('http://localhost:8000/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ email, password })
-      // });
+      const response = await fetch('http://localhost:8000/auth/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      // if (response.ok || true) {
-      if (true) {
+      if (response.ok) {
         const isChecked = document.getElementById("remember-me").checked;
 
         if (isChecked) {
@@ -99,10 +98,10 @@ document.getElementById("login-btn").addEventListener('click', async function ()
         this.innerHTML = `<i class="material-icons">done</i>`;
         setTimeout(handleLogInSuccess, 1500);
       } else {
-        throw new Error('Something went wrong');
+        throw new Error('login_fail');
       }
     } catch (error) {
-      document.getElementById('login-error-msg').innerText = 'Something went wrong. Please try again.';
+      document.getElementById('login-error-msg').innerText = 'Login failed. Please try again.';
       this.innerText = "LOGIN";
     }
   }
@@ -123,7 +122,7 @@ document.getElementById("login-password").addEventListener("keypress", function 
 });
 
 document.getElementById("sign-up-instead").addEventListener("click", function () {
-  chrome.tabs.create({ url: 'https://example.com' });
+  chrome.tabs.create({ url: 'http://localhost:3000/pages/register/' });
 });
 
 
@@ -152,33 +151,6 @@ function loadSelectors() {
     });
   });
 }
-
-// Event listener for the 'Save' button
-// document.getElementById('save').addEventListener('click', () => {
-//   const titleSelector = document.getElementById('titleSelector').value;
-//   const descriptionSelector = document.getElementById('descriptionSelector').value;
-
-//   chrome.tabs.query({
-//     active: true,
-//     currentWindow: true
-//   }, (tabs) => {
-//     const url = new URL(tabs[0].url);
-//     const hostname = url.hostname;
-
-//     // Save the selectors for the current site
-//     chrome.storage.local.set({
-//       [hostname]: {
-//         titleSelector,
-//         descriptionSelector
-//       }
-//     }, () => {
-//       console.log('Selectors saved for ' + hostname);
-//       M.toast({
-//         html: 'Selectors saved!'
-//       }); // Assuming MaterializeCSS is properly loaded
-//     });
-//   });
-// });
 
 // Function to fetch resumes and populate dropdown
 async function fetchResumes() {
