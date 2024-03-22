@@ -2,12 +2,12 @@ body,
 html {
     margin: 0;
     padding: 0;
-    width: 300px;
+    width: 350px;
     min-height: 400px;
 }
 
 .container {
-    padding: 20px;
+    padding: 20px 10px;
 }
 
 #login-board {
@@ -28,10 +28,22 @@ html {
     padding: 0px;
 }
 
-#descriptionSelector {
+ .job-description-content {
     width: 100%;
-    height: 400px;
+    height: 300px;
     font-size: 14px;
+    resize: none;
+    padding: 8px;
+    border: 1px solid #9e9e9e;
+}
+
+.job-description-content:focus {
+    border: 1px solid #9e9e9e;
+}
+
+.scan-job-btn {
+    margin-top: 16px;
+    margin-bottom: 16px;
 }
 
 .error-text {
@@ -113,6 +125,12 @@ html {
     display: none;
 }
 
+.support-text {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: red;
+}
+
 .preloader-wrapper.small {
     width: 20px;
     height: 20px;
@@ -121,4 +139,26 @@ html {
 
 .spinner-white {
     border-color: white;
+}
+
+.resume-select-wrapper {
+    margin-bottom: 32px;
+}
+
+.support-btn {
+    margin-bottom: 32px;
+}
+
+.generate-resume-btn {
+    text-align: center;
+    width: 165px;
+}
+
+.download-resume-btn {
+    margin-top: 16px;
+    width: 100%;
+}
+
+#support {
+    display: none;
 }

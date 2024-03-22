@@ -1,26 +1,18 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "startScraping") {
-    console.log('startScraping')
-    chrome.storage.local.get([window.location.hostname], (result) => {
-      const {
-        titleSelector,
-        descriptionSelector
-      } = result[window.location.hostname] || {};
-      if (titleSelector && descriptionSelector) {
-        const jobTitle = document.querySelector(titleSelector)?.innerText;
-        const jobDescription = document.querySelector(descriptionSelector)?.innerText;
-        // You might want to send this information back to your popup or elsewhere
-        getResume(message.resumeId, jobTitle, jobDescription);
-      } else {
-        console.log('No selectors saved for this site.');
-      }
-    });
-  }
+  switch (message.action) {
+    case 'select_by_classname':
+      const jobTitle = document.querySelector(message.className.title)?.innerText;
+      const jobDescription = document.querySelector(message.className.description)?.innerText;
+      sendResponse({ jobTitle, jobDescription });
+      break;
 
-  if (message.action === "select_by_classname") {
-    const jobTitle = document.querySelector(message.className.title)?.innerText;
-    const jobDescription = document.querySelector(message.className.description)?.innerText;
-    sendResponse({ jobTitle, jobDescription });
+    case 'getHostname':
+      const hostname = window.location.hostname;
+      sendResponse({ hostname });
+      break;
+
+    default:
+      break;
   }
 });
 
