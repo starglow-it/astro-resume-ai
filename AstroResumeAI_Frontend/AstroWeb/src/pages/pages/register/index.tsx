@@ -2,7 +2,11 @@
 import { useState, Fragment, ChangeEvent, MouseEvent, ReactNode } from 'react'
 
 // ** Next Imports
-import Link from 'next/link'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+// ** Axios Imports
+import Axios from 'axios'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -16,6 +20,7 @@ import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
+import FormHelperText from '@mui/material/FormHelperText'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -39,8 +44,14 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 interface State {
+  first_name: string,
+  last_name: string,
+  email: string,
   password: string
-  showPassword: boolean
+}
+
+interface Errors {
+  [key: string]: string[]
 }
 
 // ** Styled Components
@@ -66,21 +77,51 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: ''
   })
+
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [didAgree, setDidAgree] = useState<boolean>(false)
+  const [errors, setErrors] = useState<Errors>({})
 
   // ** Hook
   const theme = useTheme()
+  const router = useRouter()
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setShowPassword(!showPassword);
   }
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
+  }
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDidAgree(event.target.checked);
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await Axios.post('http://localhost:8000/auth/register/', values);
+
+      console.log(response.data)
+
+      router.push('/pages/login')
+    } catch (error) {
+      if (Axios.isAxiosError(error) && error.response) {
+        const errors = error.response.data || {};
+
+        setErrors(errors);
+      } else {
+        console.error('An unexpected error occurred: ', error);
+      }
+    }
   }
 
   return (
@@ -166,17 +207,18 @@ const RegisterPage = () => {
             </Typography>
             <Typography variant='body2'>Make your app management easy and fun!</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
-            <FormControl fullWidth>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <TextField autoFocus fullWidth id='first_name' label='First Name' sx={{ marginBottom: 4 }} onChange={handleChange('first_name')} value={values.first_name} helperText={errors?.first_name} error={!!errors?.first_name} />
+            <TextField autoFocus fullWidth id='last_name' label='Last Name' sx={{ marginBottom: 4 }} onChange={handleChange('last_name')} value={values.last_name} helperText={errors?.last_name} error={!!errors?.last_name} />
+            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />
+            <FormControl fullWidth error={!!errors?.password}>
               <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
                 value={values.password}
                 id='auth-register-password'
                 onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -185,14 +227,17 @@ const RegisterPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      {values.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
+                      {showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
+              {errors?.password && (
+                <FormHelperText>{errors.password}</FormHelperText>
+              )}
             </FormControl>
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox onChange={handleCheckboxChange} checked={didAgree} />}
               label={
                 <Fragment>
                   <span>I agree to </span>
@@ -204,7 +249,7 @@ const RegisterPage = () => {
                 </Fragment>
               }
             />
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
+            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }} disabled={!didAgree}>
               Sign up
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
