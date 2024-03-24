@@ -103,7 +103,7 @@ const LoginPage = () => {
     try {
       const response = await Axios.post('http://localhost:8000/auth/login/', values);
 
-      console.log(response.data);
+      localStorage.setItem('token', response.data.key)
 
       router.push('/')
     } catch (error) {
@@ -226,6 +226,9 @@ const LoginPage = () => {
                 <FormHelperText>{errors.password}</FormHelperText>
               )}
             </FormControl>
+            {errors?.non_field_errors && (
+                <FormHelperText error>{errors.non_field_errors}</FormHelperText>
+              )}
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
             >

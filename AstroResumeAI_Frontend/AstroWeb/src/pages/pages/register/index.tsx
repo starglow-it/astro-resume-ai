@@ -25,6 +25,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import { CircularProgress, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 // ** Icons Imports
 import Google from 'mdi-material-ui/Google'
@@ -44,10 +45,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 interface State {
-  first_name: string,
-  last_name: string,
+  // first_name: string,
+  // last_name: string,
   email: string,
-  password: string
+  password1: string
+  password2: string
 }
 
 interface Errors {
@@ -77,15 +79,19 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
-    first_name: '',
-    last_name: '',
+    // first_name: '',
+    // last_name: '',
     email: '',
-    password: ''
+    password1: '',
+    password2: ''
   })
 
-  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPassword1, setShowPassword1] = useState<boolean>(false)
+  const [showPassword2, setShowPassword2] = useState<boolean>(false)
   const [didAgree, setDidAgree] = useState<boolean>(false)
   const [errors, setErrors] = useState<Errors>({})
+  const [modalOpened, setOpenModal] = useState<boolean>(false)
+  const [isLoading, setLoading] = useState<boolean>(false)
 
   // ** Hook
   const theme = useTheme()
@@ -94,11 +100,11 @@ const RegisterPage = () => {
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+  const handleClickShowPassword1 = () => {
+    setShowPassword1(!showPassword1);
   }
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+  const handleClickShowPassword2 = () => {
+    setShowPassword2(!showPassword2);
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,12 +113,12 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true)
     try {
-      const response = await Axios.post('http://localhost:8000/auth/register/', values);
+      const response = await Axios.post('http://localhost:8000/auth/registration/', values);
 
-      console.log(response.data)
-
-      router.push('/pages/login')
+      setOpenModal(true)
+      setLoading(false)
     } catch (error) {
       if (Axios.isAxiosError(error) && error.response) {
         const errors = error.response.data || {};
@@ -121,6 +127,7 @@ const RegisterPage = () => {
       } else {
         console.error('An unexpected error occurred: ', error);
       }
+      setLoading(false)
     }
   }
 
@@ -203,39 +210,70 @@ const RegisterPage = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Adventure starts here 🚀
+              Your new job start here 🚀
             </Typography>
-            <Typography variant='body2'>Make your app management easy and fun!</Typography>
+            <Typography variant='body2'>Make your job application process easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField autoFocus fullWidth id='first_name' label='First Name' sx={{ marginBottom: 4 }} onChange={handleChange('first_name')} value={values.first_name} helperText={errors?.first_name} error={!!errors?.first_name} />
-            <TextField autoFocus fullWidth id='last_name' label='Last Name' sx={{ marginBottom: 4 }} onChange={handleChange('last_name')} value={values.last_name} helperText={errors?.last_name} error={!!errors?.last_name} />
+            {/* <TextField autoFocus fullWidth id='first_name' label='First Name' sx={{ marginBottom: 4 }} onChange={handleChange('first_name')} value={values.first_name} helperText={errors?.first_name} error={!!errors?.first_name} /> */}
+            {/* <TextField autoFocus fullWidth id='last_name' label='Last Name' sx={{ marginBottom: 4 }} onChange={handleChange('last_name')} value={values.last_name} helperText={errors?.last_name} error={!!errors?.last_name} /> */}
             <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />
-            <FormControl fullWidth error={!!errors?.password}>
-              <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
+            
+            <FormControl fullWidth error={!!errors?.password1}>
+              <InputLabel htmlFor='auth-register-password1'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
-                value={values.password}
-                id='auth-register-password'
-                onChange={handleChange('password')}
-                type={showPassword ? 'text' : 'password'}
+                value={values.password1}
+                id='auth-register-password1'
+                onChange={handleChange('password1')}
+                type={showPassword1 ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
                       edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
+                      onClick={handleClickShowPassword1}
+                      // onMouseDown={handleMouseDownPassword1}
                       aria-label='toggle password visibility'
                     >
-                      {showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
+                      {showPassword1 ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
-              {errors?.password && (
-                <FormHelperText>{errors.password}</FormHelperText>
+              {errors?.password1 && (
+                <FormHelperText>{errors.password1}</FormHelperText>
               )}
             </FormControl>
+
+            <FormControl fullWidth error={!!errors?.password2} margin="normal">
+              <InputLabel htmlFor='auth-register-password2'>Confirm Password</InputLabel>
+              <OutlinedInput
+                label='Confirm Password'
+                value={values.password2}
+                id='auth-register-password2'
+                onChange={handleChange('password2')}
+                type={showPassword2 ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      onClick={handleClickShowPassword2}
+                      // onMouseDown={handleMouseDownPassword2}
+                      aria-label='toggle password visibility'
+                    >
+                      {showPassword2 ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              {errors?.password2 && (
+                <FormHelperText>{errors.password2}</FormHelperText>
+              )}
+            </FormControl>
+            {errors?.non_field_errors && (
+                <FormHelperText error>{errors.non_field_errors}</FormHelperText>
+              )}
+            
             <FormControlLabel
               control={<Checkbox onChange={handleCheckboxChange} checked={didAgree} />}
               label={
@@ -250,7 +288,7 @@ const RegisterPage = () => {
               }
             />
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }} disabled={!didAgree}>
-              Sign up
+              {isLoading ? <CircularProgress size={26} sx={{color: 'white'}}/> : 'Sign up'}
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
@@ -291,6 +329,17 @@ const RegisterPage = () => {
         </CardContent>
       </Card>
       <FooterIllustrationsV1 />
+
+      <Dialog onClose={() => setOpenModal(false)} open={modalOpened}>
+        <DialogTitle sx={{textAlign: "center"}}>You're all set!</DialogTitle>
+        <DialogContent>
+          <Typography variant='body2'>Please check your email to verify your account.</Typography>
+          <Button fullWidth size='medium' variant='contained' sx={{ marginY: 4 }} onClick={() => setOpenModal(false)}>
+            Got it!
+          </Button>
+        </DialogContent>
+      </Dialog>
+
     </Box>
   )
 }
