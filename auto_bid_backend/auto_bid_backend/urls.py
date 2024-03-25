@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('resume_api.urls')),
     path('auth/', include('auth_app.urls')),
+    path('parse-resume/', include('resume_parser.urls')),
     # path('accounts/', include('allauth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
