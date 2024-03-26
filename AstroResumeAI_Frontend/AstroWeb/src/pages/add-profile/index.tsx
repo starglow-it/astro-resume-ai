@@ -18,10 +18,12 @@ import InformationOutline from 'mdi-material-ui/InformationOutline'
 // ** Demo Tabs Imports
 import TabInfo from 'src/views/add-profile/TabInfo'
 import TabBasicProfile from 'src/views/add-profile/TabBasicProfile'
+import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
 import TabSecurity from 'src/views/add-profile/TabSecurity'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
+import TabEducation from 'src/views/add-profile/TabEducation'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -67,11 +69,20 @@ const AddProfile = () => {
             }
           />
           <Tab
-            value='security'
+            value='work_experience'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Security</TabName>
+                <AccountOutline />
+                <TabName>Work Experience</TabName>
+              </Box>
+            }
+          />
+          <Tab
+            value='education'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <AccountOutline />
+                <TabName>Education</TabName>
               </Box>
             }
           />
@@ -84,16 +95,31 @@ const AddProfile = () => {
               </Box>
             }
           />
+          <Tab
+            value='security'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <LockOpenOutline />
+                <TabName>Security</TabName>
+              </Box>
+            }
+          />
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='basic_profile'>
           <TabBasicProfile />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
+        <TabPanel sx={{ p: 0 }} value='work_experience'>
+          <TabWorkExperience />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='education'>
+          <TabEducation />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='info'>
           <TabInfo />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='security'>
+          <TabSecurity />
         </TabPanel>
       </TabContext>
     </Card>
