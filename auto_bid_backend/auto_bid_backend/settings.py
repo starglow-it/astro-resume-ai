@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'resume_api.apps.ResumeApiConfig',
     'corsheaders',
     'auth_app',
+    'profile_management',
     'resume_parser',
     'rest_framework',
     'rest_framework.authtoken',
