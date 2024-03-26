@@ -43,7 +43,7 @@ const TabName = styled('span')(({ theme }) => ({
 
 const AccountSettings = () => {
   // ** State
-  const [value, setValue] = useState<string>('account')
+  const [value, setValue] = useState<string>('security')
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -57,7 +57,7 @@ const AccountSettings = () => {
           aria-label='account-settings tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Tab
+          {/* <Tab
             value='account'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -65,7 +65,7 @@ const AccountSettings = () => {
                 <TabName>Account</TabName>
               </Box>
             }
-          />
+          /> */}
           <Tab
             value='security'
             label={
@@ -75,7 +75,7 @@ const AccountSettings = () => {
               </Box>
             }
           />
-          <Tab
+          {/* <Tab
             value='info'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -83,18 +83,18 @@ const AccountSettings = () => {
                 <TabName>Info</TabName>
               </Box>
             }
-          />
+          /> */}
         </TabList>
 
-        <TabPanel sx={{ p: 0 }} value='account'>
+        {/* <TabPanel sx={{ p: 0 }} value='account'>
           <TabAccount />
-        </TabPanel>
+        </TabPanel> */}
         <TabPanel sx={{ p: 0 }} value='security'>
           <TabSecurity />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='info'>
+        {/* <TabPanel sx={{ p: 0 }} value='info'>
           <TabInfo />
-        </TabPanel>
+        </TabPanel> */}
       </TabContext>
     </Card>
   )

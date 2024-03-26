@@ -2,38 +2,14 @@
 import { useState, ElementType, ChangeEvent } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
-import LinearProgress from '@mui/material/LinearProgress'
-
-//  ** Axios Import
-import axios from 'axios'
 
 // Context API
 import { useProfileData } from 'src/@core/context/profileDataContext'
-
-interface ProfileData {
-  name: string,
-  email: string,
-  phone: string,
-  location: string,
-  skills: string[],
-  summary: string
-}
-
-const initialProfileData: ProfileData = {
-  name: '',
-  email: '',
-  phone: '',
-  location: '',
-  skills: [],
-  summary: ''
-};
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 80,
@@ -59,7 +35,11 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabWorkExperience = () => {
+interface TabWorkExperienceProps{
+  handleSetTab: (tab: string) => void;
+}
+
+const TabWorkExperience : React.FC<TabWorkExperienceProps>= ({handleSetTab}) => {
   // ** State
   const [openAlert, setOpenAlert] = useState<boolean>(true)
 
@@ -104,8 +84,15 @@ const TabWorkExperience = () => {
     })
   }
 
+  const handleReset = () => {
+    setProfileData({
+      ...profileData,
+      experience: []
+    })
+  }
+
   return (
-    <CardContent>
+    <CardContent sx={{marginTop: 4.75}}>
       <form>
         {profileData.experience.map((exp, index) => 
           <Grid container spacing={7} sx={{marginBottom: 10}} key={index}>
@@ -168,30 +155,11 @@ const TabWorkExperience = () => {
             </Button>
           </Grid>
 
-          {/* {openAlert ? (
-            <Grid item xs={12} sx={{ mb: 3 }}>
-              <Alert
-                severity='warning'
-                sx={{ '& a': { fontWeight: 400 } }}
-                action={
-                  <IconButton size='small' color='inherit' aria-label='close' onClick={() => setOpenAlert(false)}>
-                    <Close fontSize='inherit' />
-                  </IconButton>
-                }
-              >
-                <AlertTitle>Your email is not confirmed. Please check your inbox.</AlertTitle>
-                <Link href='/' onClick={(e: SyntheticEvent) => e.preventDefault()}>
-                  Resend Confirmation
-                </Link>
-              </Alert>
-            </Grid>
-          ) : null} */}
-
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('education')}>
+              Next
             </Button>
-            <Button type='reset' variant='outlined' color='secondary' >
+            <Button type='reset' variant='outlined' color='secondary' onClick={handleReset}>
               Reset
             </Button>
           </Grid>

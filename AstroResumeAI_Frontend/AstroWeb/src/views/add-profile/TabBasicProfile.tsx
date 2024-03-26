@@ -45,8 +45,11 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
+interface TabBasicProfileProps {
+  handleSetTab: (tab: string) => void;
+}
 
-const TabBasicProfile = () => {
+const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
   // ** State
   const [openAlert, setOpenAlert] = useState<boolean>(true)
   const [fileName, setFileName] = useState<string>("")
@@ -89,6 +92,18 @@ const TabBasicProfile = () => {
     setProfileData({
       ...profileData,
       [prop]: event.target.value
+    })
+  }
+
+  const handleReset = () => {
+    setProfileData({
+      ...profileData,
+      name: '',
+      email: '',
+      recent_role: '',
+      location: '',
+      phone: '',
+      summary: ''
     })
   }
 
@@ -205,10 +220,10 @@ const TabBasicProfile = () => {
           ) : null} */}
 
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('work_experience')}>
+              Next
             </Button>
-            <Button type='reset' variant='outlined' color='secondary' >
+            <Button type='reset' variant='outlined' color='secondary' onClick={handleReset}>
               Reset
             </Button>
           </Grid>

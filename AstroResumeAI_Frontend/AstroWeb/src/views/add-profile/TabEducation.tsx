@@ -2,14 +2,11 @@
 import { useState, ElementType, ChangeEvent } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Button, { ButtonProps } from '@mui/material/Button'
-import LinearProgress from '@mui/material/LinearProgress'
 
 // Context API
 import { useProfileData } from 'src/@core/context/profileDataContext'
@@ -56,7 +53,11 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const TabEducation = () => {
+interface TabEducationProps {
+  handleSetTab: (tab: string) => void
+}
+
+const TabEducation: React.FC<TabEducationProps> = ({handleSetTab}) => {
   // ** State
   const [openAlert, setOpenAlert] = useState<boolean>(true)
 
@@ -100,8 +101,15 @@ const TabEducation = () => {
     })
   }
 
+  const handleReset = () => {
+    setProfileData({
+      ...profileData,
+      education: []
+    })
+  }
+
   return (
-    <CardContent>
+    <CardContent sx={{marginTop: 4.75}}>
       <form>
         {profileData.education.map((edu, index) => 
           <Grid container spacing={7} sx={{marginBottom: 10}} key={index}>
@@ -172,10 +180,10 @@ const TabEducation = () => {
           ) : null} */}
 
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('info')}>
+              Next
             </Button>
-            <Button type='reset' variant='outlined' color='secondary' >
+            <Button type='reset' variant='outlined' color='secondary' onClick={handleReset}>
               Reset
             </Button>
           </Grid>
