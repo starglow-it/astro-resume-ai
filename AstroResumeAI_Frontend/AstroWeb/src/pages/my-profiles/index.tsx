@@ -10,11 +10,15 @@ import { useAuth } from 'src/@core/context/authContext'
 import CardProfile from 'src/views/cards/CardProfile'
 import { FetchedProfileData } from 'src/types/ProfileData'
 import { API_BASE_URL } from 'src/configs/apiConfig'
+import { Button, Box } from '@mui/material'
+import { useRouter } from 'next/router'
 
 const MyProfiles = () => {
   const { token } = useAuth();
 
   const [profileList, setProfileList] = useState<FetchedProfileData[]>([])
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProfileList = async (token: string|null) => {
@@ -52,7 +56,13 @@ const MyProfiles = () => {
   }
 
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={6} justifyContent="center">
+      {!profileList.length && 
+          <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginTop: 30}}>
+                <Typography variant='h2'>You have no profiles yet.</Typography>
+                <Button variant='outlined' size="large" onClick={() => router.push('/add-profile')} sx={{marginTop: 30}}>ADD NEW PROFILE</Button>
+          </Box>
+              }
       {profileList.map((profile) => (
         <Grid item xs={12}>
           <CardProfile profile={profile} editProfile={editProfile} deleteProfile={deleteProfile} />
