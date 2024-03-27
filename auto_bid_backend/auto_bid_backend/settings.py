@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'resume_parser',
     'rest_framework',
     'rest_framework.authtoken',
+    'job_query',
+    'support',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

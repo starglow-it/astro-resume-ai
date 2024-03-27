@@ -24,6 +24,8 @@ from django.views.static import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('resume_api.urls')),
+    path('api/', include('job_query.urls')),
+    path('api/', include('support.urls')),
     path('auth/', include('auth_app.urls')),
     path('parse-resume/', include('resume_parser.urls')),
     path('profile/', include('profile_management.urls')),

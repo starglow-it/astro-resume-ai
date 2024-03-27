@@ -2,8 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('generate-resume/', views.generate_resume, name='generate-resume'),
     path('resumes/', views.resumes, name='resumes'),
+    path('resumes/generate-resume/', views.generate_resume, name='generate-resume'),
     path('resumes/<uuid:resume_id>/', views.resume_detail, name='resume-detail'),
-    path('delete-resumes/', views.delete_resumes, name='delete-resumes'),
+    path('resumes/user/<int:user_id>/', views.resumes_by_user, name='resumes-by-user'),
+    path('resumes/delete-resumes/', views.delete_resumes, name='delete-resumes'),
+    path('resumes/cal_matching_scores/', views.cal_matching_scores, name='cal_matching_scores'),
 ]

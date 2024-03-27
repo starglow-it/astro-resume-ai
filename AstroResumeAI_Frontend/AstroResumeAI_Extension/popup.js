@@ -6,15 +6,46 @@ var jobTitle = '';
 var jobDescription = '';
 var renderedResumeUrl = '';
 var errorForSupport = '';
+var jobContentQuery = { title: '', description: '' };
 const titleSelector = document.getElementById('titleSelector');
 const descriptionSelector = document.getElementById('descriptionSelector');
+
+//Auth Actions
+const handleLogInSuccess = async (isRemember = false) => {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, async (tabs) => {
+    const url = new URL(tabs[0].url);
+    const hostname = url.hostname;
+    const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      jobContentQuery.title = jsonResponse.title_query || '';
+      jobContentQuery.description = jsonResponse.description_query || '';
+    }
+  });
+
+  if (!isRemember) {
+    chrome.storage.sync.get('userId', async function (data) {
+      const userId = data.userId;
+
+      if (userId) {
+        await fetchResumes(userId);
+      }
+    });
+  }
+
+  document.getElementById("main-board").style.display = "block";
+  document.getElementById("login-board").style.display = "none";
+};
 
 document.addEventListener('DOMContentLoaded', function () {
 
   chrome.storage.sync.get('isAuthenticated', function (data) {
     const isAuthenticated = data.isAuthenticated;
 
-    if (isAuthenticated && false) {
+    if (isAuthenticated) {
       handleLogInSuccess();
     }
   });
@@ -26,22 +57,33 @@ function updateInputValue(element, newValue) {
   element.dispatchEvent(event);
 }
 
-// Event listener to detect input changes
-titleSelector.addEventListener('valueChange', function (event) {
-  jobTitle = event.target.value;
-  console.log('Input value changed:', event.target.value);
-});
+async function fetchResumes(userId) {
+  try {
+    if (userId) {
+      const response = await fetch(`http://localhost:8000/api/resumes/user/${userId}/`);
 
-descriptionSelector.addEventListener('valueChange', function (event) {
-  jobDescription = event.target.value;
-  console.log('Input value changed:', event.target.value);
-});
+      if (response) {
+        const resumes = await response.json();
+        const selectElement = document.getElementById('resume-select');
 
-//Auth Actions
-const handleLogInSuccess = () => {
-  document.getElementById("main-board").style.display = "block";
-  document.getElementById("login-board").style.display = "none";
-};
+        if (Array.isArray(resumes) && resumes.length > 0) {
+          resumes.forEach(resume => {
+            const option = document.createElement('option');
+            option.value = resume.id; // Assuming each resume has an 'id' field
+            option.textContent = resume.personal_information.name; // Assuming each resume has a 'name' field
+            selectElement.appendChild(option);
+          });
+          selectedResumeId = resumes[0]['id'];
+        }
+
+        var elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+      }
+    }
+  } catch (error) {
+    return;
+  }
+}
 
 document.getElementById("login-btn").addEventListener('click', async function () {
   document.getElementById("sign-up-instead").disabled = true;
@@ -89,14 +131,18 @@ document.getElementById("login-btn").addEventListener('click', async function ()
       });
 
       if (response.ok) {
+        const { id } = await response.json();
         const isChecked = document.getElementById("remember-me").checked;
 
         if (isChecked) {
-          chrome.storage.sync.set({ isAuthenticated: true });
+          chrome.storage.sync.set({ isAuthenticated: true, userId: id });
+        } else {
+          await fetchResumes(id);
         }
+
         // Change button content to success icon
         this.innerHTML = `<i class="material-icons">done</i>`;
-        setTimeout(handleLogInSuccess, 1500);
+        setTimeout(() => handleLogInSuccess(!isChecked), 1500);
       } else {
         throw new Error('login_fail');
       }
@@ -125,201 +171,79 @@ document.getElementById("sign-up-instead").addEventListener("click", function ()
   chrome.tabs.create({ url: 'http://localhost:3000/pages/register/' });
 });
 
+// document.getElementById("support-btn").addEventListener("click", async function () {
+//   chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+//     const url = new URL(tabs[0].url);
+//     const hostname = url.hostname;
+//     const requestData = {
+//       url: hostname,
+//       content: errorForSupport
+//     }
 
-// This function retrieves stored selectors for the current website and updates the popup fields
-function loadSelectors() {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  }, async (tabs) => {
-    const url = new URL(tabs[0].url);
-    const hostname = url.hostname;
+//     const response = await fetch('http://localhost:8000/api/supports/', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(requestData)
+//     });
 
-    // Use hostname to retrieve the corresponding selectors from storage
-    chrome.storage.local.get([hostname], (result) => {
-      if (result[hostname]) {
-        const {
-          titleSelector,
-          descriptionSelector
-        } = result[hostname];
-        document.getElementById('titleSelector').value = titleSelector || '';
-        document.getElementById('descriptionSelector').value = descriptionSelector || '';
+//     if (response.ok) {
+//       M.toast({
+//         html: 'Thank you for your support. You will get it shortly.'
+//       });
 
-        // Re-initialize Materialize input fields to adjust labels for filled values
-        M.updateTextFields();
-      }
-    });
-  });
-}
+//       document.getElementById("support-text").innerText = "Successfully supported."
+//       this.disabled = true;
+//     }
+//   });
+// });
 
-// Function to fetch resumes and populate dropdown
-async function fetchResumes() {
-  try {
-    const response = await fetch('http://localhost:8000/api/resumes');
+document.getElementById("cal-resume-score").addEventListener('click', async function () {
+  if (jobDescription) {
 
-    if (response) {
-      const resumes = await response.json();
-      const selectElement = document.getElementById('resume-select');
+    let { userId } = await chrome.storage.sync.get('isAuthenticated');
+    console.log(userId);
+    userId = 1;
 
-      if (Array.isArray(resumes) && resumes.length > 0) {
-        resumes.forEach(resume => {
-          const option = document.createElement('option');
-          option.value = resume.id; // Assuming each resume has an 'id' field
-          option.textContent = resume.personal_information.name; // Assuming each resume has a 'name' field
-          selectElement.appendChild(option);
+    if (userId) {
+      try {
+        const requestData = {
+          user_id: userId,
+          description: jobDescription
+        };
+        console.log(requestData);
+
+        const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestData)
         });
-        selectedResumeId = resumes[0]['id'];
-      }
-      var elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
-    }
-  } catch (error) {
-    return;
-  }
-}
 
-document.getElementById('titleSelector').addEventListener('change', function (event) {
-  console.log(event.target.value)
-  jobTitle = event.target.value;
-  console.log(jobTitle)
-});
-
-document.getElementById('descriptionSelector').addEventListener('change', function () {
-  jobDescription = this.value;
-});
-
-document.getElementById('resume-select').addEventListener('change', function (event) {
-  if (event.target.value) {
-    selectedResumeId = event.target.value;
-  }
-});
-
-document.getElementById('generate-resume-btn').addEventListener('click', async function () {
-  try {
-    if (selectedResumeId && jobTitle && jobDescription) {
-      this.innerHTML = `
-    <div class="preloader-wrapper small active">
-      <div class="spinner-layer spinner-green-only spinner-white">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div>
-        <div class="gap-patch">
-          <div class="circle"></div>
-        </div>
-        <div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-    </div>
-  `;
-      const response = await fetch("http://localhost:8000/api/generate-resume/", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          resume_id: selectedResumeId,
-          job_url: 'value2',
-          title: jobTitle,
-          job_description: jobDescription
-        })
-      });
-
-      if (response.ok) {
-        const { url } = await response.json();
-        renderedResumeUrl = url;
-        this.innerHTML = `<i class="material-icons">done</i>`;
-        document.getElementById("download-resume-btn").disabled = false;
-      } else {
-        throw new Error('something went wrong. Please try again.');
-      }
-    } else {
-      if (!selectedResumeId) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please select your resume.';
-      }
-
-      if (!jobTitle || !jobDescription) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please scan job.';
+        if (response.ok) {
+          const scores = await response.json();
+          console.log(scores);
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
-  } catch (error) {
-    this.innerHTML = "GENERATE RESUME";
-    document.getElementById("generate-resume-error-msg").innerText = error.message;
-    console.error(error);
-    return;
   }
 });
 
-document.getElementById("scan-job-content").addEventListener('click', async function () {
-  let jobContentQuery = '';
-  chrome.tabs.query({
+document.getElementById('show-sidebar-btn').addEventListener('click', async function () {
+  const [tab] = await chrome.tabs.query({
     active: true,
-    currentWindow: true
-  }, async (tabs) => {
-    try {
-      const url = new URL(tabs[0].url);
-      const hostname = url.hostname;
-      // const jobContentQuery = await fetch('http://localhost:8000/get/jobcontentquery');
-
-      jobContentQuery = {
-        title: '.jobsearch-JobInfoHeader-title',
-        description: '#jobDescriptionText'
-      };
-      console.log(jobContentQuery);
-
-      if (jobContentQuery.title && jobContentQuery.description) {
-        chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-          const response = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
-
-          if (!!response.jobTitle && !!response.jobDescription) {
-            updateInputValue(titleSelector, response.jobTitle);
-            document.getElementById('titleSelector').value = response.jobTitle;
-            updateInputValue(descriptionSelector, response.jobDescription);
-            document.getElementById('descriptionSelector').value = response.jobDescription;
-          } else {
-            errorForSupport = "Could not find job.";
-            document.getElementById("support").style.display = 'block';
-          }
-        });
-      } else {
-        errorForSupport = 'Did not getting fetched query from server';
-        document.getElementById("support").style.display = 'block';
-      }
-    } catch (error) {
-      errorForSupport = error.message;
-      document.getElementById("support").style.display = 'block';
-    }
+    lastFocusedWindow: true
   });
-});
 
-document.getElementById('download-resume-btn').addEventListener('click', function () {
-  console.log(renderedResumeUrl);
-  if (renderedResumeUrl) {
-    const link = document.createElement('a');
-    link.href = renderedResumeUrl;
-    link.download = 'filename.ext';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-});
-
-document.getElementById("support-btn").addEventListener("click", async function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    const url = new URL(tabs[0].url);
-    const hostname = url.hostname;
-
-    M.toast({
-      html: 'Thank you for your support. You will get it shortly.'
-    });
+  const tabId = tab.id;
+  await chrome.sidePanel.open({ tabId });
+  await chrome.sidePanel.setOptions({
+    tabId,
+    path: 'sidepanel.html',
+    enabled: true
   });
-});
-
-// Call loadSelectors when the popup is opened
-document.addEventListener('DOMContentLoaded', () => {
-  loadSelectors();
-  fetchResumes();
-
-  var elems = document.querySelectorAll('select');
-  M.FormSelect.init(elems);
 });
