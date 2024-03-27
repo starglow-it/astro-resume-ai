@@ -13,6 +13,7 @@ import { API_BASE_URL } from 'src/configs/apiConfig'
 import { Button, Box } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useProfileData } from 'src/@core/context/profileDataContext'
+import withAuth from 'src/@core/components/withAuth'
 
 const MyProfiles = () => {
   const { token } = useAuth();
@@ -73,4 +74,4 @@ const MyProfiles = () => {
   )
 }
 
-export default MyProfiles
+export default withAuth(MyProfiles)

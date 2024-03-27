@@ -22,6 +22,7 @@ import TabSecurity from 'src/views/account-settings/TabSecurity'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
+import withAuth from 'src/@core/components/withAuth'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -100,4 +101,4 @@ const AccountSettings = () => {
   )
 }
 
-export default AccountSettings
+export default withAuth(AccountSettings)
