@@ -5,13 +5,16 @@
   "permissions": [
     "activeTab",
     "storage",
-    "tabs"
+    "tabs",
+    "windows",
+    "sidePanel",
+    "contextMenus"
   ],
+  "minimum_chrome_version": "116",
   "host_permissions": [
     "<all_urls>"
   ],
   "action": {
-    "default_popup": "popup.html",
     "default_icon": "icon.png"
   },
   "background": {
@@ -24,7 +27,11 @@
       ],
       "js": [
         "content.js"
-      ]
+      ],
+      "css": [
+        "styles/content.css"
+      ],
+      "run_at": "document_end"
     }
   ],
   "icons": {
@@ -40,5 +47,9 @@
         "<all_urls>"
       ]
     }
-  ]
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html",
+    "open_mode": "OPEN_ON_CLICK"
+  }
 }
