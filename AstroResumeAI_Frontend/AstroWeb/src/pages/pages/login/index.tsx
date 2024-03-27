@@ -45,6 +45,7 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 // Use Auth
 import { useAuth } from 'src/@core/context/authContext';
+import { API_BASE_URL } from 'src/configs/apiConfig';
 
 interface State {
   email: string
@@ -107,7 +108,7 @@ const LoginPage = () => {
     event.preventDefault();
 
     try {
-      const response = await Axios.post('http://localhost:8000/auth/login/', values);
+      const response = await Axios.post(`${API_BASE_URL}/auth/login/`, values);
 
       login(response.data.key)
 

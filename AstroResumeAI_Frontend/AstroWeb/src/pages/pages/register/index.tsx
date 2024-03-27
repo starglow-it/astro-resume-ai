@@ -44,6 +44,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 import { useAuth } from 'src/@core/context/authContext';
+import { API_BASE_URL } from 'src/configs/apiConfig';
 
 interface State {
   // first_name: string,
@@ -117,7 +118,7 @@ const RegisterPage = () => {
     event.preventDefault();
     setLoading(true)
     try {
-      const response = await Axios.post('http://localhost:8000/auth/registration/', values);
+      const response = await Axios.post(`${API_BASE_URL}/auth/registration/`, values);
 
       setOpenModal(true)
       setLoading(false)

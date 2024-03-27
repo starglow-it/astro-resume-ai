@@ -11,9 +11,9 @@ class ResumeParser():
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         # GPT-3 completion questions
         self.prompt_questions = \
-"""Summarize the text below into a JSON with exactly the following structure \
-    {name, recent_role, email, phone, location, summary, skills: [], education: [{university, education_level, major, graduation_year,}]\
-    experience: [{job_title, company, location, duration, description}], linkedin, github, website, language }
+"""Summarize the text below into a JSON with exactly the following structure.  \
+    {name, recent_role, email, phone, location, summary(write as it is), skills: [], education: [{university, education_level, major, graduation_year,}]\
+    experience: [{job_title, company, location, duration, description(Write as it is)}], linkedin, github, website, language }
 """
     def query_completion(self: object,
                         prompt: str,
@@ -39,18 +39,22 @@ class ResumeParser():
         text = ""
 
         if file_ext == '.doc':
-            # docx_path = self.convert_doc_to_docx(file_path)
-            # file_path = docx_path  # Update file_path to point to the converted .docx
-
             text = textract.process(file_path)
-            return text.decode('utf-8')
 
-        if file_ext == '.docx':
+            return text.decode('utf-8')
+        elif file_ext == '.docx':
             """Extract text from docx file including body, headers, footers, and content controls."""
             text = docx2txt.process(file_path)
+
             return text
         elif file_ext == '.pdf':
             text = extract_text(file_path)
+
+            return text
+        
+        # In other cases
+        with open(file_path, 'r', encoding='utf-8') as file:
+                text = file.read()
 
         return text 
     

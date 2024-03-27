@@ -20,6 +20,7 @@ import { useProfileData } from 'src/@core/context/profileDataContext'
 // Import types
 import { ProfileData } from 'src/types/ProfileData'
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { API_BASE_URL } from 'src/configs/apiConfig'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 80,
@@ -69,7 +70,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await axios.post('http://localhost:8000/parse-resume/', formData, {
+        const response = await axios.post(`${API_BASE_URL}/parse-resume/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -125,11 +126,8 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
                     id='add-profile-upload-resume'
                   />
                 </ButtonStyled>
-                <ResetButtonStyled color='error' variant='outlined' onClick={() => { }}>
-                  Reset
-                </ResetButtonStyled>
                 {isLoading ? <LinearProgress sx={{ marginTop: 5 }} /> : <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  {fileName ? <>{fileName} <br /> {"Uploaded at " + uploadTime}</> : "Allowed PDF, DOCX or DOC."}
+                  {fileName ? <>{fileName} <br /> {"Uploaded at " + uploadTime}</> : "Allowed PDF, DOCX, DOC or TXT."}
                 </Typography>}
               </Box>
             </Box>
