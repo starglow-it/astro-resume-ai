@@ -43,6 +43,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
+import { useAuth } from 'src/@core/context/authContext';
 
 interface State {
   // first_name: string,
@@ -79,12 +80,13 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
-    // first_name: '',
-    // last_name: '',
     email: '',
     password1: '',
     password2: ''
   })
+
+  // ** Auth
+  const {isAuthenticated} = useAuth();
 
   const [showPassword1, setShowPassword1] = useState<boolean>(false)
   const [showPassword2, setShowPassword2] = useState<boolean>(false)
@@ -129,6 +131,10 @@ const RegisterPage = () => {
       }
       setLoading(false)
     }
+  }
+
+  if (isAuthenticated) {
+    router.push('/')
   }
 
   return (

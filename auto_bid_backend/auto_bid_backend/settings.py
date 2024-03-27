@@ -105,8 +105,14 @@ WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'astro-ai',                      # Your database name
+        'USER': 'postgres',                    # Your database user
+        'PASSWORD': '123123',                     # Your database password
+        'HOST': 'localhost',                        # Your database host
+        'PORT': '5432',                                 # Your database port (leave blank for default)
     }
 }
 
@@ -159,8 +165,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
 }
 
@@ -198,6 +205,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'
 EMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'
 EMAIL_USE_TLS = True
-
-
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'localhost:8000/login'

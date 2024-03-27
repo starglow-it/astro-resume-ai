@@ -43,6 +43,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
+// Use Auth
+import { useAuth } from 'src/@core/context/authContext';
+
 interface State {
   email: string
   password: string
@@ -71,6 +74,9 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginPage = () => {
+  // ** Authentication State
+  const {isAuthenticated, login, logout} = useAuth();
+
   // ** State
   const [values, setValues] = useState<State>({
     email: '',
@@ -103,7 +109,7 @@ const LoginPage = () => {
     try {
       const response = await Axios.post('http://localhost:8000/auth/login/', values);
 
-      localStorage.setItem('token', response.data.key)
+      login(response.data.key)
 
       router.push('/')
     } catch (error) {
@@ -113,6 +119,10 @@ const LoginPage = () => {
         console.error('Unexpected error occurred: ', error);
       }
     }
+  }
+
+  if (isAuthenticated) {
+    router.push('/')
   }
 
   return (
