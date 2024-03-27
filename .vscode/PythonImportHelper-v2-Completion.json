@@ -1057,7 +1057,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': 'astro-ai',                      # Your database name\n        'USER': 'postgres',                    # Your database user",
+        "peekOfCode": "WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': os.getenv('DB_NAME'),                      # Your database name\n        'USER': os.getenv('DB_USER'),                    # Your database user",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1066,7 +1066,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "DATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': 'astro-ai',                      # Your database name\n        'USER': 'postgres',                    # Your database user\n        'PASSWORD': '123123',                     # Your database password\n        'HOST': 'localhost',                        # Your database host\n        'PORT': '5432',                                 # Your database port (leave blank for default)",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': os.getenv('DB_NAME'),                      # Your database name\n        'USER': os.getenv('DB_USER'),                    # Your database user\n        'PASSWORD': os.getenv('DB_PASSWORD'),                     # Your database password\n        'HOST': os.getenv('DB_HOST'),                        # Your database host\n        'PORT': os.getenv('DB_PORT'),                                 # Your database port (leave blank for default)",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1192,7 +1192,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "SITE_ID = 1\nACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'",
+        "peekOfCode": "SITE_ID = 1\nACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1201,7 +1201,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "ACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'",
+        "peekOfCode": "ACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1210,7 +1210,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "ACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "ACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1219,7 +1219,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "ACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "ACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1228,7 +1228,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "ACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "ACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1237,7 +1237,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1246,7 +1246,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "EMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "EMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1255,7 +1255,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "EMAIL_PORT = 587\nEMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "EMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1264,7 +1264,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "EMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'\nEMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -1273,7 +1273,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "EMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'\nEMAIL_USE_TLS = True",
+        "peekOfCode": "EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
