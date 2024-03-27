@@ -221,10 +221,7 @@ const RegisterPage = () => {
             <Typography variant='body2'>Make your job application process easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            {/* <TextField autoFocus fullWidth id='first_name' label='First Name' sx={{ marginBottom: 4 }} onChange={handleChange('first_name')} value={values.first_name} helperText={errors?.first_name} error={!!errors?.first_name} /> */}
-            {/* <TextField autoFocus fullWidth id='last_name' label='Last Name' sx={{ marginBottom: 4 }} onChange={handleChange('last_name')} value={values.last_name} helperText={errors?.last_name} error={!!errors?.last_name} /> */}
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />
-            
+            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />            
             <FormControl fullWidth error={!!errors?.password1}>
               <InputLabel htmlFor='auth-register-password1'>Password</InputLabel>
               <OutlinedInput
