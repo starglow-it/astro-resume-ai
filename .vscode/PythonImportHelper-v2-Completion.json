@@ -1,5 +1,477 @@
 [
     {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "re_path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "QueryDict",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "ConfirmEmailView",
+        "importPath": "allauth.account.views",
+        "description": "allauth.account.views",
+        "isExtraImport": true,
+        "detail": "allauth.account.views",
+        "documentation": {}
+    },
+    {
+        "label": "redirect",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "get_object_or_404",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "get_object_or_404",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
@@ -33,51 +505,35 @@
         "documentation": {}
     },
     {
-        "label": "admin",
-        "importPath": "django.contrib",
-        "description": "django.contrib",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.contrib",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "admin",
-        "importPath": "django.contrib",
-        "description": "django.contrib",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.contrib",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.urls",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
-        "label": "include",
-        "importPath": "django.urls",
-        "description": "django.urls",
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
         "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
-        "label": "re_path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
+        "detail": "django.conf",
         "documentation": {}
     },
     {
@@ -121,44 +577,69 @@
         "documentation": {}
     },
     {
-        "label": "uuid",
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "json",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "uuid",
-        "description": "uuid",
-        "detail": "uuid",
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
         "documentation": {}
     },
     {
-        "label": "migrations",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "django.db.models.deletion",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "django.db",
+        "importPath": "django.db.models.deletion",
+        "description": "django.db.models.deletion",
+        "detail": "django.db.models.deletion",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "User",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.contrib.auth.models",
         "documentation": {}
     },
     {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
+        "label": "User",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
         "isExtraImport": true,
-        "detail": "django.db",
+        "detail": "django.contrib.auth.models",
         "documentation": {}
     },
     {
-        "label": "AppConfig",
-        "importPath": "django.apps",
-        "description": "django.apps",
+        "label": "User",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
         "isExtraImport": true,
-        "detail": "django.apps",
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
         "documentation": {}
     },
     {
@@ -178,27 +659,92 @@
         "documentation": {}
     },
     {
-        "label": "TestCase",
-        "importPath": "django.test",
-        "description": "django.test",
+        "label": "generics",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
         "isExtraImport": true,
-        "detail": "django.test",
+        "detail": "rest_framework",
         "documentation": {}
     },
     {
-        "label": "HttpResponse",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "rest_framework",
         "documentation": {}
     },
     {
-        "label": "QueryDict",
-        "importPath": "django.http",
-        "description": "django.http",
+        "label": "status",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
         "isExtraImport": true,
-        "detail": "django.http",
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "APIView",
+        "importPath": "rest_framework.views",
+        "description": "rest_framework.views",
+        "isExtraImport": true,
+        "detail": "rest_framework.views",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "IsAuthenticated",
+        "importPath": "rest_framework.permissions",
+        "description": "rest_framework.permissions",
+        "isExtraImport": true,
+        "detail": "rest_framework.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
         "documentation": {}
     },
     {
@@ -218,20 +764,11 @@
         "documentation": {}
     },
     {
-        "label": "Response",
-        "importPath": "rest_framework.response",
-        "description": "rest_framework.response",
+        "label": "api_view",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
         "isExtraImport": true,
-        "detail": "rest_framework.response",
-        "documentation": {}
-    },
-    {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
+        "detail": "rest_framework.decorators",
         "documentation": {}
     },
     {
@@ -261,11 +798,11 @@
         "documentation": {}
     },
     {
-        "label": "get_object_or_404",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
+        "label": "OpenAI",
+        "importPath": "openai",
+        "description": "openai",
         "isExtraImport": true,
-        "detail": "django.shortcuts",
+        "detail": "openai",
         "documentation": {}
     },
     {
@@ -295,12 +832,98 @@
         "documentation": {}
     },
     {
+        "label": "SentenceTransformer",
+        "importPath": "sentence_transformers",
+        "description": "sentence_transformers",
+        "isExtraImport": true,
+        "detail": "sentence_transformers",
+        "documentation": {}
+    },
+    {
+        "label": "cosine_similarity",
+        "importPath": "sklearn.metrics.pairwise",
+        "description": "sklearn.metrics.pairwise",
+        "isExtraImport": true,
+        "detail": "sklearn.metrics.pairwise",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "extract_text",
+        "importPath": "pdfminer.high_level",
+        "description": "pdfminer.high_level",
+        "isExtraImport": true,
+        "detail": "pdfminer.high_level",
+        "documentation": {}
+    },
+    {
+        "label": "docx2txt",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "docx2txt",
+        "description": "docx2txt",
+        "detail": "docx2txt",
+        "documentation": {}
+    },
+    {
+        "label": "textract",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "textract",
+        "description": "textract",
+        "detail": "textract",
+        "documentation": {}
+    },
+    {
+        "label": "default_storage",
+        "importPath": "django.core.files.storage",
+        "description": "django.core.files.storage",
+        "isExtraImport": true,
+        "detail": "django.core.files.storage",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "sys",
         "description": "sys",
         "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "AuthAppConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.auth_app.apps",
+        "description": "auto_bid_backend.auth_app.apps",
+        "peekOfCode": "class AuthAppConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'auth_app'",
+        "detail": "auto_bid_backend.auth_app.apps",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auth_app.urls",
+        "description": "auto_bid_backend.auth_app.urls",
+        "peekOfCode": "urlpatterns = [\n    path('', include('dj_rest_auth.urls')),\n    path('registration/', include('dj_rest_auth.registration.urls')),\n    path('account-confirm-email/<str:key>/', CustomConfirmEmailView.as_view(), name=\"account_confirm_email\")\n]",
+        "detail": "auto_bid_backend.auth_app.urls",
+        "documentation": {}
+    },
+    {
+        "label": "CustomConfirmEmailView",
+        "kind": 6,
+        "importPath": "auto_bid_backend.auth_app.views",
+        "description": "auto_bid_backend.auth_app.views",
+        "peekOfCode": "class CustomConfirmEmailView(ConfirmEmailView):\n    def get(self, *args, **kwargs):\n        try:\n            confirmation = self.get_object()\n            confirmation.confirm(self.request)\n        except Exception as e: \n            print('Email confirmation failed:', str(e))\n            return redirect('http://localhost:3000/pages/confirm-error')    \n        else:\n            return redirect('http://localhost:3000/pages/login')",
+        "detail": "auto_bid_backend.auth_app.views",
         "documentation": {}
     },
     {
@@ -398,7 +1021,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'resume_api.apps.ResumeApiConfig',\n    'corsheaders'\n]",
+        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'resume_api.apps.ResumeApiConfig',\n    'corsheaders',\n    'auth_app',",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -407,7 +1030,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n    'corsheaders.middleware.CorsMiddleware',\n]",
+        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    # 'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n    'corsheaders.middleware.CorsMiddleware',\n    \"allauth.account.middleware.AccountMiddleware\",",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -434,7 +1057,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation",
+        "peekOfCode": "WSGI_APPLICATION = 'auto_bid_backend.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.0/ref/settings/#databases\nDATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': os.getenv('DB_NAME'),                      # Your database name\n        'USER': os.getenv('DB_USER'),                    # Your database user",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -443,7 +1066,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation\n# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators\nAUTH_PASSWORD_VALIDATORS = [\n    {",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        # 'ENGINE': 'django.db.backends.sqlite3',\n        # 'NAME': BASE_DIR / 'db.sqlite3',\n        'ENGINE': 'django.db.backends.postgresql',\n        'NAME': os.getenv('DB_NAME'),                      # Your database name\n        'USER': os.getenv('DB_USER'),                    # Your database user\n        'PASSWORD': os.getenv('DB_PASSWORD'),                     # Your database password\n        'HOST': os.getenv('DB_HOST'),                        # Your database host\n        'PORT': os.getenv('DB_PORT'),                                 # Your database port (leave blank for default)",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -488,7 +1111,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.0/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True\nCORS_ALLOW_CREDENTIALS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -497,7 +1120,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True\nCORS_ALLOW_CREDENTIALS = True\nREST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -506,7 +1129,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nOPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True\nCORS_ALLOW_CREDENTIALS = True\nREST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',\n    ],\n}\nAUTHENTICATION_BACKENDS = [",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -515,7 +1138,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True",
+        "peekOfCode": "OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')\nCORS_ALLOW_ALL_ORIGINS = True\nCORS_ALLOW_CREDENTIALS = True\nREST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',\n    ],\n}\nAUTHENTICATION_BACKENDS = [\n    'django.contrib.auth.backends.ModelBackend',",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -524,7 +1147,142 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.settings",
         "description": "auto_bid_backend.auto_bid_backend.settings",
-        "peekOfCode": "CORS_ALLOW_ALL_ORIGINS = True",
+        "peekOfCode": "CORS_ALLOW_ALL_ORIGINS = True\nCORS_ALLOW_CREDENTIALS = True\nREST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',\n    ],\n}\nAUTHENTICATION_BACKENDS = [\n    'django.contrib.auth.backends.ModelBackend',\n    'allauth.account.auth_backends.AuthenticationBackend',",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_CREDENTIALS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "CORS_ALLOW_CREDENTIALS = True\nREST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',\n    ],\n}\nAUTHENTICATION_BACKENDS = [\n    'django.contrib.auth.backends.ModelBackend',\n    'allauth.account.auth_backends.AuthenticationBackend',\n]",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "REST_FRAMEWORK",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "REST_FRAMEWORK = {\n    'DEFAULT_AUTHENTICATION_CLASSES': [\n        'rest_framework.authentication.TokenAuthentication',\n    ],\n}\nAUTHENTICATION_BACKENDS = [\n    'django.contrib.auth.backends.ModelBackend',\n    'allauth.account.auth_backends.AuthenticationBackend',\n]\n# Provider specific settings",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTHENTICATION_BACKENDS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "AUTHENTICATION_BACKENDS = [\n    'django.contrib.auth.backends.ModelBackend',\n    'allauth.account.auth_backends.AuthenticationBackend',\n]\n# Provider specific settings\nSOCIALACCOUNT_PROVIDERS = {\n    'google': {\n        # For each OAuth based provider, either add a ``SocialApp``\n        # (``socialaccount`` app) containing the required client\n        # credentials, or list them here:",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SOCIALACCOUNT_PROVIDERS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "SOCIALACCOUNT_PROVIDERS = {\n    'google': {\n        # For each OAuth based provider, either add a ``SocialApp``\n        # (``socialaccount`` app) containing the required client\n        # credentials, or list them here:\n        'APP': {\n            'client_id': '123',\n            'secret': '456',\n            'key': ''\n        }",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SITE_ID",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "SITE_ID = 1\nACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ACCOUNT_EMAIL_REQUIRED",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ACCOUNT_EMAIL_REQUIRED = True\nACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ACCOUNT_USERNAME_REQUIRED",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ACCOUNT_USERNAME_REQUIRED = False\nACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ACCOUNT_AUTHENTICATION_METHOD",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ACCOUNT_AUTHENTICATION_METHOD = 'email'\nACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ACCOUNT_EMAIL_VERIFICATION",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "ACCOUNT_EMAIL_VERIFICATION = 'mandatory'\n# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\nEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_BACKEND",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_PORT",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_PORT = 587\nEMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST_USER",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')\nEMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST_PASSWORD",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')\nEMAIL_USE_TLS = True",
+        "detail": "auto_bid_backend.auto_bid_backend.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_USE_TLS",
+        "kind": 5,
+        "importPath": "auto_bid_backend.auto_bid_backend.settings",
+        "description": "auto_bid_backend.auto_bid_backend.settings",
+        "peekOfCode": "EMAIL_USE_TLS = True",
         "detail": "auto_bid_backend.auto_bid_backend.settings",
         "documentation": {}
     },
@@ -533,7 +1291,7 @@
         "kind": 5,
         "importPath": "auto_bid_backend.auto_bid_backend.urls",
         "description": "auto_bid_backend.auto_bid_backend.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/', include('resume_api.urls')),\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\nif settings.DEBUG:\n    urlpatterns += [\n        re_path(r'^public/(?P<path>.*)$', serve, {\n            'document_root': settings.PUBLIC_ROOT,\n        }),\n    ]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/', include('resume_api.urls')),\n    path('api/', include('job_query.urls')),\n    path('api/', include('support.urls')),\n    path('auth/', include('auth_app.urls')),\n    path('parse-resume/', include('resume_parser.urls')),\n    path('profile/', include('profile_management.urls')),\n] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\nif settings.DEBUG:",
         "detail": "auto_bid_backend.auto_bid_backend.urls",
         "documentation": {}
     },
@@ -549,10 +1307,226 @@
     {
         "label": "Migration",
         "kind": 6,
+        "importPath": "auto_bid_backend.job_query.migrations.0001_initial",
+        "description": "auto_bid_backend.job_query.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='JobQuery',\n            fields=[\n                ('id', models.AutoField(primary_key=True, serialize=False)),\n                ('url', models.TextField(default='')),",
+        "detail": "auto_bid_backend.job_query.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "JobQueryAdmin",
+        "kind": 6,
+        "importPath": "auto_bid_backend.job_query.admin",
+        "description": "auto_bid_backend.job_query.admin",
+        "peekOfCode": "class JobQueryAdmin(admin.ModelAdmin):\n    list_display = ('url', 'title_query', 'description_query')",
+        "detail": "auto_bid_backend.job_query.admin",
+        "documentation": {}
+    },
+    {
+        "label": "JobQueryConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.job_query.apps",
+        "description": "auto_bid_backend.job_query.apps",
+        "peekOfCode": "class JobQueryConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'job_query'",
+        "detail": "auto_bid_backend.job_query.apps",
+        "documentation": {}
+    },
+    {
+        "label": "JobQuery",
+        "kind": 6,
+        "importPath": "auto_bid_backend.job_query.models",
+        "description": "auto_bid_backend.job_query.models",
+        "peekOfCode": "class JobQuery(models.Model):\n    id = models.AutoField(primary_key=True)\n    url = models.TextField(default='')\n    title_query = models.TextField(default='')\n    description_query = models.TextField(default='')\n    def __str__(self):\n        return f\"JobQuery: {self.url}\"",
+        "detail": "auto_bid_backend.job_query.models",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.job_query.urls",
+        "description": "auto_bid_backend.job_query.urls",
+        "peekOfCode": "urlpatterns = [\n    path('job_queries/', views.job_query_list, name='job_query_list'),\n    path('job_queries/<str:url>/', views.job_query_detail, name='job_query_detail'),\n    path('job_queries/delete/<str:url>/', views.job_query_delete, name='job_query_delete'),\n]",
+        "detail": "auto_bid_backend.job_query.urls",
+        "documentation": {}
+    },
+    {
+        "label": "job_query_list",
+        "kind": 2,
+        "importPath": "auto_bid_backend.job_query.views",
+        "description": "auto_bid_backend.job_query.views",
+        "peekOfCode": "def job_query_list(request):\n    if request.method == 'GET':\n        job_queries = JobQuery.objects.all()\n        data = [{'url': query.url, 'title_query': query.title_query, 'description_query': query.description_query} for query in job_queries]\n        return JsonResponse(data, safe=False)\n    elif request.method == 'POST':\n        data = json.loads(request.body)\n        url = data.get('url', '')\n        title_query = data.get('title_query', '')\n        description_query = data.get('description_query', '')",
+        "detail": "auto_bid_backend.job_query.views",
+        "documentation": {}
+    },
+    {
+        "label": "job_query_detail",
+        "kind": 2,
+        "importPath": "auto_bid_backend.job_query.views",
+        "description": "auto_bid_backend.job_query.views",
+        "peekOfCode": "def job_query_detail(request, url):\n    try:\n        job_query = JobQuery.objects.get(url=url)\n        data = {'url': job_query.url, 'title_query': job_query.title_query, 'description_query': job_query.description_query}\n        return JsonResponse(data)\n    except JobQuery.DoesNotExist:\n        return JsonResponse({'message': 'JobQuery not found'}, status=404)\n@csrf_exempt\ndef job_query_delete(request, url):\n    try:",
+        "detail": "auto_bid_backend.job_query.views",
+        "documentation": {}
+    },
+    {
+        "label": "job_query_delete",
+        "kind": 2,
+        "importPath": "auto_bid_backend.job_query.views",
+        "description": "auto_bid_backend.job_query.views",
+        "peekOfCode": "def job_query_delete(request, url):\n    try:\n        job_query = JobQuery.objects.get(url=url)\n        job_query.delete()\n        return JsonResponse({'message': 'JobQuery deleted successfully'})\n    except JobQuery.DoesNotExist:\n        return JsonResponse({'message': 'JobQuery not found'}, status=404)",
+        "detail": "auto_bid_backend.job_query.views",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.migrations.0001_initial",
+        "description": "auto_bid_backend.profile_management.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Profile',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "auto_bid_backend.profile_management.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileManagementConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.apps",
+        "description": "auto_bid_backend.profile_management.apps",
+        "peekOfCode": "class ProfileManagementConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'profile_management'",
+        "detail": "auto_bid_backend.profile_management.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Profile",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.models",
+        "description": "auto_bid_backend.profile_management.models",
+        "peekOfCode": "class Profile(models.Model):\n    user = models.ForeignKey(User, related_name='profiles', on_delete=models.CASCADE)\n    name = models.CharField(max_length=255)\n    email = models.EmailField(max_length=255)\n    recent_role = models.CharField(max_length=255)\n    phone = models.CharField(max_length=255, blank=True)  # Assuming this can be optional as well\n    location = models.CharField(max_length=255, blank=True, null=True)  # Allow null and blank\n    summary = models.TextField(blank=True)  # Assuming this can be optional as well\n    skills = models.JSONField(default=list)  # Storing as a list in a JSON field, assumed optional\n    work_authorization = models.CharField(max_length=255, blank=True)  # Assuming this can be optional as well",
+        "detail": "auto_bid_backend.profile_management.models",
+        "documentation": {}
+    },
+    {
+        "label": "Education",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.models",
+        "description": "auto_bid_backend.profile_management.models",
+        "peekOfCode": "class Education(models.Model):\n    profile = models.ForeignKey(Profile, related_name='education', on_delete=models.CASCADE)\n    university = models.CharField(max_length=255)\n    education_level = models.CharField(max_length=255, blank=True)\n    graduation_year = models.CharField(max_length=255, blank=True)\n    major = models.CharField(max_length=255, blank=True)\nclass Experience(models.Model):\n    profile = models.ForeignKey(Profile, related_name='experience', on_delete=models.CASCADE)\n    job_title = models.CharField(max_length=255)\n    company = models.CharField(max_length=255, blank=True)",
+        "detail": "auto_bid_backend.profile_management.models",
+        "documentation": {}
+    },
+    {
+        "label": "Experience",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.models",
+        "description": "auto_bid_backend.profile_management.models",
+        "peekOfCode": "class Experience(models.Model):\n    profile = models.ForeignKey(Profile, related_name='experience', on_delete=models.CASCADE)\n    job_title = models.CharField(max_length=255)\n    company = models.CharField(max_length=255, blank=True)\n    location = models.CharField(max_length=255, blank=True)\n    duration = models.CharField(max_length=255, blank=True)\n    description = models.TextField()",
+        "detail": "auto_bid_backend.profile_management.models",
+        "documentation": {}
+    },
+    {
+        "label": "EducationSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.serializers",
+        "description": "auto_bid_backend.profile_management.serializers",
+        "peekOfCode": "class EducationSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Education\n        fields = '__all__'\n        extra_kwargs = {'profile': {'required': False, 'allow_null': True}}\nclass ExperienceSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Experience\n        fields = '__all__'\n        extra_kwargs = {'profile': {'required': False, 'allow_null': True}}",
+        "detail": "auto_bid_backend.profile_management.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "ExperienceSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.serializers",
+        "description": "auto_bid_backend.profile_management.serializers",
+        "peekOfCode": "class ExperienceSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Experience\n        fields = '__all__'\n        extra_kwargs = {'profile': {'required': False, 'allow_null': True}}\nclass ProfileSerializer(serializers.ModelSerializer):\n    education = EducationSerializer(many=True)\n    experience = ExperienceSerializer(many=True)\n    class Meta:\n        model = Profile",
+        "detail": "auto_bid_backend.profile_management.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.serializers",
+        "description": "auto_bid_backend.profile_management.serializers",
+        "peekOfCode": "class ProfileSerializer(serializers.ModelSerializer):\n    education = EducationSerializer(many=True)\n    experience = ExperienceSerializer(many=True)\n    class Meta:\n        model = Profile\n        fields = '__all__'\n        read_only_fields = ('user',)\n        extra_kwargs = {\n            # Specify optional fields here\n            'phone': {'required': False, 'allow_null': True},",
+        "detail": "auto_bid_backend.profile_management.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.profile_management.urls",
+        "description": "auto_bid_backend.profile_management.urls",
+        "peekOfCode": "urlpatterns = [\n    path('create/', ProfileCreateAPIView.as_view(), name='create-profile'),\n    path('update/<int:id>/', ProfileUpdateAPIView.as_view(), name='update-profile'),\n    path('delete/<int:id>/', ProfileDeleteAPIView.as_view(), name='delete-profile'),\n    path('get-list/', UserProfileListView.as_view(), name=\"user-profiles-list\")\n]",
+        "detail": "auto_bid_backend.profile_management.urls",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileCreateAPIView",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.views",
+        "description": "auto_bid_backend.profile_management.views",
+        "peekOfCode": "class ProfileCreateAPIView(APIView):\n    permission_classes = [IsAuthenticated]\n    def post(self, request, *args, **kwargs):\n        serializer = ProfileSerializer(data=request.data)\n        if serializer.is_valid():\n            serializer.save(user=request.user)\n            return Response(serializer.data, status=status.HTTP_201_CREATED)\n        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)\nclass ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):\n    queryset = Profile.objects.all()",
+        "detail": "auto_bid_backend.profile_management.views",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileUpdateAPIView",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.views",
+        "description": "auto_bid_backend.profile_management.views",
+        "peekOfCode": "class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):\n    queryset = Profile.objects.all()\n    serializer_class = ProfileSerializer\n    permission_classes = [IsAuthenticated]\n    lookup_field = 'id'\n    def perform_update(self, serializer):\n        serializer.save(user=self.request.user)\nclass ProfileDeleteAPIView(generics.DestroyAPIView):\n    queryset = Profile.objects.all()\n    serializer_class = ProfileSerializer",
+        "detail": "auto_bid_backend.profile_management.views",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileDeleteAPIView",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.views",
+        "description": "auto_bid_backend.profile_management.views",
+        "peekOfCode": "class ProfileDeleteAPIView(generics.DestroyAPIView):\n    queryset = Profile.objects.all()\n    serializer_class = ProfileSerializer\n    permission_classes = [IsAuthenticated]\n    lookup_field = 'id'\n    def perform_destroy(self, instance):\n        # Optional: Add any custom delete logic here\n        instance.delete()\nclass UserProfileListView(generics.ListAPIView):\n    serializer_class = ProfileSerializer",
+        "detail": "auto_bid_backend.profile_management.views",
+        "documentation": {}
+    },
+    {
+        "label": "UserProfileListView",
+        "kind": 6,
+        "importPath": "auto_bid_backend.profile_management.views",
+        "description": "auto_bid_backend.profile_management.views",
+        "peekOfCode": "class UserProfileListView(generics.ListAPIView):\n    serializer_class = ProfileSerializer\n    permission_classes = [IsAuthenticated]\n    def get_queryset(self):\n        \"\"\"\n        This view should return a list of all profiles\n        for the currently authenticated user.\n        \"\"\"\n        user = self.request.user\n        return Profile.objects.filter(user=user)",
+        "detail": "auto_bid_backend.profile_management.views",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
         "importPath": "auto_bid_backend.resume_api.migrations.0001_initial",
         "description": "auto_bid_backend.resume_api.migrations.0001_initial",
         "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='JobDescription',\n            fields=[\n                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),\n                ('job_url', models.TextField()),",
         "detail": "auto_bid_backend.resume_api.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.migrations.0002_resume_user_id",
+        "description": "auto_bid_backend.resume_api.migrations.0002_resume_user_id",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('resume_api', '0001_initial'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.AddField(\n            model_name='resume',\n            name='user_id',\n            field=models.ForeignKey(default=User.objects.first().id, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),",
+        "detail": "auto_bid_backend.resume_api.migrations.0002_resume_user_id",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.migrations.0003_rename_user_id_resume_user",
+        "description": "auto_bid_backend.resume_api.migrations.0003_rename_user_id_resume_user",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('resume_api', '0002_resume_user_id'),\n    ]\n    operations = [\n        migrations.RenameField(\n            model_name='resume',\n            old_name='user_id',\n            new_name='user',\n        ),",
+        "detail": "auto_bid_backend.resume_api.migrations.0003_rename_user_id_resume_user",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_api.migrations.0004_alter_resume_user",
+        "description": "auto_bid_backend.resume_api.migrations.0004_alter_resume_user",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('resume_api', '0003_rename_user_id_resume_user'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='resume',\n            name='user',\n            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),",
+        "detail": "auto_bid_backend.resume_api.migrations.0004_alter_resume_user",
         "documentation": {}
     },
     {
@@ -569,7 +1543,7 @@
         "kind": 6,
         "importPath": "auto_bid_backend.resume_api.models",
         "description": "auto_bid_backend.resume_api.models",
-        "peekOfCode": "class Resume(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)\n    personal_information = models.JSONField()\n    profile = models.JSONField()\n    experience = models.JSONField()\n    skills = models.JSONField()\n    hide_text = models.TextField()\n    def __str__(self):\n        return self.personal_information.get(\"name\", \"No Name\")\nclass JobDescription(models.Model):",
+        "peekOfCode": "class Resume(models.Model):\n    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)\n    user = models.ForeignKey(User, default='', on_delete=models.CASCADE)\n    personal_information = models.JSONField()\n    profile = models.JSONField()\n    experience = models.JSONField()\n    skills = models.JSONField()\n    hide_text = models.TextField()\n    def __str__(self):\n        return self.personal_information.get(\"name\", \"No Name\")",
         "detail": "auto_bid_backend.resume_api.models",
         "documentation": {}
     },
@@ -587,7 +1561,7 @@
         "kind": 6,
         "importPath": "auto_bid_backend.resume_api.serializers",
         "description": "auto_bid_backend.resume_api.serializers",
-        "peekOfCode": "class ResumeSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Resume\n        fields = '__all__'\nclass JobDescriptionSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = JobDescription\n        fields = '__all__'",
+        "peekOfCode": "class ResumeSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Resume\n        fields = ['id', 'user_id', 'personal_information', 'profile', 'experience', 'skills', 'hide_text']\nclass JobDescriptionSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = JobDescription\n        fields = '__all__'",
         "detail": "auto_bid_backend.resume_api.serializers",
         "documentation": {}
     },
@@ -605,8 +1579,53 @@
         "kind": 5,
         "importPath": "auto_bid_backend.resume_api.urls",
         "description": "auto_bid_backend.resume_api.urls",
-        "peekOfCode": "urlpatterns = [\n    path('generate-resume/', views.generate_resume, name='generate-resume'),\n    path('resumes/', views.resumes, name='resumes'),\n    path('resumes/<uuid:resume_id>/', views.resume_detail, name='resume-detail'),\n    path('delete-resumes/', views.delete_resumes, name='delete-resumes'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('resumes/', views.resumes, name='resumes'),\n    path('resumes/generate-resume/', views.generate_resume, name='generate-resume'),\n    path('resumes/<uuid:resume_id>/', views.resume_detail, name='resume-detail'),\n    path('resumes/user/<int:user_id>/', views.resumes_by_user, name='resumes-by-user'),\n    path('resumes/delete-resumes/', views.delete_resumes, name='delete-resumes'),\n    path('resumes/cal_matching_scores/', views.cal_matching_scores, name='cal_matching_scores'),\n]",
         "detail": "auto_bid_backend.resume_api.urls",
+        "documentation": {}
+    },
+    {
+        "label": "get_embeddings",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def get_embeddings(texts):\n    # Generate embeddings for a batch of texts\n    # The encode method supports b atches directly.\n    embeddings = model.encode(texts)\n    return embeddings\ndef calculate_batch_similarity(embeddings1, embeddings2):\n    # Cosine similarity for batches\n    # This calculates the similarity between each pair of embeddings\n    similarities = cosine_similarity(embeddings1, embeddings2)\n    return similarities",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_batch_similarity",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def calculate_batch_similarity(embeddings1, embeddings2):\n    # Cosine similarity for batches\n    # This calculates the similarity between each pair of embeddings\n    similarities = cosine_similarity(embeddings1, embeddings2)\n    return similarities\ndef calculate_similarity(embedding1, embedding2):\n    # Cosine similarity\n    similarity = cosine_similarity([embedding1], [embedding2])\n    return similarity[0][0]\ndef get_matching_scores(resumes, job_descriptions):",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_similarity",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def calculate_similarity(embedding1, embedding2):\n    # Cosine similarity\n    similarity = cosine_similarity([embedding1], [embedding2])\n    return similarity[0][0]\ndef get_matching_scores(resumes, job_descriptions):\n    # Ensure that resumes and job_descriptions are lists of texts\n    assert len(resumes) == len(job_descriptions), \"Each resume must correspond to one job description.\"\n    # Generate embeddings for batches\n    resume_embeddings = get_embeddings(resumes)\n    job_description_embeddings = get_embeddings(job_descriptions)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_matching_scores",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def get_matching_scores(resumes, job_descriptions):\n    # Ensure that resumes and job_descriptions are lists of texts\n    assert len(resumes) == len(job_descriptions), \"Each resume must correspond to one job description.\"\n    # Generate embeddings for batches\n    resume_embeddings = get_embeddings(resumes)\n    job_description_embeddings = get_embeddings(job_descriptions)\n    # Calculate similarity for each pair\n    scores = calculate_batch_similarity(resume_embeddings, job_description_embeddings)\n    # Since we're calculating one-to-one matches, we return the diagonal of the similarity matrix\n    # which represents the similarity scores between corresponding resumes and job descriptions.",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_matching_score",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def get_matching_score(resume, job_description):\n    # Generate embeddings\n    resume_embedding = get_embeddings(resume)\n    job_description_embedding = get_embeddings(job_description)\n    # Calculate similarity\n    score = calculate_similarity(resume_embedding, job_description_embedding)\n    return score\n@api_view(['POST'])\ndef generate_resume(request):\n    job_description_text = request.data.get('job_description')",
+        "detail": "auto_bid_backend.resume_api.views",
         "documentation": {}
     },
     {
@@ -677,7 +1696,7 @@
         "kind": 2,
         "importPath": "auto_bid_backend.resume_api.views",
         "description": "auto_bid_backend.resume_api.views",
-        "peekOfCode": "def generate_resume_data(title, job_description, origin_resume):\n    client = OpenAI(api_key=settings.OPENAI_API_KEY)\n    prompt = (f\"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name \"\n              f\"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score.\"\n              f\"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%.\"\n              f\"Only provide JSON code. Don't mention explain.\"\n              )\n    chat_completion = client.chat.completions.create(\n        messages=[\n            {\"role\": \"user\", \"content\": prompt}",
+        "peekOfCode": "def generate_resume_data(title, job_description, origin_resume):\n    client = OpenAI(api_key=settings.OPENAI_API_KEY)\n    prompt = (f\"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name \"\n              f\"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score.\"\n              f\"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%.\"\n              )\n    chat_completion = client.chat.completions.create(\n        messages=[\n            {\"role\": \"user\", \"content\": prompt}\n        ],",
         "detail": "auto_bid_backend.resume_api.views",
         "documentation": {}
     },
@@ -754,6 +1773,15 @@
         "documentation": {}
     },
     {
+        "label": "resumes_by_user",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def resumes_by_user(request, user_id):\n    if request.method == 'GET':\n        resumes = Resume.objects.filter(user_id=user_id)\n        serializer = ResumeSerializer(resumes, many=True)\n        return Response(serializer.data, status=status.HTTP_200_OK)\n@api_view(['GET', 'PUT', 'DELETE'])\ndef resume_detail(request, resume_id):\n    resume = get_object_or_404(Resume, id=resume_id)\n    if request.method == 'GET':\n        resume_data = {",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
         "label": "resume_detail",
         "kind": 2,
         "importPath": "auto_bid_backend.resume_api.views",
@@ -769,6 +1797,141 @@
         "description": "auto_bid_backend.resume_api.views",
         "peekOfCode": "def delete_resumes(request):\n    resume_ids = request.data.get('ids', [])\n    if not resume_ids:\n        return Response({'error': 'No resume IDs provided.'}, status=status.HTTP_400_BAD_REQUEST)\n    try:\n        # Filter resumes by the provided IDs and delete them\n        Resume.objects.filter(id__in=resume_ids).delete()\n        return Response({'message': 'Resumes deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)\n    except Exception as e:\n        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)",
         "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "cal_matching_scores",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "def cal_matching_scores(request):\n    if request.method == 'POST':\n        try:\n            user_id = request.data.get('user_id', '')\n            description = request.data.get('description', '')\n            resumes = Resume.objects.filter(user_id=user_id)\n            serializer = ResumeSerializer(resumes, many=True)\n            resumesText = []\n            descriptions = []\n            for resume in serializer.data:",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "model",
+        "kind": 5,
+        "importPath": "auto_bid_backend.resume_api.views",
+        "description": "auto_bid_backend.resume_api.views",
+        "peekOfCode": "model = SentenceTransformer('all-MiniLM-L6-v2')\ndef get_embeddings(texts):\n    # Generate embeddings for a batch of texts\n    # The encode method supports b atches directly.\n    embeddings = model.encode(texts)\n    return embeddings\ndef calculate_batch_similarity(embeddings1, embeddings2):\n    # Cosine similarity for batches\n    # This calculates the similarity between each pair of embeddings\n    similarities = cosine_similarity(embeddings1, embeddings2)",
+        "detail": "auto_bid_backend.resume_api.views",
+        "documentation": {}
+    },
+    {
+        "label": "ResumeParserConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_parser.apps",
+        "description": "auto_bid_backend.resume_parser.apps",
+        "peekOfCode": "class ResumeParserConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'resume_parser'",
+        "detail": "auto_bid_backend.resume_parser.apps",
+        "documentation": {}
+    },
+    {
+        "label": "ResumeParser",
+        "kind": 6,
+        "importPath": "auto_bid_backend.resume_parser.resume_parser",
+        "description": "auto_bid_backend.resume_parser.resume_parser",
+        "peekOfCode": "class ResumeParser():\n    def __init__(self, OPENAI_API_KEY):\n        # set GPT-3 API key from the environment vairable\n        self.client = OpenAI(api_key=OPENAI_API_KEY)\n        # GPT-3 completion questions\n        self.prompt_questions = \\\n\"\"\"Summarize the text below into a JSON with exactly the following structure \\\n    {name, recent_role, email, phone, location, summary, skills: [], education: [{university, education_level, major, graduation_year,}]\\\n    experience: [{job_title, company, location, duration, description}], linkedin, github, website, language }\n\"\"\"",
+        "detail": "auto_bid_backend.resume_parser.resume_parser",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.resume_parser.urls",
+        "description": "auto_bid_backend.resume_parser.urls",
+        "peekOfCode": "urlpatterns = [\n    path('', parse_resume, name='parse-resume'),\n]",
+        "detail": "auto_bid_backend.resume_parser.urls",
+        "documentation": {}
+    },
+    {
+        "label": "parse_resume",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_parser.views",
+        "description": "auto_bid_backend.resume_parser.views",
+        "peekOfCode": "def parse_resume(request):\n    if request.method == 'POST':\n        if 'file' not in request.FILES:\n            return JsonResponse({'error': 'No file part'}, status=400)\n        file = request.FILES['file']\n        if file.name == '':\n            return JsonResponse({'error': 'No selected file'}, status=400)\n        if file and is_allowed_file(file.name):\n            file_path = default_storage.save(os.path.join('uploaded-resumes', file.name), file)\n            file_path = default_storage.path(file_path)",
+        "detail": "auto_bid_backend.resume_parser.views",
+        "documentation": {}
+    },
+    {
+        "label": "is_allowed_file",
+        "kind": 2,
+        "importPath": "auto_bid_backend.resume_parser.views",
+        "description": "auto_bid_backend.resume_parser.views",
+        "peekOfCode": "def is_allowed_file(filename):\n    ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc'}\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS",
+        "detail": "auto_bid_backend.resume_parser.views",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.support.migrations.0001_initial",
+        "description": "auto_bid_backend.support.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Support',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "auto_bid_backend.support.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "auto_bid_backend.support.migrations.0002_remove_support_user",
+        "description": "auto_bid_backend.support.migrations.0002_remove_support_user",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('support', '0001_initial'),\n    ]\n    operations = [\n        migrations.RemoveField(\n            model_name='support',\n            name='user',\n        ),\n    ]",
+        "detail": "auto_bid_backend.support.migrations.0002_remove_support_user",
+        "documentation": {}
+    },
+    {
+        "label": "SupportConfig",
+        "kind": 6,
+        "importPath": "auto_bid_backend.support.apps",
+        "description": "auto_bid_backend.support.apps",
+        "peekOfCode": "class SupportConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'support'",
+        "detail": "auto_bid_backend.support.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Support",
+        "kind": 6,
+        "importPath": "auto_bid_backend.support.models",
+        "description": "auto_bid_backend.support.models",
+        "peekOfCode": "class Support(models.Model):\n    url = models.CharField(max_length=255)\n    content = models.TextField()\n    created_at = models.DateTimeField(auto_now_add=True)\n    def __str__(self):\n        return f\"Support request by {self.url}\"",
+        "detail": "auto_bid_backend.support.models",
+        "documentation": {}
+    },
+    {
+        "label": "SupportSerializer",
+        "kind": 6,
+        "importPath": "auto_bid_backend.support.serializers",
+        "description": "auto_bid_backend.support.serializers",
+        "peekOfCode": "class SupportSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Support\n        fields = '__all__'",
+        "detail": "auto_bid_backend.support.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "auto_bid_backend.support.urls",
+        "description": "auto_bid_backend.support.urls",
+        "peekOfCode": "urlpatterns = [\n    path('supports/', views.support_list),\n    path('supports/<int:pk>/', views.support_detail),\n]",
+        "detail": "auto_bid_backend.support.urls",
+        "documentation": {}
+    },
+    {
+        "label": "support_list",
+        "kind": 2,
+        "importPath": "auto_bid_backend.support.views",
+        "description": "auto_bid_backend.support.views",
+        "peekOfCode": "def support_list(request):\n    if request.method == 'POST':\n        serializer = SupportSerializer(data=request.data)\n        if serializer.is_valid():\n            support = Support.objects.get(url=request.data.url);\n            # if support:\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)\n        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)\n    elif request.method == 'GET':",
+        "detail": "auto_bid_backend.support.views",
+        "documentation": {}
+    },
+    {
+        "label": "support_detail",
+        "kind": 2,
+        "importPath": "auto_bid_backend.support.views",
+        "description": "auto_bid_backend.support.views",
+        "peekOfCode": "def support_detail(request, pk):\n    try:\n        support = Support.objects.get(pk=pk)\n    except Support.DoesNotExist:\n        return Response(status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':\n        serializer = SupportSerializer(support)\n        return Response(serializer.data)\n    elif request.method == 'DELETE':\n        support.delete()",
+        "detail": "auto_bid_backend.support.views",
         "documentation": {}
     },
     {
