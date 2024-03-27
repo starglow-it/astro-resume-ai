@@ -3,3 +3,5 @@
 __pycache__
 output
 /auto_bid_backend/db.sqlite3
+.vscode/*
+.vscode/PythonImportHelper-v2-Completion.json
