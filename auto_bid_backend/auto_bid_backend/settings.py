@@ -108,11 +108,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'astro-ai',                      # Your database name
-        'USER': 'postgres',                    # Your database user
-        'PASSWORD': '123123',                     # Your database password
-        'HOST': 'localhost',                        # Your database host
-        'PORT': '5432',                                 # Your database port (leave blank for default)
+        'NAME': os.getenv('DB_NAME'),                      # Your database name
+        'USER': os.getenv('DB_USER'),                    # Your database user
+        'PASSWORD': os.getenv('DB_PASSWORD'),                     # Your database password
+        'HOST': os.getenv('DB_HOST'),                        # Your database host
+        'PORT': os.getenv('DB_PORT'),                                 # Your database port (leave blank for default)
     }
 }
 
@@ -200,6 +200,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'john1007.starglowventures@gmail.com'
-EMAIL_HOST_PASSWORD = 'sjmy ofol zqiu tbzt'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
