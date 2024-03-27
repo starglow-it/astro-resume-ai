@@ -125,11 +125,8 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
                     id='add-profile-upload-resume'
                   />
                 </ButtonStyled>
-                <ResetButtonStyled color='error' variant='outlined' onClick={() => { }}>
-                  Reset
-                </ResetButtonStyled>
                 {isLoading ? <LinearProgress sx={{ marginTop: 5 }} /> : <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  {fileName ? <>{fileName} <br /> {"Uploaded at " + uploadTime}</> : "Allowed PDF, DOCX or DOC."}
+                  {fileName ? <>{fileName} <br /> {"Uploaded at " + uploadTime}</> : "Allowed PDF, DOCX, DOC or TXT."}
                 </Typography>}
               </Box>
             </Box>

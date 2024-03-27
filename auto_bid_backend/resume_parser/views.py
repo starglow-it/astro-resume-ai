@@ -18,9 +18,6 @@ def parse_resume(request):
             file_path = default_storage.save(os.path.join('uploaded-resumes', file.name), file)
             file_path = default_storage.path(file_path)
             
-            format = request.POST.get('format', 'json')  # Default format is json
-            output_folder = request.POST.get('output_folder', 'uploaded-resumes')
-            
             parser = ResumeParser(os.getenv('OPEN_API_KEY'))
             
             try:
@@ -32,5 +29,5 @@ def parse_resume(request):
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def is_allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc'}
+    ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc', 'txt'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
