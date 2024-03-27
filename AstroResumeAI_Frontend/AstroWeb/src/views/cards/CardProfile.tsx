@@ -13,7 +13,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import StarOutline from 'mdi-material-ui/StarOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import { ProfileData } from 'src/types/ProfileData'
+import { FetchedProfileData, ProfileData } from 'src/types/ProfileData'
 
 // Styled Box component
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -23,10 +23,12 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 interface CardProfileProps {
-  profile: ProfileData
+  profile: FetchedProfileData,
+  editProfile: (index: string) => void,
+  deleteProfile: (index: string) => void,
 }
 
-const CardProfile: React.FC<CardProfileProps> = ({profile}) => {
+const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deleteProfile}) => {
   return (
     <Card>
       <Grid container spacing={6}>
@@ -92,8 +94,8 @@ const CardProfile: React.FC<CardProfileProps> = ({profile}) => {
                 <span>{profile.summary}</span>
               </Typography>
               <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <Button variant='outlined' size='small'>Edit</Button>
-                <Button variant='contained' size='small'>Delete</Button>
+                <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)}>Edit</Button>
+                <Button variant='contained' size='small' onClick={() => deleteProfile(profile.id)}>Delete</Button>
               </Box>
             </Box>
           </CardContent>

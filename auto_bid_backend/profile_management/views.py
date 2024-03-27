@@ -15,6 +15,25 @@ class ProfileCreateAPIView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+class ProfileDeleteAPIView(generics.DestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
+
+    def perform_destroy(self, instance):
+        # Optional: Add any custom delete logic here
+        instance.delete()
 
 class UserProfileListView(generics.ListAPIView):
     serializer_class = ProfileSerializer

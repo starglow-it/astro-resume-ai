@@ -8,11 +8,12 @@ import { useAuth } from 'src/@core/context/authContext'
 
 // ** Demo Components Imports
 import CardProfile from 'src/views/cards/CardProfile'
+import { FetchedProfileData } from 'src/types/ProfileData'
 
-const CardBasic = () => {
+const MyProfiles = () => {
   const { token } = useAuth();
 
-  const [profileList, setProfileList] = useState([])
+  const [profileList, setProfileList] = useState<FetchedProfileData[]>([])
 
   useEffect(() => {
     const fetchProfileList = async (token: string|null) => {
@@ -33,15 +34,31 @@ const CardBasic = () => {
 
   }, [])
 
+  const editProfile = (profileId: string) => {
+    try {
+      
+    } catch (error) {
+
+    }
+  }
+
+  const deleteProfile = (profileId: string) => {
+    try {
+      
+    } catch (error) {
+
+    }
+  }
+
   return (
     <Grid container spacing={6}>
-      {profileList.map(profile => (
+      {profileList.map((profile) => (
         <Grid item xs={12}>
-          <CardProfile profile={profile} />
+          <CardProfile profile={profile} editProfile={editProfile} deleteProfile={deleteProfile} />
         </Grid>
       ))}
     </Grid>
   )
 }
 
-export default CardBasic
+export default MyProfiles
