@@ -1,46 +1,25 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent, SyntheticEvent } from 'react'
+import { useState, ElementType, ChangeEvent } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
-import Alert from '@mui/material/Alert'
-import Select from '@mui/material/Select'
 import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import AlertTitle from '@mui/material/AlertTitle'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
 import Button, { ButtonProps } from '@mui/material/Button'
 import LinearProgress from '@mui/material/LinearProgress'
 
 //  ** Axios Import
 import axios from 'axios'
 
-// ** Icons Imports
-import Close from 'mdi-material-ui/Close'
+// Context API
+import { useProfileData } from 'src/@core/context/profileDataContext'
 
-
-interface ProfileData {
-  name: string,
-  email: string,
-  phone: string,
-  location: string,
-  skills: string[]
-}
-
-const initialProfileData: ProfileData = {
-  name: '',
-  email: '',
-  phone: '',
-  location: '',
-  skills: []
-};
+// Import types
+import { ProfileData } from 'src/types/ProfileData'
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 80,
@@ -66,17 +45,20 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
+interface TabBasicProfileProps {
+  handleSetTab: (tab: string) => void;
+}
 
-const TabBasicProfile = () => {
+const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
   // ** State
-  const [file, setFile] = useState<File | null>(null);
   const [openAlert, setOpenAlert] = useState<boolean>(true)
   const [fileName, setFileName] = useState<string>("")
   const [uploadTime, setUploadTime] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [profileData, setProfileData] = useState<ProfileData>(initialProfileData)
 
-  const onChange = async (file: ChangeEvent) => {
+  const {profileData, setProfileData} = useProfileData();
+
+  const onFileChange = async (file: ChangeEvent) => {
     const reader = new FileReader()
     const { files } = file.target as HTMLInputElement
     if (files && files.length !== 0) {
@@ -87,7 +69,7 @@ const TabBasicProfile = () => {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await axios.post('http://localhost:5000/parse-resume', formData, {
+        const response = await axios.post('http://localhost:8000/parse-resume/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -106,6 +88,25 @@ const TabBasicProfile = () => {
     }
   }
 
+  const handleChange = (prop: string) => (event: React.ChangeEvent<HTMLInputElement>)=> {
+    setProfileData({
+      ...profileData,
+      [prop]: event.target.value
+    })
+  }
+
+  const handleReset = () => {
+    setProfileData({
+      ...profileData,
+      name: '',
+      email: '',
+      recent_role: '',
+      location: '',
+      phone: '',
+      summary: ''
+    })
+  }
+
   return (
     <CardContent>
       <form>
@@ -119,7 +120,7 @@ const TabBasicProfile = () => {
                   <input
                     hidden
                     type='file'
-                    onChange={onChange}
+                    onChange={onFileChange}
                     accept='application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword'
                     id='add-profile-upload-resume'
                   />
@@ -135,7 +136,17 @@ const TabBasicProfile = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Name' placeholder='John Doe' value={profileData.name} />
+            <TextField fullWidth label='Name' placeholder='John Doe' value={profileData.name} onChange = {handleChange('name')} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl>
+              <FormLabel sx={{ fontSize: '0.875rem' }}>Gender</FormLabel>
+              <RadioGroup row defaultValue='male' aria-label='gender' name='account-settings-info-radio'>
+                <FormControlLabel value='male' label='Male' control={<Radio />} />
+                <FormControlLabel value='female' label='Female' control={<Radio />} />
+                <FormControlLabel value='other' label='Other' control={<Radio />} />
+              </RadioGroup>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -144,6 +155,16 @@ const TabBasicProfile = () => {
               label='Email'
               placeholder='johnDoe@example.com'
               value={profileData.email}
+              onChange = {handleChange('email')}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label='Recent Role'
+              placeholder='Senior Full Stack Developer'
+              value={profileData.recent_role}
+              onChange = {handleChange('recent_role')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -153,6 +174,7 @@ const TabBasicProfile = () => {
               label='Location'
               placeholder='New York, NY'
               value={profileData.location}
+              onChange = {handleChange('location')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -162,23 +184,23 @@ const TabBasicProfile = () => {
               label='Phone'
               placeholder='+1 234 567 8900'
               value={profileData.phone}
+              onChange = {handleChange('phone')}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select label='Status' defaultValue='active'>
-                <MenuItem value='active'>Active</MenuItem>
-                <MenuItem value='inactive'>Inactive</MenuItem>
-                <MenuItem value='pending'>Pending</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Company' placeholder='ABC Pvt. Ltd.' defaultValue='ABC Pvt. Ltd.' />
+          
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              type='text'
+              label='Summary'
+              value={profileData.summary}
+              onChange = {handleChange('summary')}
+            />
           </Grid>
 
-          {openAlert ? (
+          {/* {openAlert ? (
             <Grid item xs={12} sx={{ mb: 3 }}>
               <Alert
                 severity='warning'
@@ -195,13 +217,13 @@ const TabBasicProfile = () => {
                 </Link>
               </Alert>
             </Grid>
-          ) : null}
+          ) : null} */}
 
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('work_experience')}>
+              Next
             </Button>
-            <Button type='reset' variant='outlined' color='secondary'>
+            <Button type='reset' variant='outlined' color='secondary' onClick={handleReset}>
               Reset
             </Button>
           </Grid>

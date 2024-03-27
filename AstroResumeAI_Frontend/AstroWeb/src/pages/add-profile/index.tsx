@@ -12,16 +12,18 @@ import MuiTab, { TabProps } from '@mui/material/Tab'
 
 // ** Icons Imports
 import AccountOutline from 'mdi-material-ui/AccountOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 import InformationOutline from 'mdi-material-ui/InformationOutline'
+import WorkIcon from '@mui/icons-material/Work';
+import SchoolIcon from '@mui/icons-material/School';
 
 // ** Demo Tabs Imports
 import TabInfo from 'src/views/add-profile/TabInfo'
 import TabBasicProfile from 'src/views/add-profile/TabBasicProfile'
-import TabSecurity from 'src/views/add-profile/TabSecurity'
+import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
+import TabEducation from 'src/views/add-profile/TabEducation'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -49,6 +51,10 @@ const AddProfile = () => {
     setValue(newValue)
   }
 
+  const handleSetTab = (tab: string): void => {
+    setValue(tab)
+  }
+
   return (
     <Card>
       <TabContext value={value}>
@@ -67,11 +73,20 @@ const AddProfile = () => {
             }
           />
           <Tab
-            value='security'
+            value='work_experience'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <LockOpenOutline />
-                <TabName>Security</TabName>
+                <WorkIcon />
+                <TabName>Work Experience</TabName>
+              </Box>
+            }
+          />
+          <Tab
+            value='education'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <SchoolIcon />
+                <TabName>Education</TabName>
               </Box>
             }
           />
@@ -80,21 +95,26 @@ const AddProfile = () => {
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <InformationOutline />
-                <TabName>Info</TabName>
+                <TabName>Links & Save</TabName>
               </Box>
             }
           />
+          
         </TabList>
 
         <TabPanel sx={{ p: 0 }} value='basic_profile'>
-          <TabBasicProfile />
+          <TabBasicProfile handleSetTab={handleSetTab} />
         </TabPanel>
-        <TabPanel sx={{ p: 0 }} value='security'>
-          <TabSecurity />
+        <TabPanel sx={{ p: 0 }} value='work_experience'>
+          <TabWorkExperience handleSetTab={handleSetTab}  />
+        </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='education'>
+          <TabEducation handleSetTab={handleSetTab} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='info'>
           <TabInfo />
         </TabPanel>
+        
       </TabContext>
     </Card>
   )
