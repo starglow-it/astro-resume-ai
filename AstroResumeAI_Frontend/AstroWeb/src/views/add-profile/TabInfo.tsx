@@ -9,10 +9,12 @@ import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import { useProfileData } from 'src/@core/context/profileDataContext'
 import { useAuth } from 'src/@core/context/authContext'
-import { CircularProgress } from '@mui/material'
+import { Alert, AlertTitle, CircularProgress, IconButton } from '@mui/material'
+import { Close } from 'mdi-material-ui'
 
 const TabInfo = () => {
   // ** State
+  const [openAlert, setOpenAlert] = useState<boolean>(false)
   const {profileData, setProfileData} = useProfileData();
   const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -37,13 +39,13 @@ const TabInfo = () => {
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      console.log(profileData)
       const response = await Axios.post('http://localhost:8000/profile/create/', profileData, {
         headers: {
           Authorization: 'Token ' + token
         }
       })
       
+      setOpenAlert(true)
       setLoading(false)
     } catch (error) {
       console.log(error)
@@ -79,6 +81,21 @@ const TabInfo = () => {
               Reset
             </Button>
           </Grid>
+          {openAlert ? (
+            <Grid item xs={12} sx={{ mb: 3 }}>
+              <Alert
+                severity='success'
+                sx={{ '& a': { fontWeight: 400 } }}
+                action={
+                  <IconButton size='small' color='inherit' aria-label='close' onClick={() => setOpenAlert(false)}>
+                    <Close fontSize='inherit' />
+                  </IconButton>
+                }
+              >
+                <AlertTitle>Your profile has been successfully saved.</AlertTitle>
+              </Alert>
+            </Grid>
+          ) : null}
         </Grid>
       </form>
     </CardContent>

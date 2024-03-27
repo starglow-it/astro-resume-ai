@@ -13,6 +13,7 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import StarOutline from 'mdi-material-ui/StarOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
+import { ProfileData } from 'src/types/ProfileData'
 
 // Styled Box component
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -21,20 +22,21 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const CardMembership = () => {
+interface CardProfileProps {
+  profile: ProfileData
+}
+
+const CardProfile: React.FC<CardProfileProps> = ({profile}) => {
   return (
     <Card>
       <Grid container spacing={6}>
         <Grid item xs={12} sm={7}>
           <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5.75, 6.25)} !important` }}>
             <Typography variant='h6' sx={{ marginBottom: 3.5 }}>
-              Lifetime Membership
+              {profile.name}
             </Typography>
             <Typography variant='body2'>
-              Here, I focus on a range of items and features that we use in life without giving them a second thought
-              such as Coca Cola, body muscles and holding ones own breath. Though, most of these notes are not
-              fundamentally necessary, they are such that you can use them for a good laugh, at a drinks party or for
-              picking up women or men.
+              {profile.summary}
             </Typography>
             <Divider sx={{ marginTop: 6.5, marginBottom: 6.75 }} />
             <Grid container spacing={4}>
@@ -42,22 +44,22 @@ const CardMembership = () => {
                 <StyledBox>
                   <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
                     <LockOpenOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                    <Typography variant='body2'>Full Access</Typography>
+                    <Typography variant='body2'>{profile.email}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <AccountOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                    <Typography variant='body2'>15 Members</Typography>
+                    <Typography variant='body2'>{profile.recent_role}</Typography>
                   </Box>
                 </StyledBox>
               </Grid>
               <Grid item xs={12} sm={7}>
                 <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
                   <StarOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                  <Typography variant='body2'>Access all Features</Typography>
+                  <Typography variant='body2'>{profile.location}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <TrendingUp sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
-                  <Typography variant='body2'>Lifetime Free Update</Typography>
+                  <Typography variant='body2'>{profile.phone}</Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -92,7 +94,10 @@ const CardMembership = () => {
                 <span>5 Tips For Offshore</span>
                 <span>Software Development</span>
               </Typography>
-              <Button variant='contained'>Contact Now</Button>
+              <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                <Button variant='outlined' size='small'>Edit</Button>
+                <Button variant='contained' size='small'>Delete</Button>
+              </Box>
             </Box>
           </CardContent>
         </Grid>
@@ -101,4 +106,4 @@ const CardMembership = () => {
   )
 }
 
-export default CardMembership
+export default CardProfile
