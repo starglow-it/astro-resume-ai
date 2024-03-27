@@ -1,0 +1,19 @@
+.astro-button {
+  position: fixed;
+  right: 0px;
+  bottom: 200px;
+  padding: 8px;
+  background: white;
+  border: none;
+  box-shadow: 0px 0px 8px #b5afaf;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.astro-button:hover {
+  background: #9155FD;
+  color: white;
+}

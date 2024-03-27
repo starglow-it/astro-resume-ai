@@ -1,8 +1,10 @@
 from django.db import models
 import uuid
+from django.contrib.auth.models import User
 
 class Resume(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, default='', on_delete=models.CASCADE)
     personal_information = models.JSONField()
     profile = models.JSONField()
     experience = models.JSONField()

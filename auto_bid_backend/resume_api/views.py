@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Resume, JobDescription
+from .serializers import ResumeSerializer
 import json
 import os
 import subprocess
@@ -15,7 +16,54 @@ from django.http import QueryDict
 import shutil
 from datetime import datetime
 import re
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
+# Load a pre-trained model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def get_embeddings(texts):
+    # Generate embeddings for a batch of texts
+    # The encode method supports b atches directly.
+    embeddings = model.encode(texts)
+    return embeddings
+
+def calculate_batch_similarity(embeddings1, embeddings2):
+    # Cosine similarity for batches
+    # This calculates the similarity between each pair of embeddings
+    similarities = cosine_similarity(embeddings1, embeddings2)
+    return similarities
+
+def calculate_similarity(embedding1, embedding2):
+    # Cosine similarity
+
+    similarity = cosine_similarity([embedding1], [embedding2])
+    return similarity[0][0]
+
+def get_matching_scores(resumes, job_descriptions):
+    # Ensure that resumes and job_descriptions are lists of texts
+    assert len(resumes) == len(job_descriptions), "Each resume must correspond to one job description."
+    
+    # Generate embeddings for batches
+    resume_embeddings = get_embeddings(resumes)
+    job_description_embeddings = get_embeddings(job_descriptions)
+    
+    # Calculate similarity for each pair
+    scores = calculate_batch_similarity(resume_embeddings, job_description_embeddings)
+    
+    # Since we're calculating one-to-one matches, we return the diagonal of the similarity matrix
+    # which represents the similarity scores between corresponding resumes and job descriptions.
+    return np.diag(scores)
+
+def get_matching_score(resume, job_description):
+    # Generate embeddings
+    resume_embedding = get_embeddings(resume)
+    job_description_embedding = get_embeddings(job_description)
+    
+    # Calculate similarity
+    score = calculate_similarity(resume_embedding, job_description_embedding)
+    return score
 
 @api_view(['POST'])
 def generate_resume(request):
@@ -29,13 +77,16 @@ def generate_resume(request):
         origin_resume = get_origin_resume(resume_id)
         resume_data = generate_resume_data(title, job_description_text, origin_resume)
         # Save the job description and generated resume to the database
-        job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
-        resume_obj = save_resume_data_to_db(resume_data)
+        # job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
+        # resume_obj = save_resume_data_to_db(resume_data)
+        print(type(resume_data))
+        score = get_matching_score(str(resume_data), job_description_text)
 
         resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
         return Response({
             'message': 'Resume PDF generated successfully',
-            'url': resume_pdf_path
+            'url': resume_pdf_path,
+            'score': score
         }, status=status.HTTP_200_OK)
         # return serve_pdf_response(resume_pdf_path)
     except Exception as e:
@@ -137,13 +188,15 @@ def generate_resume_data(title, job_description, origin_resume):
     prompt = (f"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name "
               f"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score."
               f"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%."
-              f"Only provide JSON code. Don't mention explain."
               )
     chat_completion = client.chat.completions.create(
         messages=[
             {"role": "user", "content": prompt}
         ],
-        model="gpt-4",
+        # model="gpt-4",
+        model="gpt-3.5-turbo-0125",
+        # model="text-babbage-002",
+        response_format={ "type": "json_object" },
         stop=None
     )
 
@@ -254,6 +307,7 @@ def format_skills_section(skills):
 def resumes(request):
     if request.method == 'GET':
         resumes = Resume.objects.all()
+            
         resumes_data = [{
             "id": str(resume.id),
             "personal_information": resume.personal_information,
@@ -265,6 +319,7 @@ def resumes(request):
         return Response(resumes_data, status=status.HTTP_200_OK)
     elif request.method == 'POST':
         data = request.data
+        user_id = data.get('user_id', '')
         personal_information = data.get('personal_information', {})
         profile = data.get('profile', {})
         experience = data.get('experience', [])
@@ -272,6 +327,7 @@ def resumes(request):
         hide_text = data.get('hide_text', '')
         
         resume_obj = Resume.objects.create(
+                user_id = user_id,
                 personal_information=personal_information,
                 profile=profile,
                 experience=experience,
@@ -279,6 +335,13 @@ def resumes(request):
                 hide_text=hide_text
             )
         return Response({'message': 'Resume created successfully', 'id': str(resume_obj.id)}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def resumes_by_user(request, user_id):
+    if request.method == 'GET':
+        resumes = Resume.objects.filter(user_id=user_id)
+        serializer = ResumeSerializer(resumes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def resume_detail(request, resume_id):
@@ -332,3 +395,33 @@ def delete_resumes(request):
         return Response({'message': 'Resumes deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET', 'POST'])
+def cal_matching_scores(request):
+    if request.method == 'POST':
+        try:
+            user_id = request.data.get('user_id', '')
+            description = request.data.get('description', '')
+            resumes = Resume.objects.filter(user_id=user_id)
+            serializer = ResumeSerializer(resumes, many=True)
+            resumesText = []
+            descriptions = []
+
+            for resume in serializer.data:
+                profile_text = resume['profile']['text'] if 'profile' in resume and 'text' in resume['profile'] else ''
+                experience_text = resume['experience']['text'] if 'experience' in resume and 'text' in resume['experience'] else ''
+                skills_text = resume['skills']['text'] if 'skills' in resume and 'text' in resume['skills'] else ''
+
+                resumeText = profile_text + experience_text + skills_text
+                resumesText.append(resumeText)
+                descriptions.append(description)
+
+            scores = {}
+            for idx, score in enumerate(get_matching_scores(resumesText, descriptions)):
+                scores[serializer.data[idx]['id']] = score
+
+            return Response({'message': 'Successfully calculated', 'scores': scores}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+

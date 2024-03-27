@@ -29,7 +29,7 @@ class LoginView(APIView):
             user = authenticate(username=username, password=password)
 
             if user:
-                return Response({"message": "Login Successful"}, status=status.HTTP_200_OK)
+                return Response({"message": "Login Successful", "id": user.id }, status=status.HTTP_200_OK)
             else:
                 return Response({"message": "Invalid credentials, try again"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

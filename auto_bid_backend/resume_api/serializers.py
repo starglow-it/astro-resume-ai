@@ -4,7 +4,7 @@ from .models import Resume, JobDescription
 class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume
-        fields = '__all__'
+        fields = ['id', 'user_id', 'personal_information', 'profile', 'experience', 'skills', 'hide_text']
 
 class JobDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
