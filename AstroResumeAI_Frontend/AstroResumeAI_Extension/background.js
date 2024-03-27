@@ -1,4 +1,4 @@
 chrome.runtime.onInstalled.addListener(() => {
-    console.log('Dynamic Job Scraper installed.');
-  });
-  
+  console.log('Dynamic Job Scraper installed.');
+});
+
