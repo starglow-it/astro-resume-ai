@@ -9,6 +9,7 @@ import { useAuth } from 'src/@core/context/authContext'
 // ** Demo Components Imports
 import CardProfile from 'src/views/cards/CardProfile'
 import { FetchedProfileData } from 'src/types/ProfileData'
+import { API_BASE_URL } from 'src/configs/apiConfig'
 
 const MyProfiles = () => {
   const { token } = useAuth();
@@ -18,7 +19,7 @@ const MyProfiles = () => {
   useEffect(() => {
     const fetchProfileList = async (token: string|null) => {
       try {
-        const response = await Axios.get('http://localhost:8000/profile/get-list/', {
+        const response = await Axios.get(`${API_BASE_URL}/profile/get-list/`, {
           headers: {
             Authorization: 'Token ' + token
           }

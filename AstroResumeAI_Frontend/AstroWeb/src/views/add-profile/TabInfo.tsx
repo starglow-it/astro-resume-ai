@@ -11,6 +11,7 @@ import { useProfileData } from 'src/@core/context/profileDataContext'
 import { useAuth } from 'src/@core/context/authContext'
 import { Alert, AlertTitle, CircularProgress, IconButton } from '@mui/material'
 import { Close } from 'mdi-material-ui'
+import { API_BASE_URL } from 'src/configs/apiConfig'
 
 const TabInfo = () => {
   // ** State
@@ -39,7 +40,7 @@ const TabInfo = () => {
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const response = await Axios.post('http://localhost:8000/profile/create/', profileData, {
+      const response = await Axios.post(`${API_BASE_URL}/profile/create/`, profileData, {
         headers: {
           Authorization: 'Token ' + token
         }
