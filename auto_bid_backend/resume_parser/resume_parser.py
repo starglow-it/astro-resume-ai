@@ -39,17 +39,22 @@ class ResumeParser():
         text = ""
 
         if file_ext == '.doc':
-            # docx_path = self.convert_doc_to_docx(file_path)
-            # file_path = docx_path  # Update file_path to point to the converted .docx
-
             text = textract.process(file_path)
+
             return text.decode('utf-8')
         elif file_ext == '.docx':
             """Extract text from docx file including body, headers, footers, and content controls."""
             text = docx2txt.process(file_path)
+
             return text
         elif file_ext == '.pdf':
             text = extract_text(file_path)
+
+            return text
+        
+        # In other cases
+        with open(file_path, 'r', encoding='utf-8') as file:
+                text = file.read()
 
         return text 
     
