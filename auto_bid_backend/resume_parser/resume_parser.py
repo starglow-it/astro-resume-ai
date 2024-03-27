@@ -4,6 +4,7 @@ from openai import OpenAI
 import json
 import docx2txt
 import textract
+from pypdf import PdfReader
 
 class ResumeParser():
     def __init__(self, OPENAI_API_KEY):
@@ -13,24 +14,18 @@ class ResumeParser():
         self.prompt_questions = \
 """Summarize the text below into a JSON with exactly the following structure.  \
     {name, recent_role, email, phone, location, summary(write as it is), skills: [], education: [{university, education_level, major, graduation_year,}]\
-    experience: [{job_title, company, location, duration, description(Write as it is)}], linkedin, github, website, language }
+    experience: [{job_title, company, location, duration, description(Write whole sentences as they are)}], linkedin, github, website, language }
 """
     def query_completion(self: object,
                         prompt: str,
                         engine: str='gpt-3.5-turbo',
-                        max_tokens: int = 100,
                         ) -> object:
-        """
-        Base function for querying GPT-3. 
-        Send a request to GPT-3 with the passed-in function parameters and return the response object.
-        :param prompt: GPT-3 completion prompt.
-        """
         response = self.client.chat.completions.create(
             messages=[{
                 'role': 'user',
                 'content': prompt
             }],
-            model="gpt-3.5-turbo",
+            model=engine,
         )
         return response
 
@@ -48,7 +43,12 @@ class ResumeParser():
 
             return text
         elif file_ext == '.pdf':
-            text = extract_text(file_path)
+            reader = PdfReader(file_path)
+
+            text = ''
+            for index in range(len(reader.pages)):
+                page = reader.pages[index]
+                text += page.extract_text()
 
             return text
         

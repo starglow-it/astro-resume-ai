@@ -12,11 +12,12 @@ import { FetchedProfileData } from 'src/types/ProfileData'
 import { API_BASE_URL } from 'src/configs/apiConfig'
 import { Button, Box } from '@mui/material'
 import { useRouter } from 'next/router'
+import { useProfileData } from 'src/@core/context/profileDataContext'
 
 const MyProfiles = () => {
   const { token } = useAuth();
 
-  const [profileList, setProfileList] = useState<FetchedProfileData[]>([])
+  const {profileList, setProfileList} = useProfileData();
 
   const router = useRouter();
 

@@ -11,7 +11,10 @@ class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
         fields = '__all__'
-        extra_kwargs = {'profile': {'required': False, 'allow_null': True}}
+        extra_kwargs = {
+            'profile': {'required': False, 'allow_null': True},
+            'location': {'required': False, 'allow_null': True}
+        }
 
 class ProfileSerializer(serializers.ModelSerializer):
     education = EducationSerializer(many=True)

@@ -1,10 +1,12 @@
 // src/@core/context/profileDataContext.tsx
 import React, { createContext, useState, useContext } from 'react';
-import { ProfileData } from 'src/types/ProfileData';
+import { FetchedProfileData, ProfileData } from 'src/types/ProfileData';
 
 interface ProfileContextProps {
   profileData: ProfileData;
+  profileList: FetchedProfileData[];
   setProfileData: React.Dispatch<React.SetStateAction<ProfileData>>;
+  setProfileList: React.Dispatch<React.SetStateAction<FetchedProfileData[]>>;
 }
 
 export const ProfileDataContext = createContext<ProfileContextProps | null>(null);
@@ -34,8 +36,10 @@ export const ProfileDataProvider: React.FC = ({ children }) => {
     website: '',
   });
 
+  const [profileList, setProfileList] = useState<FetchedProfileData[]>([])
+
   return (
-    <ProfileDataContext.Provider value={{ profileData, setProfileData }}>
+    <ProfileDataContext.Provider value={{ profileData, profileList, setProfileData, setProfileList }}>
       {children}
     </ProfileDataContext.Provider>
   );
