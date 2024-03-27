@@ -84,17 +84,14 @@ const CardProfile: React.FC<CardProfileProps> = ({profile}) => {
           >
             <Box>
               <Box sx={{ mb: 3.5, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <Typography variant='h6'>$</Typography>
-                <Typography variant='h6' sx={{ lineHeight: 1, fontWeight: 600, fontSize: '3.75rem !important' }}>
-                  899
-                </Typography>
-                <Typography variant='h6'>USD</Typography>
+                <Typography variant='h6' sx={{ lineHeight: 1, fontWeight: 600, fontSize: '2.75rem !important' }}>
+                  {profile.name}
+                </Typography>                
               </Box>
               <Typography variant='body2' sx={{ mb: 13.75, display: 'flex', flexDirection: 'column' }}>
-                <span>5 Tips For Offshore</span>
-                <span>Software Development</span>
+                <span>{profile.summary}</span>
               </Typography>
-              <Box sx={{display: 'flex', flexDirection: 'row'}}>
+              <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                 <Button variant='outlined' size='small'>Edit</Button>
                 <Button variant='contained' size='small'>Delete</Button>
               </Box>
