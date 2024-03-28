@@ -31,9 +31,11 @@ class ProfileDeleteAPIView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
 
-    def perform_destroy(self, instance):
-        # Optional: Add any custom delete logic here
-        instance.delete()
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        # Custom success message
+        return Response({"success": "Profile deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 class UserProfileListView(generics.ListAPIView):
     serializer_class = ProfileSerializer

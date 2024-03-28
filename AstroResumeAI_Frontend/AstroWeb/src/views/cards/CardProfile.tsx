@@ -13,7 +13,10 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import StarOutline from 'mdi-material-ui/StarOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import { FetchedProfileData, ProfileData } from 'src/types/ProfileData'
+import { FetchedProfileData  } from 'src/types/ProfileData'
+import { number } from 'prop-types'
+import router from 'next/router'
+import { API_BASE_URL } from 'src/configs/apiConfig'
 
 // Styled Box component
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -25,7 +28,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 interface CardProfileProps {
   profile: FetchedProfileData,
   editProfile: (index: string) => void,
-  deleteProfile: (index: string) => void,
+  deleteProfile: (index: string) => void, 
 }
 
 const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deleteProfile}) => {
@@ -94,7 +97,7 @@ const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deletePr
                 <span>{profile.summary}</span>
               </Typography>
               <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)}>Edit</Button>
+                <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)} sx={{marginRight: 5}}>Edit</Button>
                 <Button variant='contained' size='small' onClick={() => deleteProfile(profile.id)}>Delete</Button>
               </Box>
             </Box>

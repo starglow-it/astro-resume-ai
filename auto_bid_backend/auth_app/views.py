@@ -4,10 +4,15 @@ from dotenv import load_dotenv
 from django.http import JsonResponse
 from allauth.account.views import ConfirmEmailView
 from django.shortcuts import redirect
+from dj_rest_auth.views import LoginView
+from .serializers import CustomTokenSerializer
 
 load_dotenv()
 
 frontend_url = os.getenv('FRONTEND_URL')
+
+class CustomLoginView(LoginView):
+    serializer_class = CustomTokenSerializer
 
 class CustomConfirmEmailView(ConfirmEmailView):
     def get(self, *args, **kwargs):
