@@ -2,7 +2,7 @@
 .vscode
 __pycache__
 output
-/auto_bid_backend/db.sqlite3
+*.sqlite3
 .vscode/*
 .vscode/PythonImportHelper-v2-Completion.json
 /auto_bid_backend/media/uploaded-resumes
