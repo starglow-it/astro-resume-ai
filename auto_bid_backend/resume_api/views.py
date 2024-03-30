@@ -281,7 +281,7 @@ def format_experience_section(experiences):
     formatted = ""
     for exp in experiences:
         formatted += f"\\begin{{subsection}}{{{exp['title']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
-        for responsibility in exp['responsibilities']:
+        for responsibility in exp['responsibilities'].split('. '):
             formatted += f"\\item {responsibility}\n"
         formatted += "\\end{subsection}\n\n"
     return formatted
