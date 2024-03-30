@@ -187,6 +187,8 @@ def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
     prompt = (f"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name "
               f"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score."
+              f"Also every experience description value should be random number between 5-7 sentences. And you should not use exact sentence that is in the job description. You should also avoid making resume exactly the same as the job description."
+              f"You can change job_title to match the job description but you shouldn't change job_tile, location and duration."
               f"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%."
               )
     chat_completion = client.chat.completions.create(
