@@ -70,3 +70,8 @@ window.addEventListener("load", async () => {
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
   }
 });
+
+window.addEventListener('beforeunload', async function(event) {
+  // chrome.runtime.sendMessage({ action: 'pageReloaded' });
+});
+

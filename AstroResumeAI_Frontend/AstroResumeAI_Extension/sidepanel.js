@@ -24,7 +24,7 @@ function handleScore() {
   if (defaultResumes.length > 0) {
     for (const resume of defaultResumes) {
       let score = scores_g[resume.id] || 0;
-      generateScoreResumeItem(resume.id, resume.personal_information.name, score);
+      generateScoreResumeItem(resume.id, resume.recent_role, score);
 
       const customCollectionItems = document.querySelectorAll('#score-collection .custom-collection-item');
 
@@ -81,13 +81,20 @@ function updateScores({ isLoading, scores }) {
   }
 }
 
-async function fetchResumes(userId) {
+async function fetchResumes(token) {
   try {
-    if (userId) {
-      const response = await fetch(`http://localhost:8000/api/resumes/user/${userId}/`);
+    console.log(token);
+    if (token) {
+      const response = await fetch(`http://localhost:8000/profile/get-list/`, {
+        method: 'GET',
+        headers: {
+          'authorization': `token ${token}`
+        }
+      });
 
       if (response) {
         const resumes = await response.json();
+        console.log(resumes);
         const selectElement = document.getElementById('resume-select');
 
         if (Array.isArray(resumes) && resumes.length > 0) {
@@ -97,7 +104,7 @@ async function fetchResumes(userId) {
           resumes.forEach(resume => {
             const option = document.createElement('option');
             option.value = resume.id; // Assuming each resume has an 'id' field
-            option.textContent = resume.personal_information.name; // Assuming each resume has a 'name' field
+            option.textContent = resume.recent_role; // Assuming each resume has a 'name' field
             selectElement.appendChild(option);
           });
           selectedResumeId = resumes[0]['id'];
@@ -115,12 +122,10 @@ async function fetchResumes(userId) {
 // Event listener to detect input changes
 titleSelector.addEventListener('valueChange', function (event) {
   jobTitle = event.target.value;
-  console.log('Input value changed:', event.target.value);
 });
 
 descriptionSelector.addEventListener('valueChange', function (event) {
   jobDescription = event.target.value;
-  console.log('Input value changed:', event.target.value);
 });
 
 function toggleScoreBoard(isShow) {
@@ -154,7 +159,7 @@ function toggleScanJobBoard(isShow) {
 }
 
 //Auth Actions
-const handleLogInSuccess = async (isRemember = false) => {
+const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
   chrome.tabs.query({
     active: true,
     currentWindow: true
@@ -162,52 +167,63 @@ const handleLogInSuccess = async (isRemember = false) => {
     const url = new URL(tabs[0].url);
     const hostname = url.hostname;
     const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
+
     if (response.ok) {
       const jsonResponse = await response.json();
+      console.log(jsonResponse);
       jobContentQuery.title = jsonResponse.title_query || '';
       jobContentQuery.description = jsonResponse.description_query || '';
 
-      updateScores({ isLoading: true, scores: {} });
-      let { userId } = await chrome.storage.sync.get('isAuthenticated');
-      userId = 1;
+      if (!tokenParam) {
+        await chrome.storage.local.get('token', async function (data) {
+          console.log(data.token);
+          if (data.token) {
+            chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+              const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
 
-      chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        const data = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
+              if (!!jobData.jobDescription) {
+                const requestData = {
+                  description: jobData.jobDescription
+                };
 
-        if (!!data.jobDescription) {
-          const requestData = {
-            user_id: userId,
-            description: data.jobDescription
-          };
+                const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `token ${data.token}`
+                  },
+                  body: JSON.stringify(requestData)
+                });
 
-          const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-          });
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log(data);
+                  scores_g = data.scores;
+                  updateScores({ isLoading: false, scores: data.scores });
+                } else {
+                  chrome.storage.local.remove('token', function () {
+                    console.log('Token removed');
+                  });
 
-          if (response.ok) {
-            const data = await response.json();
-            scores_g = data.scores;
-            updateScores({ isLoading: false, scores: data.scores });
+                  await chrome.storage.local.set({ isAuthenticated: false });
+                  document.getElementById("navbar").style.display = "none";
+                  document.getElementById("login-board").style.display = "block";
+                  toggleScanJobBoard(false);
+                  toggleScoreBoard(false);
+                }
+              }
+            });
+
+            await fetchResumes(data.token);
           }
-        }
-      });
+        })
+      }
+
+      updateScores({ isLoading: true, scores: {} });
+
       await chrome.storage.local.set({ jobQueries: jobContentQuery });
     }
   });
-
-  if (!isRemember) {
-    chrome.storage.sync.get('userId', async function (data) {
-      const userId = data.userId;
-
-      if (userId) {
-        await fetchResumes(userId);
-      }
-    });
-  }
 
   document.getElementById("navbar").style.display = "flex";
   document.getElementById("login-board").style.display = "none";
@@ -260,18 +276,13 @@ document.getElementById("login-btn").addEventListener('click', async function ()
       });
 
       if (response.ok) {
-        const { id } = await response.json();
-        const isChecked = document.getElementById("remember-me").checked;
+        const { key } = await response.json();
 
-        if (isChecked) {
-          chrome.storage.sync.set({ isAuthenticated: true, userId: id });
-        } else {
-          await fetchResumes(id);
-        }
+        await chrome.storage.local.set({ isAuthenticated: true, token: key });
 
         // Change button content to success icon
         this.innerHTML = `<i class="material-icons">done</i>`;
-        setTimeout(() => handleLogInSuccess(!isChecked), 1500);
+        setTimeout(async () => await handleLogInSuccess(), 1500);
       } else {
         throw new Error('login_fail');
       }
@@ -419,6 +430,7 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
       }
     }
   } catch (error) {
+    this.style.pointerEvents = 'auto';
     this.innerHTML = "GENERATE RESUME";
     document.getElementById("generate-resume-error-msg").innerText = error.message;
   }
@@ -504,23 +516,34 @@ document.getElementById("support-btn").addEventListener("click", async function 
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  switch (message.action) {
-    case 'jobContentChanged':
-      let { isAuthenticated, userId } = await chrome.storage.sync.get('isAuthenticated');
-      userId = 1;
+  let { isAuthenticated, token } = await chrome.storage.local.get('isAuthenticated');
 
-      if (isAuthenticated && userId && message.description) {
+  switch (message.action) {
+    case "pageReloaded":
+      if (isAuthenticated) {
+        handleLogInSuccess();
+      } else {
+        document.getElementById('login-board').style.display = 'block';
+        document.getElementById('navbar').style.display = 'none';
+        document.getElementById('scan-job-board').style.display = 'none';
+        document.getElementById('score-board').style.display = 'none';
+      }
+
+    case 'jobContentChanged':
+
+
+      if (isAuthenticated && token && message.description) {
         try {
           updateScores({ isLoading: true, scores: {} });
           const requestData = {
-            user_id: userId,
             description: message.description
           };
 
           const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'authorization': `token ${token}`
             },
             body: JSON.stringify(requestData)
           });
@@ -542,7 +565,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
-  chrome.storage.sync.get('isAuthenticated', async function (data) {
+  chrome.storage.local.get(['isAuthenticated', 'token'], async function (data) {
     const isAuthenticated = data.isAuthenticated;
 
     if (isAuthenticated) {

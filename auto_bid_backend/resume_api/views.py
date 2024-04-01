@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Resume, JobDescription
 from .serializers import ResumeSerializer
+from profile_management.models import Profile
+from profile_management.serializers import ProfileSerializer
 import json
 import os
 import subprocess
@@ -19,6 +21,7 @@ import re
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from django.template.loader import render_to_string, get_template
 
 # Load a pre-trained model
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -73,16 +76,17 @@ def generate_resume(request):
     resume_id = request.data.get('resume_id', None)
     resume_pdf_path = None  # Define early to ensure it's in scope for the finally block
 
+    print(resume_id)
     try:
         origin_resume = get_origin_resume(resume_id)
         resume_data = generate_resume_data(title, job_description_text, origin_resume)
         # Save the job description and generated resume to the database
         # job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
         # resume_obj = save_resume_data_to_db(resume_data)
-        print(type(resume_data))
         score = get_matching_score(str(resume_data), job_description_text)
 
-        resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
+        # resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
+        resume_pdf_path = generate_pdf_from_resume_data_beta(resume_data, title)
         return Response({
             'message': 'Resume PDF generated successfully',
             'url': resume_pdf_path,
@@ -92,7 +96,6 @@ def generate_resume(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-
 def sanitize_for_filename(s):
     """
     Sanitizes a string for use in a filename by removing or replacing
@@ -121,13 +124,14 @@ def serialize_resume(resume):
 
 def get_origin_resume(resume_id):
     if resume_id:
-        resume = Resume.objects.get(id=resume_id)
+        resume = Profile.objects.get(id=resume_id)
     else:
-        resume = Resume.objects.first() if Resume.objects.exists() else None
+        resume = Profile.objects.first() if Profile.objects.exists() else None
     
     if resume:
         # Manually serialize the Resume instance
-        return serialize_resume(resume)
+        serialier = ProfileSerializer(resume)
+        return serialier.data
     return None
 
 def escape_latex_special_chars(text):
@@ -185,9 +189,13 @@ def process_json(input_json):
 
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt = (f"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name "
-              f"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score."
-              f"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%."
+    prompt = (f"Chatgpt!, Given the original resume JSON and a job description: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, Update the resume by based on original resume format to align with the job description and ensure it is fully ATS-friendly. Do not use underscores for field names."
+              f"Also, extract all keywords (400+ words) from the job description and add them as a string to the 'hideText' field in the resume JSON to increase the matching score."
+              f"Please update the profile overview, experience (title, description), and skills for a perfect match with the job description. Use camelCase for all variables"
+              f"Please follow the such format for the updated resume JSON."
+              "{'id': number, 'education': [{'id': number, 'university': string, 'educationLevel': string, 'graduationYear': string, 'major': string, 'profile': number}], 'experience': {'id': number, 'jobTitle': string, 'company': string, 'location': string, 'duration': string, 'description': string, 'profile': number}[], 'name': string, 'email': string, 'recentRole': string, 'phone': string, 'location': string, 'summary': string, 'skills': string[], 'workAuthorization': string, 'website': string, 'linkedin': string, 'github': string, 'user': number, 'hideText': string}"
+              "do not use 'macro parameter character' and update it if exist to convert the updated reseme to latex code."
+              f"And use '\' to special letters so that latex code recognize it."
               )
     chat_completion = client.chat.completions.create(
         messages=[
@@ -216,32 +224,29 @@ def generate_pdf_from_resume_data(resume_data, title):
     os.makedirs(output_dir, exist_ok=True)
     cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.cls')
     shutil.copy(cls_path, output_dir)
-
-    personal_info = resume_data['personal_information']
-    profile = resume_data['profile']
-
+    
     experience = format_experience_section(resume_data['experience'])
-    education = format_education_section(profile['education'])
+    education = format_education_section(resume_data['education'])
     skills = format_skills_section(resume_data['skills'])
 
     # Fill out the LaTeX template with sanitized data
     with open(template_path, 'r') as file:
         latex_content = file.read()
-    latex_content = latex_content.replace('{{name}}', f"{{{personal_info['name']}}}")
-    latex_content = latex_content.replace('{{linkedin}}', f"{{{personal_info['linkedin']}}}")
-    latex_content = latex_content.replace('{{email}}', f"{{{personal_info['email']}}}")
-    latex_content = latex_content.replace('{{phone}}', f"{{{personal_info['phone']}}}")
-    latex_content = latex_content.replace('{{website}}', f"{{{personal_info['website']}}}")  # Use the actual website data
-    latex_content = latex_content.replace('{{summary}}', profile['overview'])
+    latex_content = latex_content.replace('{{name}}', f"{{{resume_data['name']}}}")
+    latex_content = latex_content.replace('{{linkedin}}', f"{{{resume_data['linkedin']}}}")
+    latex_content = latex_content.replace('{{email}}', f"{{{resume_data['email']}}}")
+    latex_content = latex_content.replace('{{phone}}', f"{{{resume_data['phone']}}}")
+    latex_content = latex_content.replace('{{website}}', f"{{{resume_data['website']}}}")  # Use the actual website data
+    latex_content = latex_content.replace('{{summary}}', resume_data['summary'])
     latex_content = latex_content.replace('{{experiences}}', experience)
     latex_content = latex_content.replace('{{education}}', education)
     latex_content = latex_content.replace('{{skills}}', skills)
-    latex_content = latex_content.replace('{{hide_text}}', f"{{{resume_data['hide_text']}}}")
+    latex_content = latex_content.replace('{{hide_text}}', f"{{{resume_data['hideText']}}}")
     current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     # Write filled content to a temporary .tex file
-    file_name = sanitize_for_filename(f"{personal_info['name']}_{title}_{current_datetime}.tex")
+    file_name = sanitize_for_filename(f"{resume_data['name']}_{title}_{current_datetime}.tex")
     temp_tex_path = os.path.join(output_dir, file_name)
-    print (temp_tex_path)
+    print(temp_tex_path)
     with open(temp_tex_path, 'w') as file:
         file.write(latex_content)
 
@@ -256,6 +261,48 @@ def generate_pdf_from_resume_data(resume_data, title):
 
     # Return path to the generated PDF
     return os.path.splitext(temp_tex_path)[0] + '.pdf'
+
+def generate_pdf_from_resume_data_beta(resume_data, title):
+    try:
+        template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')
+        output_dir = os.path.join(settings.BASE_DIR, 'output')
+        os.makedirs(output_dir, exist_ok=True)
+        
+        experience = resume_data['experience']
+        for exp in experience:
+            if 'description' in exp:
+                exp['description'] = exp['description'].join('. ')
+
+        data = {
+            'name': resume_data['name'],
+            'email': resume_data['email'],
+            'phone': resume_data['phone'],
+            'linkedin': resume_data['linkedin'],
+            'location': resume_data['location'],
+            'education': resume_data['education'],
+            'experience': experience,
+            'skills': resume_data['skills'],
+            "hide_text": resume_data['hideText']
+            # 'certifications': resume_data['certifications'],
+            # 'projects': resume_data['projects'],
+        }
+
+        template = get_template(template_path)
+        latex_content = template.render(data)
+        print(latex_content)
+
+        current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"{resume_data['name']}_Resume_{current_datetime}.tex"
+        temp_tex_path = os.path.join(output_dir, file_name)
+        with open(temp_tex_path, 'w') as file:
+            file.write(latex_content)
+
+        subResult = subprocess.check_call(['pdflatex', temp_tex_path])
+        result = os.path.splitext(temp_tex_path)[0] + '.pdf'
+
+        return result
+    except Exception as e:
+        print(e)
 
 def serve_pdf_response(pdf_path):
     pdf_url = os.path.join(settings.STATIC_URL, 'pdfs', os.path.basename(pdf_path))
@@ -278,9 +325,10 @@ def cleanup_generated_files(pdf_path):
 def format_experience_section(experiences):
     formatted = ""
     for exp in experiences:
-        formatted += f"\\begin{{subsection}}{{{exp['title']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
-        for responsibility in exp['responsibilities']:
-            formatted += f"\\item {responsibility}\n"
+        formatted += f"\\begin{{subsection}}{{{exp['jobTitle']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
+        # for responsibility in exp['responsibilities'].split('. '):
+        #     formatted += f"\\item {responsibility}\n"
+        formatted += f"\\item {exp['description']}\n"
         formatted += "\\end{subsection}\n\n"
     return formatted
 
@@ -288,20 +336,24 @@ def format_experience_section(experiences):
 def format_education_section(education):
     formatted = ""
     for edu in education:
-        formatted += f"\\begin{{subsectionnobullet}}{{{edu['degree']}}}{{{edu['institution']}}}{{{edu['duration']}}}{{}}\n\\italicitem{{}}\\end{{subsectionnobullet}}\n\n"
+        formatted += f"\\begin{{subsectionnobullet}}{{{edu['educationLevel']}}}{{{edu['major']}}}{{{edu['university']}}}{{{edu['graduationYear']}}}{{}}\n\\italicitem{{}}\\end{{subsectionnobullet}}\n\n"
     return formatted
 
 
 # Function to format the education section
 # Function to format skills section for sectiontable in LaTeX
+# def format_skills_section(skills):
+#     formatted_skills = ""
+#     for category, skill_list in skills.items():
+#         formatted_skills += "\\entry{" + category.replace("programmingLangage", "Programming Languages").title() + "}\n"
+#         formatted_skills += f"{{{', '.join(skill_list)}}}"  # Assuming no description for each skill
+#     return formatted_skills
 def format_skills_section(skills):
     formatted_skills = ""
-    for category, skill_list in skills.items():
-        formatted_skills += "\\entry{" + category.replace("programmingLangage", "Programming Languages").title() + "}\n"
-        formatted_skills += f"{{{', '.join(skill_list)}}}"  # Assuming no description for each skill
+    for skill in skills:
+        formatted_skills += f"{{{skill}}}"  # Assuming no description for each skill
+        formatted_skills += ", "
     return formatted_skills
-
-
 
 @api_view(['GET', 'POST'])
 def resumes(request):
@@ -337,9 +389,9 @@ def resumes(request):
         return Response({'message': 'Resume created successfully', 'id': str(resume_obj.id)}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-def resumes_by_user(request, user_id):
+def resumes_by_user(request):
     if request.method == 'GET':
-        resumes = Resume.objects.filter(user_id=user_id)
+        resumes = Resume.objects.filter(user_id=request.user.id)
         serializer = ResumeSerializer(resumes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -400,28 +452,141 @@ def delete_resumes(request):
 def cal_matching_scores(request):
     if request.method == 'POST':
         try:
-            user_id = request.data.get('user_id', '')
+            user_id = request.user.id
+            print(request.user)
             description = request.data.get('description', '')
-            resumes = Resume.objects.filter(user_id=user_id)
-            serializer = ResumeSerializer(resumes, many=True)
+            profiles = Profile.objects.filter(user = request.user)
+            profileSerializer = ProfileSerializer(profiles, many=True)
+            resumes = []
+            
+            if not profileSerializer:
+                return Response({'message': 'No resumes found', 'scores': {}}, status=status.HTTP_200_OK)
+
             resumesText = []
             descriptions = []
 
-            for resume in serializer.data:
-                profile_text = resume['profile']['text'] if 'profile' in resume and 'text' in resume['profile'] else ''
-                experience_text = resume['experience']['text'] if 'experience' in resume and 'text' in resume['experience'] else ''
-                skills_text = resume['skills']['text'] if 'skills' in resume and 'text' in resume['skills'] else ''
-
-                resumeText = profile_text + experience_text + skills_text
-                resumesText.append(resumeText)
+            for resume in profileSerializer.data:
+                resumesText.append(json.dumps(resume))
                 descriptions.append(description)
 
             scores = {}
             for idx, score in enumerate(get_matching_scores(resumesText, descriptions)):
-                scores[serializer.data[idx]['id']] = score
+                scores[profileSerializer.data[idx]['id']] = score
 
             return Response({'message': 'Successfully calculated', 'scores': scores}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET', 'POST'])
+def latex_test(request):
+    if request.method == 'POST':
+        try:
+            resume_data = {
+                'name': 'Praveen Gujja',
+                'phone': '+90 531 420 4536',
+                'email': 'arasgungore09@gmail.com',
+                'linkedin': 'https://www.linkedin.com/in/arasgungore',
+                'location': 'Istanbul, Turkey',
+                'education': [
+                                {
+                                    'degree': 'Bachelor of Science in Computer Science',
+                                    'university': 'Massachusetts Institute of Technology (MIT), Cambridge, MA',
+                                    'dates': 'September 2018 - June 2022'
+                                },
+                                {
+                                    'degree': 'Master of Science in Artificial Intelligence',
+                                    'university': 'Stanford University, Stanford, CA',
+                                    'dates': 'September 2022 - June 2024 (Expected)'
+                                }
+                            ],
+                'experiences': [
+                                    {
+                                        'company': 'Avikon',
+                                        'location': 'Istanbul, Turkey',
+                                        'position': 'Software Engineer',
+                                        'dates': 'Dec 2023 -- Present, Full-time',
+                                        'responsibilities': [
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                            'text',
+                                        ]
+                                    },
+                                    {
+                                        'company': 'SemperTech',
+                                        'location': 'Istanbul, Turkey',
+                                        'position': 'Software Engineer',
+                                        'dates': 'Sep 2023 -- Dec 2023, Full-time',
+                                        'responsibilities': [
+                                            'first line.',
+                                            'first line.',
+                                            'first line.',
+                                            'first line.',
+                                            'first line.',
+                                        ]
+                                    },
+                                ],
+                'awards': [
+                    {
+                        'title': 'High Honors Degree',
+                        'description': 'Awarded to Bachelor alumni who have graduated with a GPA greater than or equal to 3.50 by Bogazici University.',
+                        'date': 'Jul 2023'
+                    },
+                ],
+                "skills": {
+                    'languages': ['C/C++', 'C\#', 'Java', 'Python', 'Go', 'JavaScript', 'TypeScript', 'SQL', 'Swift', 'Scala', 'MATLAB', 'R'],
+                    'technologies': ['Qt', 'Flask', 'Django', 'Node.js', 'React.js', 'MySQL', 'MongoDB', 'Git', 'SVN', 'Docker', 'AWS', 'Kubernetes', 'GCP', 'Kafka', 'RabbitMQ', 'OpenCV', 'PyTorch', 'TensorFlow'],
+                    'methodologies': ['Agile', 'Scrum', 'OOP', 'Functional Programming', 'DevOps', 'CI/CD', 'TDD']
+                },
+                'certifications': [
+                    {
+                        'program': 'Procter \& Gamble VIA Certificate Program',
+                        'date': 'Feb 2022'
+                    },
+                ],
+
+            }
+
+            template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')
+            output_dir = os.path.join(settings.BASE_DIR, 'output')
+            os.makedirs(output_dir, exist_ok=True)
+
+            data = {
+                'name': resume_data['name'],
+                'email': resume_data['email'],
+                'phone': resume_data['phone'],
+                'linkedin': resume_data['linkedin'],
+                'location': resume_data['location'],
+                'education': resume_data['education'],
+                'experience': resume_data['experiences'],
+                'skills': resume_data['skills'],
+                'certifications': resume_data['certifications'],
+                # 'projects': resume_data['projects'],
+            }
+
+            template = get_template(template_path)
+            latex_content = template.render(data)
+
+            current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            file_name = f"{resume_data['name']}_Resume_{current_datetime}.tex"
+            temp_tex_path = os.path.join(output_dir, file_name)
+            with open(temp_tex_path, 'w') as file:
+                file.write(latex_content)
+
+            subResult = subprocess.check_call(['pdflatex', temp_tex_path])
+            result = os.path.splitext(temp_tex_path)[0] + '.pdf'
+
+            return Response({'message': 'Successfully calculated', 'result': result}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
