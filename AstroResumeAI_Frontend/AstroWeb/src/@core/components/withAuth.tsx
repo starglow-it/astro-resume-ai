@@ -10,14 +10,14 @@ function withAuth<P extends object>(WrappedComponent: ComponentType<P>): Compone
   // This component now returns a function that explicitly accepts all props P
   // and returns a ReactElement or null.
   return function WithAuthComponent(props: P): ReactElement | null {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, token } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-      if (!isAuthenticated) {
+      if (token === null) {
         router.push('/pages/login');
       }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, token]);
 
     // Correctly spread the props to the WrappedComponent
     return <WrappedComponent {...props} />;

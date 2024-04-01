@@ -41,19 +41,23 @@ const MyProfiles = () => {
 
   }, [])
 
-  const editProfile = (profileId: string) => {
-    try {
-      
-    } catch (error) {
-
-    }
+  const editProfile = (id: string) => {
+    router.push(`/edit-profile/${id}`)
   }
 
-  const deleteProfile = (profileId: string) => {
+  const deleteProfile = async (id: string) => {
     try {
-      
-    } catch (error) {
+      const response = await Axios.delete(`${API_BASE_URL}/profile/delete/${id}/`, {
+        headers: {
+          Authorization: 'Token ' + token
+        }
+      })
 
+      setProfileList(profileList.filter(profile => profile.id !== id))
+
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
     }
   }
 

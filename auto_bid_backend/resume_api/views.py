@@ -189,13 +189,11 @@ def process_json(input_json):
 
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt = (f"Chatgpt!, Given the original resume JSON and a job description: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, Update the resume by based on original resume format to align with the job description and ensure it is fully ATS-friendly. Do not use underscores for field names."
-              f"Also, extract all keywords (400+ words) from the job description and add them as a string to the 'hideText' field in the resume JSON to increase the matching score."
-              f"Please update the profile overview, experience (title, description), and skills for a perfect match with the job description. Use camelCase for all variables"
-              f"Please follow the such format for the updated resume JSON."
-              "{'id': number, 'education': [{'id': number, 'university': string, 'educationLevel': string, 'graduationYear': string, 'major': string, 'profile': number}], 'experience': {'id': number, 'jobTitle': string, 'company': string, 'location': string, 'duration': string, 'description': string, 'profile': number}[], 'name': string, 'email': string, 'recentRole': string, 'phone': string, 'location': string, 'summary': string, 'skills': string[], 'workAuthorization': string, 'website': string, 'linkedin': string, 'github': string, 'user': number, 'hideText': string}"
-              "do not use 'macro parameter character' and update it if exist to convert the updated reseme to latex code."
-              f"And use '\' to special letters so that latex code recognize it."
+    prompt = (f"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name "
+              f"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score."
+              f"Also every experience description value should be random number between 5-7 sentences. And you should not use exact sentence that is in the job description. You should also avoid making resume exactly the same as the job description."
+              f"You can change job_title to match the job description but you shouldn't change job_tile, location and duration."
+              f"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%."
               )
     chat_completion = client.chat.completions.create(
         messages=[
@@ -325,10 +323,9 @@ def cleanup_generated_files(pdf_path):
 def format_experience_section(experiences):
     formatted = ""
     for exp in experiences:
-        formatted += f"\\begin{{subsection}}{{{exp['jobTitle']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
-        # for responsibility in exp['responsibilities'].split('. '):
-        #     formatted += f"\\item {responsibility}\n"
-        formatted += f"\\item {exp['description']}\n"
+        formatted += f"\\begin{{subsection}}{{{exp['title']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
+        for responsibility in exp['responsibilities']:
+            formatted += f"\\item {responsibility}\n"
         formatted += "\\end{subsection}\n\n"
     return formatted
 

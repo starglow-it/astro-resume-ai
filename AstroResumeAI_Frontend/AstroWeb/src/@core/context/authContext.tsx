@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 interface AuthContextType {
+  // username: string | null;
   token: string | null;
   isAuthenticated: boolean;
   setToken: (token: string | null) => void;
@@ -20,26 +21,28 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string|null>("");
 
   // Use effect to read the token from local storage or cookies when the app loads
   useEffect(() => {
     const storedToken = localStorage.getItem('token'); // Or your token storage logic
     if (storedToken) {
       setToken(storedToken);
+    } else {
+      setToken(null)
     }
   }, []);
 
   const isAuthenticated = !!token;
 
   const login = (newToken: string) => {
-    localStorage.setItem('token', newToken); // Or your token storage logic
+    localStorage.setItem('token', newToken); 
     setToken(newToken);
   };
 
   const logout = () => {
-    localStorage.removeItem('token'); // Or your token removal logic
-    setToken(null);
+    localStorage.removeItem('token'); 
+    setToken("");
   };
 
   return (

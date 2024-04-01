@@ -1,5 +1,5 @@
 // ** React Imports
-import { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useState, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -25,6 +25,8 @@ import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
 import 'react-datepicker/dist/react-datepicker.css'
 import TabEducation from 'src/views/add-profile/TabEducation'
 import withAuth from 'src/@core/components/withAuth'
+import { useProfileData } from 'src/@core/context/profileDataContext'
+import { useRouter } from 'next/router'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -44,9 +46,11 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
-const AddProfile = () => {
+const EditProfile = () => {
   // ** State
   const [value, setValue] = useState<string>('basic_profile')
+
+  const router = useRouter()
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -55,6 +59,24 @@ const AddProfile = () => {
   const handleSetTab = (tab: string): void => {
     setValue(tab)
   }
+
+  const { profileData, profileList, setProfileData } = useProfileData()
+
+  useEffect(() => {
+    var { profileId } = router.query
+
+    console.log('profileId', profileId)
+
+    const selectedProfile = profileList.find(profile => profile.id.toString() === profileId)
+
+    if (selectedProfile && selectedProfile.id) {
+      var { id, ...updatedProfile } = selectedProfile
+
+      console.log(updatedProfile)
+
+      setProfileData(updatedProfile)
+    }
+  }, [])
 
   return (
     <Card>
@@ -112,11 +134,11 @@ const AddProfile = () => {
           <TabEducation handleSetTab={handleSetTab} />
         </TabPanel>
         <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo isUpdate={false} />
+          <TabInfo isUpdate={true} />
         </TabPanel>
       </TabContext>
     </Card>
   )
 }
 
-export default withAuth(AddProfile)
+export default withAuth(EditProfile)
