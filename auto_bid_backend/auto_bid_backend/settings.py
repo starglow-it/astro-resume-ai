@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'job_query',
     'support',
+    'job',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
