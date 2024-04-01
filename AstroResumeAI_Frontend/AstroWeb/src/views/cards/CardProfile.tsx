@@ -13,7 +13,15 @@ import TrendingUp from 'mdi-material-ui/TrendingUp'
 import StarOutline from 'mdi-material-ui/StarOutline'
 import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import { FetchedProfileData, ProfileData } from 'src/types/ProfileData'
+import { FetchedProfileData } from 'src/types/ProfileData'
+import { number } from 'prop-types'
+import router from 'next/router'
+import { API_BASE_URL } from 'src/configs/apiConfig'
+import { Chip, Stack } from '@mui/material'
+import EmailIcon from '@mui/icons-material/Email'
+import HomeIcon from '@mui/icons-material/Home'
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
+import WorkIcon from '@mui/icons-material/Work'
 
 // Styled Box component
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -23,12 +31,12 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 interface CardProfileProps {
-  profile: FetchedProfileData,
-  editProfile: (index: string) => void,
-  deleteProfile: (index: string) => void,
+  profile: FetchedProfileData
+  editProfile: (index: string) => void
+  deleteProfile: (index: string) => void
 }
 
-const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deleteProfile}) => {
+const CardProfile: React.FC<CardProfileProps> = ({ profile, editProfile, deleteProfile }) => {
   return (
     <Card>
       <Grid container spacing={6}>
@@ -37,30 +45,28 @@ const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deletePr
             <Typography variant='h6' sx={{ marginBottom: 3.5 }}>
               {profile.name}
             </Typography>
-            <Typography variant='body2'>
-              {profile.summary}
-            </Typography>
+            <Typography variant='body2'>{profile.summary}</Typography>
             <Divider sx={{ marginTop: 6.5, marginBottom: 6.75 }} />
             <Grid container spacing={4}>
               <Grid item xs={12} sm={5}>
                 <StyledBox>
                   <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
-                    <LockOpenOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
+                    <EmailIcon sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
                     <Typography variant='body2'>{profile.email}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <AccountOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
+                    <WorkIcon sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
                     <Typography variant='body2'>{profile.recent_role}</Typography>
                   </Box>
                 </StyledBox>
               </Grid>
               <Grid item xs={12} sm={7}>
                 <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
-                  <StarOutline sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
+                  <HomeIcon sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
                   <Typography variant='body2'>{profile.location}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TrendingUp sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
+                  <PhoneAndroidIcon sx={{ color: 'primary.main', marginRight: 2.75 }} fontSize='small' />
                   <Typography variant='body2'>{profile.phone}</Typography>
                 </Box>
               </Grid>
@@ -88,14 +94,19 @@ const CardProfile: React.FC<CardProfileProps> = ({profile, editProfile, deletePr
               <Box sx={{ mb: 3.5, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ lineHeight: 1, fontWeight: 600, fontSize: '2.75rem !important' }}>
                   {profile.name}
-                </Typography>                
+                </Typography>
               </Box>
-              <Typography variant='body2' sx={{ mb: 13.75, display: 'flex', flexDirection: 'column' }}>
-                <span>{profile.summary}</span>
-              </Typography>
-              <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)}>Edit</Button>
-                <Button variant='contained' size='small' onClick={() => deleteProfile(profile.id)}>Delete</Button>
+              <Box sx={{ mb: 5 }}>
+                {profile.skills.length > 0 &&
+                  profile.skills.map(skill => <Chip label={skill} size='small' sx={{ margin: 1 }} />)}
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)} sx={{ marginRight: 5 }}>
+                  Edit
+                </Button>
+                <Button variant='contained' size='small' onClick={() => deleteProfile(profile.id)}>
+                  Delete
+                </Button>
               </Box>
             </Box>
           </CardContent>

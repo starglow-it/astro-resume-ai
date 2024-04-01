@@ -47,8 +47,7 @@ import { useAuth } from 'src/@core/context/authContext';
 import { API_BASE_URL } from 'src/configs/apiConfig';
 
 interface State {
-  // first_name: string,
-  // last_name: string,
+  username: string,
   email: string,
   password1: string
   password2: string
@@ -81,6 +80,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
+    username: '',
     email: '',
     password1: '',
     password2: ''
@@ -222,6 +222,7 @@ const RegisterPage = () => {
             <Typography variant='body2'>Make your job application process easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <TextField fullWidth label='Username' sx={{ marginBottom: 4 }} onChange={handleChange('username')} value={values.username} helperText={errors?.username} error={!!errors?.username} />            
             <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />            
             <FormControl fullWidth error={!!errors?.password1}>
               <InputLabel htmlFor='auth-register-password1'>Password</InputLabel>
@@ -292,7 +293,7 @@ const RegisterPage = () => {
               }
             />
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }} disabled={!didAgree}>
-              {isLoading ? <CircularProgress size={26} sx={{color: 'white'}}/> : 'Sign up'}
+              {isLoading ? <>Sending Confirmation Email<CircularProgress size={26} sx={{color: 'white', marginLeft: 5}}/></> : 'Sign up'}
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>

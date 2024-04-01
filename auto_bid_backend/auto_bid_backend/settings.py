@@ -85,7 +85,7 @@ ROOT_URLCONF = 'auto_bid_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'latex_templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -192,7 +192,7 @@ SOCIALACCOUNT_PROVIDERS = {
 SITE_ID = 1
 
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
