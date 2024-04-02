@@ -203,7 +203,6 @@ document.getElementById("cal-resume-score").addEventListener('click', async func
   if (jobDescription) {
 
     let { userId } = await chrome.storage.sync.get('isAuthenticated');
-    console.log(userId);
     userId = 1;
 
     if (userId) {
@@ -212,7 +211,6 @@ document.getElementById("cal-resume-score").addEventListener('click', async func
           user_id: userId,
           description: jobDescription
         };
-        console.log(requestData);
 
         const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
           method: 'POST',
@@ -224,7 +222,6 @@ document.getElementById("cal-resume-score").addEventListener('click', async func
 
         if (response.ok) {
           const scores = await response.json();
-          console.log(scores);
         }
       } catch (error) {
         console.log(error);

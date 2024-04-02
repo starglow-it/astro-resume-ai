@@ -449,12 +449,10 @@ def delete_resumes(request):
 def cal_matching_scores(request):
     if request.method == 'POST':
         try:
-            user_id = request.user.id
-            print(request.user)
             description = request.data.get('description', '')
             profiles = Profile.objects.filter(user = request.user)
             profileSerializer = ProfileSerializer(profiles, many=True)
-            resumes = []
+            print(profileSerializer.data)
             
             if not profileSerializer:
                 return Response({'message': 'No resumes found', 'scores': {}}, status=status.HTTP_200_OK)
@@ -467,123 +465,12 @@ def cal_matching_scores(request):
                 descriptions.append(description)
 
             scores = {}
+            print(resumesText)
             for idx, score in enumerate(get_matching_scores(resumesText, descriptions)):
                 scores[profileSerializer.data[idx]['id']] = score
 
             return Response({'message': 'Successfully calculated', 'scores': scores}, status=status.HTTP_200_OK)
         except Exception as e:
+            print(str(e))
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-@api_view(['GET', 'POST'])
-def latex_test(request):
-    if request.method == 'POST':
-        try:
-            resume_data = {
-                'name': 'Praveen Gujja',
-                'phone': '+90 531 420 4536',
-                'email': 'arasgungore09@gmail.com',
-                'linkedin': 'https://www.linkedin.com/in/arasgungore',
-                'location': 'Istanbul, Turkey',
-                'education': [
-                                {
-                                    'degree': 'Bachelor of Science in Computer Science',
-                                    'university': 'Massachusetts Institute of Technology (MIT), Cambridge, MA',
-                                    'dates': 'September 2018 - June 2022'
-                                },
-                                {
-                                    'degree': 'Master of Science in Artificial Intelligence',
-                                    'university': 'Stanford University, Stanford, CA',
-                                    'dates': 'September 2022 - June 2024 (Expected)'
-                                }
-                            ],
-                'experiences': [
-                                    {
-                                        'company': 'Avikon',
-                                        'location': 'Istanbul, Turkey',
-                                        'position': 'Software Engineer',
-                                        'dates': 'Dec 2023 -- Present, Full-time',
-                                        'responsibilities': [
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                            'text',
-                                        ]
-                                    },
-                                    {
-                                        'company': 'SemperTech',
-                                        'location': 'Istanbul, Turkey',
-                                        'position': 'Software Engineer',
-                                        'dates': 'Sep 2023 -- Dec 2023, Full-time',
-                                        'responsibilities': [
-                                            'first line.',
-                                            'first line.',
-                                            'first line.',
-                                            'first line.',
-                                            'first line.',
-                                        ]
-                                    },
-                                ],
-                'awards': [
-                    {
-                        'title': 'High Honors Degree',
-                        'description': 'Awarded to Bachelor alumni who have graduated with a GPA greater than or equal to 3.50 by Bogazici University.',
-                        'date': 'Jul 2023'
-                    },
-                ],
-                "skills": {
-                    'languages': ['C/C++', 'C\#', 'Java', 'Python', 'Go', 'JavaScript', 'TypeScript', 'SQL', 'Swift', 'Scala', 'MATLAB', 'R'],
-                    'technologies': ['Qt', 'Flask', 'Django', 'Node.js', 'React.js', 'MySQL', 'MongoDB', 'Git', 'SVN', 'Docker', 'AWS', 'Kubernetes', 'GCP', 'Kafka', 'RabbitMQ', 'OpenCV', 'PyTorch', 'TensorFlow'],
-                    'methodologies': ['Agile', 'Scrum', 'OOP', 'Functional Programming', 'DevOps', 'CI/CD', 'TDD']
-                },
-                'certifications': [
-                    {
-                        'program': 'Procter \& Gamble VIA Certificate Program',
-                        'date': 'Feb 2022'
-                    },
-                ],
-
-            }
-
-            template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')
-            output_dir = os.path.join(settings.BASE_DIR, 'output')
-            os.makedirs(output_dir, exist_ok=True)
-
-            data = {
-                'name': resume_data['name'],
-                'email': resume_data['email'],
-                'phone': resume_data['phone'],
-                'linkedin': resume_data['linkedin'],
-                'location': resume_data['location'],
-                'education': resume_data['education'],
-                'experience': resume_data['experiences'],
-                'skills': resume_data['skills'],
-                'certifications': resume_data['certifications'],
-                # 'projects': resume_data['projects'],
-            }
-
-            template = get_template(template_path)
-            latex_content = template.render(data)
-
-            current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            file_name = f"{resume_data['name']}_Resume_{current_datetime}.tex"
-            temp_tex_path = os.path.join(output_dir, file_name)
-            with open(temp_tex_path, 'w') as file:
-                file.write(latex_content)
-
-            subResult = subprocess.check_call(['pdflatex', temp_tex_path])
-            result = os.path.splitext(temp_tex_path)[0] + '.pdf'
-
-            return Response({'message': 'Successfully calculated', 'result': result}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    return Response({'message': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-

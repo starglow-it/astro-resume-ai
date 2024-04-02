@@ -8,5 +8,4 @@ urlpatterns = [
     path('resumes/user/', views.resumes_by_user, name='resumes-by-user'),
     path('resumes/delete-resumes/', views.delete_resumes, name='delete-resumes'),
     path('resumes/cal_matching_scores/', views.cal_matching_scores, name='cal_matching_scores'),
-    path('resumes/latex-test/', views.latex_test, name='test'),
 ]
