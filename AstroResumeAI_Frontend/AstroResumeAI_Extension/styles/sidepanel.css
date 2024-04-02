@@ -320,3 +320,12 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
     border-radius: 2px;
     overflow: hidden;
 }
+
+#no-items-text {
+    font-size: 14px;
+    color: #878181;
+}
+
+.unregisted {
+    font-size: 12px;
+}

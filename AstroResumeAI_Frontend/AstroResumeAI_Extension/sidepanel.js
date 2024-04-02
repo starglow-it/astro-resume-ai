@@ -14,6 +14,15 @@ var isResumeGenerated = false;
 const titleSelector = document.getElementById('titleSelector');
 const descriptionSelector = document.getElementById('descriptionSelector');
 
+function setInitialStatus() {
+  document.getElementById('login-board').style.display = 'block';
+  document.getElementById('navbar').style.display = 'none';
+  document.getElementById('scan-job-board').style.display = 'none';
+  document.getElementById('score-board').style.display = 'none';
+  document.getElementById('support').style.display = 'none';
+  document.getElementById('no-item-text').innerText = '';
+}
+
 function updateInputValue(element, newValue) {
   element.value = newValue;
   const event = new Event('valueChange', { bubbles: true });
@@ -24,7 +33,7 @@ function handleScore() {
   if (defaultResumes.length > 0) {
     for (const resume of defaultResumes) {
       let score = scores_g[resume.id] || 0;
-      generateScoreResumeItem(resume.id, resume.personal_information.name, score);
+      generateScoreResumeItem(resume.id, resume.recent_role, score);
 
       const customCollectionItems = document.querySelectorAll('#score-collection .custom-collection-item');
 
@@ -34,9 +43,16 @@ function handleScore() {
           toggleScoreBoard(false);
           toggleScanJobBoard(true);
           const selectEl = document.getElementById("resume-select");
+          const selectUl = document.querySelector('.select-wrapper .dropdown-content');
+          const liElements = selectUl.getElementsByTagName('li');
+          
           for (var i = 0; i < selectEl.options.length; i++) {
             if (selectEl.options[i].value === selectedResumeId) {
+              selectEl.value = liElements[i].innerText;
               selectEl.selectedIndex = i;
+              const event = new Event('change', { bubbles: true });
+
+              selectEl.dispatchEvent(event);
               break;
             }
           }
@@ -81,30 +97,46 @@ function updateScores({ isLoading, scores }) {
   }
 }
 
-async function fetchResumes(userId) {
+//display resumes to select element
+function displayResumes(resumes) {
+  const selectElement = document.getElementById('resume-select');
+
+  if (Array.isArray(resumes) && resumes.length > 0) {
+    defaultResumes = resumes;
+    handleScore();
+
+    resumes.forEach(resume => {
+      const option = document.createElement('option');
+      option.value = resume.id; // Assuming each resume has an 'id' field
+      option.textContent = resume.recent_role; // Assuming each resume has a 'name' field
+      selectElement.appendChild(option);
+    });
+    selectedResumeId = resumes[0]['id'];
+  } else {
+    selectElement.innerHTML = '<option value="" disabled selected>No resumes found</option>';
+    defaultResumes = [];
+    document.getElementById('score-preloader').style.display = 'none';
+    document.getElementById('no-item-text').innerHTML = 'No resumes found. You need to create a resume first on the <a href="http://localhost:3000/add-profile/">main page</a>.';
+  }
+
+  var elems = document.querySelectorAll('select');
+  M.FormSelect.init(elems);
+}
+
+//fetch resumes from db
+async function fetchResumes(token) {
   try {
-    if (userId) {
-      const response = await fetch(`http://localhost:8000/api/resumes/user/${userId}/`);
-
-      if (response) {
-        const resumes = await response.json();
-        const selectElement = document.getElementById('resume-select');
-
-        if (Array.isArray(resumes) && resumes.length > 0) {
-          defaultResumes = resumes;
-          handleScore();
-
-          resumes.forEach(resume => {
-            const option = document.createElement('option');
-            option.value = resume.id; // Assuming each resume has an 'id' field
-            option.textContent = resume.personal_information.name; // Assuming each resume has a 'name' field
-            selectElement.appendChild(option);
-          });
-          selectedResumeId = resumes[0]['id'];
+    if (token) {
+      const response = await fetch(`http://localhost:8000/profile/get-list/`, {
+        method: 'GET',
+        headers: {
+          'authorization': `token ${token}`
         }
+      });
 
-        var elems = document.querySelectorAll('select');
-        M.FormSelect.init(elems);
+      if (response.ok) {
+        const resumes = await response.json();
+        displayResumes(resumes);
       }
     }
   } catch (error) {
@@ -115,12 +147,10 @@ async function fetchResumes(userId) {
 // Event listener to detect input changes
 titleSelector.addEventListener('valueChange', function (event) {
   jobTitle = event.target.value;
-  console.log('Input value changed:', event.target.value);
 });
 
 descriptionSelector.addEventListener('valueChange', function (event) {
   jobDescription = event.target.value;
-  console.log('Input value changed:', event.target.value);
 });
 
 function toggleScoreBoard(isShow) {
@@ -153,66 +183,76 @@ function toggleScanJobBoard(isShow) {
   }
 }
 
-//Auth Actions
-const handleLogInSuccess = async (isRemember = false) => {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  }, async (tabs) => {
-    const url = new URL(tabs[0].url);
-    const hostname = url.hostname;
-    const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
-    if (response.ok) {
-      const jsonResponse = await response.json();
-      jobContentQuery.title = jsonResponse.title_query || '';
-      jobContentQuery.description = jsonResponse.description_query || '';
+//handle login success
+const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
+  let token = tokenParam;
 
-      updateScores({ isLoading: true, scores: {} });
-      let { userId } = await chrome.storage.sync.get('isAuthenticated');
-      userId = 1;
-
-      chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-        const data = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
-
-        if (!!data.jobDescription) {
-          const requestData = {
-            user_id: userId,
-            description: data.jobDescription
-          };
-
-          const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            scores_g = data.scores;
-            updateScores({ isLoading: false, scores: data.scores });
-          }
-        }
-      });
-      await chrome.storage.local.set({ jobQueries: jobContentQuery });
-    }
-  });
-
-  if (!isRemember) {
-    chrome.storage.sync.get('userId', async function (data) {
-      const userId = data.userId;
-
-      if (userId) {
-        await fetchResumes(userId);
-      }
-    });
+  if (!tokenParam) {
+    const data = await chrome.storage.local.get('token');
+    token = data.token;
   }
+
+  if (!token) {
+    // Handle missing token
+    setInitialStatus();
+    return;
+  }
+
+  await fetchResumes(token);
 
   document.getElementById("navbar").style.display = "flex";
   document.getElementById("login-board").style.display = "none";
   toggleScoreBoard(true);
+
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const url = new URL(tabs[0].url);
+  const hostname = url.hostname;
+
+  const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
+
+  if (!response.ok) {
+    // Handle API request failure
+    return;
+  }
+
+  const jsonResponse = await response.json();
+  jobContentQuery.title = jsonResponse.title_query || '';
+  jobContentQuery.description = jsonResponse.description_query || '';
+
+  const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
+
+  if (!!jobData.jobDescription) {
+    updateScores({ isLoading: true, scores: {} });
+    const requestData = {
+      description: jobData.jobDescription
+    };
+
+    const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': `token ${token}`
+      },
+      body: JSON.stringify(requestData)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      document.getElementById('no-item-text').display = "none";
+      updateScores({ isLoading: false, scores: data.scores });
+    } else {
+      // Handle API request failure
+      updateScores({ isLoading: false, scores: {} });
+      return;
+    }
+  }
+
+
+  await chrome.storage.local.set({ jobQueries: jobContentQuery });
+
+  
 };
+
 
 document.getElementById("login-btn").addEventListener('click', async function () {
   document.getElementById("sign-up-instead").disabled = true;
@@ -260,18 +300,13 @@ document.getElementById("login-btn").addEventListener('click', async function ()
       });
 
       if (response.ok) {
-        const { id } = await response.json();
-        const isChecked = document.getElementById("remember-me").checked;
+        const { key } = await response.json();
 
-        if (isChecked) {
-          chrome.storage.sync.set({ isAuthenticated: true, userId: id });
-        } else {
-          await fetchResumes(id);
-        }
+        await chrome.storage.local.set({ isAuthenticated: true, token: key });
 
         // Change button content to success icon
         this.innerHTML = `<i class="material-icons">done</i>`;
-        setTimeout(() => handleLogInSuccess(!isChecked), 1500);
+        setTimeout(async () => await handleLogInSuccess({ tokenParam: key }), 1500);
       } else {
         throw new Error('login_fail');
       }
@@ -415,10 +450,11 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
       }
 
       if (!jobTitle || !jobDescription) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please scan job.';
+        document.getElementById("generate-resume-error-msg").innerText = 'Please scan job first.';
       }
     }
   } catch (error) {
+    this.style.pointerEvents = 'auto';
     this.innerHTML = "GENERATE RESUME";
     document.getElementById("generate-resume-error-msg").innerText = error.message;
   }
@@ -504,23 +540,30 @@ document.getElementById("support-btn").addEventListener("click", async function 
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  switch (message.action) {
-    case 'jobContentChanged':
-      let { isAuthenticated, userId } = await chrome.storage.sync.get('isAuthenticated');
-      userId = 1;
+  let { isAuthenticated, token } = await chrome.storage.local.get(['isAuthenticated', 'token']);
 
-      if (isAuthenticated && userId && message.description) {
+  switch (message.action) {
+    case "pageReloaded":
+      if (isAuthenticated) {
+        handleLogInSuccess();
+      } else {
+        setInitialStatus();
+      }
+
+    case 'jobContentChanged':
+      if (isAuthenticated && token && message.description) {
         try {
+          
           updateScores({ isLoading: true, scores: {} });
           const requestData = {
-            user_id: userId,
             description: message.description
           };
 
           const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'authorization': `token ${token}`
             },
             body: JSON.stringify(requestData)
           });
@@ -541,13 +584,17 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 });
 
+
+
 document.addEventListener('DOMContentLoaded', async function () {
-  chrome.storage.sync.get('isAuthenticated', async function (data) {
+  chrome.storage.local.get('isAuthenticated', async function (data) {
     const isAuthenticated = data.isAuthenticated;
 
+    // If user is authenticated, handleLogInSuccess() wikebParmtokenParam: keye called.
     if (isAuthenticated) {
       await handleLogInSuccess();
-      loadSelectors();
+    } else {
+      setInitialStatus();
     }
   });
 

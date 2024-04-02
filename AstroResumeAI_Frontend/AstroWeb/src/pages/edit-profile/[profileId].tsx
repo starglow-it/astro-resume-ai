@@ -68,8 +68,6 @@ const EditProfile = () => {
   useEffect(() => {
     var { profileId } = router.query
 
-    console.log('profileId', profileId)
-
     const selectedProfile = profileList.find(profile => profile.id.toString() === profileId)
 
     if (selectedProfile && selectedProfile.id) {

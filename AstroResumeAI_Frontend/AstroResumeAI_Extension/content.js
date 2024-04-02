@@ -1,8 +1,11 @@
+let isSidePanelOpen = false;
+
 (function () {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = chrome.runtime.getURL('styles/content.css');
   document.head.appendChild(link);
+  
 
   // Create the button
   const button = document.createElement('button');
@@ -11,16 +14,22 @@
 
   // Function to toggle the side panel
   async function closeSidePanel() {
-      await chrome.runtime.sendMessage({ action: 'closeSidePanel' });
+    isSidePanelOpen = false;
+    await chrome.runtime.sendMessage({ action: 'closeSidePanel' });
   }
 
   async function openSidePanel() {
-      await chrome.runtime.sendMessage({ action: 'openSidePanel' });
+    await chrome.runtime.sendMessage({ action: 'openSidePanel' });
+    isSidePanelOpen = true;
   }
 
   // Add an event listener to toggle the side panel on click
   button.addEventListener('click', async function () {
-      openSidePanel();
+    if (isSidePanelOpen) {
+      await closeSidePanel();
+    } else {
+      await openSidePanel();
+    }
   });
 
   // Append the button to the body of the webpage
@@ -30,14 +39,12 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.action) {
     case 'select_by_classname':
-      console.log(message.className);
       const jobTitle = document.querySelector(message.className.title)?.innerText;
       const jobDescription = document.querySelector(message.className.description)?.innerText;
       sendResponse({ jobTitle, jobDescription });
       break;
 
     case 'sendPanelBehavior':
-      console.log(message.status);
 
     default:
       break;
@@ -58,7 +65,6 @@ const observer = new MutationObserver(async (mutationsList, observer) => {
 });
 
 window.addEventListener("load", async () => {
-  console.log('content js loaded');
   chrome.storage.onChanged.addListener(function (changes, namespace) {
     if (namespace === 'local' && 'jobQueries' in changes) {
       observer.observe(document.body, { attributes: true, childList: true, subtree: true });
@@ -70,3 +76,8 @@ window.addEventListener("load", async () => {
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
   }
 });
+
+window.addEventListener('beforeunload', async function (event) {
+  // chrome.runtime.sendMessage({ action: 'pageReloaded' });
+});
+

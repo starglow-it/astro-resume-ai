@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'job_query',
     'support',
+    'job',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -84,7 +85,7 @@ ROOT_URLCONF = 'auto_bid_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'latex_templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

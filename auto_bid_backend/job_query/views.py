@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-@csrf_exempt
 def job_query_list(request):
     if request.method == 'GET':
         job_queries = JobQuery.objects.all()
@@ -18,7 +17,6 @@ def job_query_list(request):
         job_query = JobQuery.objects.create(url=url, title_query=title_query, description_query=description_query)
         return JsonResponse({'message': 'JobQuery created successfully', 'id': job_query.pk}, status=201)
 
-@csrf_exempt
 def job_query_detail(request, url):
     try:
         job_query = JobQuery.objects.get(url=url)
@@ -27,7 +25,6 @@ def job_query_detail(request, url):
     except JobQuery.DoesNotExist:
         return JsonResponse({'message': 'JobQuery not found'}, status=404)
 
-@csrf_exempt
 def job_query_delete(request, url):
     try:
         job_query = JobQuery.objects.get(url=url)
