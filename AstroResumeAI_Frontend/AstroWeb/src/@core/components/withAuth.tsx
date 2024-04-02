@@ -8,8 +8,6 @@ export function withAuth(gssp?: GetServerSideProps): GetServerSideProps {
     const cookies = parseCookies({ req })
     const token = cookies.token
 
-    console.log('resolvedUrl', resolvedUrl)
-
     // Check if the current URL is the login or register page
     const isAuthPage = resolvedUrl.startsWith('/pages/login') || resolvedUrl.startsWith('/pages/register')
 
