@@ -2,7 +2,7 @@
 import { ChangeEvent, MouseEvent, ReactNode, useState } from 'react'
 
 // ** Axios Imports
-import Axios from 'axios';
+import Axios from 'axios'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -24,7 +24,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
-import FormHelperText from '@mui/material/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText'
 
 // ** Icons Imports
 import Google from 'mdi-material-ui/Google'
@@ -44,8 +44,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
 
 // Use Auth
-import { useAuth } from 'src/@core/context/authContext';
-import { API_BASE_URL } from 'src/configs/apiConfig';
+import { useAuth } from 'src/@core/context/authContext'
+import { API_BASE_URL } from 'src/configs/apiConfig'
+import { withAuth } from 'src/@core/components/withAuth'
 
 interface State {
   email: string
@@ -74,19 +75,22 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
+// Check Authorization
+export const getServerSideProps = withAuth()
+
 const LoginPage = () => {
   // ** Authentication State
-  const {isAuthenticated, login, logout} = useAuth();
+  const { isAuthenticated, login, logout } = useAuth()
 
   // ** State
   const [values, setValues] = useState<State>({
     email: '',
-    password: '',
+    password: ''
   })
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<Errors>({})
 
   // ** Hook
   const theme = useTheme()
@@ -97,7 +101,7 @@ const LoginPage = () => {
   }
 
   const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+    setShowPassword(!showPassword)
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -105,25 +109,19 @@ const LoginPage = () => {
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
-      const response = await Axios.post(`${API_BASE_URL}/auth/login/`, values);
+      const response = await Axios.post(`${API_BASE_URL}/auth/login/`, values)
 
       login(response.data.key)
-
-      router.push('/')
     } catch (error) {
       if (Axios.isAxiosError(error) && error.response) {
-        setErrors(error.response.data);
+        setErrors(error.response.data)
       } else {
-        console.error('Unexpected error occurred: ', error);
+        console.error('Unexpected error occurred: ', error)
       }
     }
-  }
-
-  if (isAuthenticated) {
-    router.push('/')
   }
 
   return (
@@ -210,7 +208,17 @@ const LoginPage = () => {
             <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} value={values.email} onChange={handleChange('email')} error={!!errors?.email} helperText={errors?.email} />
+            <TextField
+              autoFocus
+              fullWidth
+              id='email'
+              label='Email'
+              sx={{ marginBottom: 4 }}
+              value={values.email}
+              onChange={handleChange('email')}
+              error={!!errors?.email}
+              helperText={errors?.email}
+            />
 
             <FormControl fullWidth error={!!errors?.password}>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
@@ -233,13 +241,9 @@ const LoginPage = () => {
                   </InputAdornment>
                 }
               />
-              {errors?.password && (
-                <FormHelperText>{errors.password}</FormHelperText>
-              )}
+              {errors?.password && <FormHelperText>{errors.password}</FormHelperText>}
             </FormControl>
-            {errors?.non_field_errors && (
-                <FormHelperText error>{errors.non_field_errors}</FormHelperText>
-              )}
+            {errors?.non_field_errors && <FormHelperText error>{errors.non_field_errors}</FormHelperText>}
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
@@ -248,16 +252,8 @@ const LoginPage = () => {
                 <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
               </Link>
             </Box>
-            {errors?.message && (
-              <FormHelperText error>{errors?.message}</FormHelperText>
-            )}
-            <Button
-              fullWidth
-              type="submit"
-              size='large'
-              variant='contained'
-              sx={{ marginBottom: 7 }}
-            >
+            {errors?.message && <FormHelperText error>{errors?.message}</FormHelperText>}
+            <Button fullWidth type='submit' size='large' variant='contained' sx={{ marginBottom: 7 }}>
               Login
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>

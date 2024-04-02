@@ -24,7 +24,7 @@ import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 import TabEducation from 'src/views/add-profile/TabEducation'
-import withAuth from 'src/@core/components/withAuth'
+import { withAuth } from 'src/@core/components/withAuth'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -43,6 +43,9 @@ const TabName = styled('span')(({ theme }) => ({
     display: 'none'
   }
 }))
+
+// Check Authorization
+export const getServerSideProps = withAuth()
 
 const AddProfile = () => {
   // ** State
@@ -119,4 +122,4 @@ const AddProfile = () => {
   )
 }
 
-export default withAuth(AddProfile)
+export default AddProfile

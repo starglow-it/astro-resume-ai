@@ -21,7 +21,11 @@ import StatisticsCard from 'src/views/dashboard/StatisticsCard'
 import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
 import SalesByCountries from 'src/views/dashboard/SalesByCountries'
-import withAuth from 'src/@core/components/withAuth'
+
+import { withAuth } from 'src/@core/components/withAuth'
+
+// Check Authorization
+export const getServerSideProps = withAuth()
 
 const Dashboard = () => {
   return (
@@ -99,5 +103,4 @@ const Dashboard = () => {
   )
 }
 
-
-export default withAuth(Dashboard)
+export default Dashboard

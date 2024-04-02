@@ -24,7 +24,7 @@ import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
 import TabEducation from 'src/views/add-profile/TabEducation'
-import withAuth from 'src/@core/components/withAuth'
+import { withAuth } from 'src/@core/components/withAuth'
 import { useProfileData } from 'src/@core/context/profileDataContext'
 import { useRouter } from 'next/router'
 
@@ -45,6 +45,9 @@ const TabName = styled('span')(({ theme }) => ({
     display: 'none'
   }
 }))
+
+// Check Authorization
+export const getServerSideProps = withAuth()
 
 const EditProfile = () => {
   // ** State
@@ -71,8 +74,6 @@ const EditProfile = () => {
 
     if (selectedProfile && selectedProfile.id) {
       var { id, ...updatedProfile } = selectedProfile
-
-      console.log(updatedProfile)
 
       setProfileData(updatedProfile)
     }
@@ -141,4 +142,4 @@ const EditProfile = () => {
   )
 }
 
-export default withAuth(EditProfile)
+export default EditProfile

@@ -1,3 +1,4 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next/types'
 // ** React Imports
 import { SyntheticEvent, useState } from 'react'
 
@@ -11,18 +12,13 @@ import { styled } from '@mui/material/styles'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 
 // ** Icons Imports
-import AccountOutline from 'mdi-material-ui/AccountOutline'
 import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
-import InformationOutline from 'mdi-material-ui/InformationOutline'
-
-// ** Demo Tabs Imports
-import TabInfo from 'src/views/account-settings/TabInfo'
-import TabAccount from 'src/views/account-settings/TabAccount'
 import TabSecurity from 'src/views/account-settings/TabSecurity'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
-import withAuth from 'src/@core/components/withAuth'
+
+import { withAuth } from 'src/@core/components/withAuth'
 
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -42,6 +38,9 @@ const TabName = styled('span')(({ theme }) => ({
   }
 }))
 
+// Check Authorization
+export const getServerSideProps = withAuth()
+
 const AccountSettings = () => {
   // ** State
   const [value, setValue] = useState<string>('security')
@@ -58,15 +57,6 @@ const AccountSettings = () => {
           aria-label='account-settings tabs'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
-          {/* <Tab
-            value='account'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AccountOutline />
-                <TabName>Account</TabName>
-              </Box>
-            }
-          /> */}
           <Tab
             value='security'
             label={
@@ -76,29 +66,14 @@ const AccountSettings = () => {
               </Box>
             }
           />
-          {/* <Tab
-            value='info'
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <InformationOutline />
-                <TabName>Info</TabName>
-              </Box>
-            }
-          /> */}
         </TabList>
 
-        {/* <TabPanel sx={{ p: 0 }} value='account'>
-          <TabAccount />
-        </TabPanel> */}
         <TabPanel sx={{ p: 0 }} value='security'>
           <TabSecurity />
         </TabPanel>
-        {/* <TabPanel sx={{ p: 0 }} value='info'>
-          <TabInfo />
-        </TabPanel> */}
       </TabContext>
     </Card>
   )
 }
 
-export default withAuth(AccountSettings)
+export default AccountSettings
