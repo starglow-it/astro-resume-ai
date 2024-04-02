@@ -26,6 +26,7 @@ class ResumeParser():
                 'content': prompt
             }],
             model=engine,
+            response_format={ "type": "json_object" },
         )
         return response
 
@@ -75,7 +76,7 @@ class ResumeParser():
         response_text = response.choices[0].message.content
 
         print(response_text)
-
+        
         resume = json.loads(response_text)
 
         return resume
