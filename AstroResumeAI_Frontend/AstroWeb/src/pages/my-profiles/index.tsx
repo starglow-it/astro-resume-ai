@@ -55,7 +55,6 @@ const MyProfiles = () => {
 
       setProfileList(profileList.filter(profile => profile.id !== id))
 
-      console.log(response.data)
     } catch (error) {
       console.log(error)
     }

@@ -18,14 +18,33 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         path: 'sidepanel.html',
         enabled: true
       });
+
       break;
 
     case 'closeSidePanel':
-      await chrome.sidePanel.setOptions({ enabled: false });
-      await chrome.sidePanel.setOptions({ enabled: true });
+      await chrome.sidePanel.setOptions({
+        tabId: sender.tab.id,
+        path: 'sidepanel.html',
+        enabled: false
+      });
+      await chrome.sidePanel.setOptions({
+        tabId: sender.tab.id,
+        path: 'sidepanel.html',
+        enabled: true
+      });
       break;
 
     default:
       break;
   }
+
+  return;
 });
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  if (changeInfo.url) {
+    console.log('URL changed to: ' + changeInfo.url);
+  }
+});
+
+

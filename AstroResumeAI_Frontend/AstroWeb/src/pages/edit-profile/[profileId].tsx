@@ -65,14 +65,10 @@ const EditProfile = () => {
   useEffect(() => {
     var { profileId } = router.query
 
-    console.log('profileId', profileId)
-
     const selectedProfile = profileList.find(profile => profile.id.toString() === profileId)
 
     if (selectedProfile && selectedProfile.id) {
       var { id, ...updatedProfile } = selectedProfile
-
-      console.log(updatedProfile)
 
       setProfileData(updatedProfile)
     }
