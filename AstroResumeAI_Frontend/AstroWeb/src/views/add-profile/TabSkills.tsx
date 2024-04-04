@@ -172,7 +172,8 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
                   onChange={handleChangeTempSkill(index)}
                   onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                     if (event.key === 'Enter') {
-                      addSkill(index)
+                      event.preventDefault()
+                      addSkill(index)()
                     }
                   }}
                 />
