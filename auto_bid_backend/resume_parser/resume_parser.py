@@ -13,7 +13,7 @@ class ResumeParser():
         # GPT-3 completion questions
         self.prompt_questions = \
 """Summarize the text below into a JSON with exactly the following structure.  \
-    {name, recent_role, email, phone, location, summary(write as it is), skills: [], education: [{university, education_level, major, graduation_year,}]\
+    {name, recent_role, email, phone, location, summary(write as it is), skills: [{category_name: ''(e.g.Programming Language), skills: []}], education: [{university, education_level, major, graduation_year,}]\
     experience: [{job_title, company, location, duration, description(Write whole sentences as they are)}], linkedin, github, website, language }
 """
     def query_completion(self: object,
@@ -26,6 +26,7 @@ class ResumeParser():
                 'content': prompt
             }],
             model=engine,
+            response_format={ "type": "json_object" },
         )
         return response
 
@@ -75,7 +76,7 @@ class ResumeParser():
         response_text = response.choices[0].message.content
 
         print(response_text)
-
+        
         resume = json.loads(response_text)
 
         return resume

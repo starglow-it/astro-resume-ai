@@ -2,8 +2,8 @@
 import { useState, Fragment, ChangeEvent, MouseEvent, ReactNode } from 'react'
 
 // ** Next Imports
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 // ** Axios Imports
 import Axios from 'axios'
@@ -25,7 +25,7 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
-import { CircularProgress, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { CircularProgress, Dialog, DialogContent, DialogTitle } from '@mui/material'
 
 // ** Icons Imports
 import Google from 'mdi-material-ui/Google'
@@ -43,12 +43,13 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustration'
-import { useAuth } from 'src/@core/context/authContext';
-import { API_BASE_URL } from 'src/configs/apiConfig';
+import { useAuth } from 'src/@core/context/authContext'
+import { API_BASE_URL } from 'src/configs/apiConfig'
+import { withAuth } from 'src/@core/components/withAuth'
 
 interface State {
-  username: string,
-  email: string,
+  username: string
+  email: string
   password1: string
   password2: string
 }
@@ -77,6 +78,9 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
+// Check Authorization
+export const getServerSideProps = withAuth()
+
 const RegisterPage = () => {
   // ** States
   const [values, setValues] = useState<State>({
@@ -87,7 +91,7 @@ const RegisterPage = () => {
   })
 
   // ** Auth
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth()
 
   const [showPassword1, setShowPassword1] = useState<boolean>(false)
   const [showPassword2, setShowPassword2] = useState<boolean>(false)
@@ -104,38 +108,34 @@ const RegisterPage = () => {
     setValues({ ...values, [prop]: event.target.value })
   }
   const handleClickShowPassword1 = () => {
-    setShowPassword1(!showPassword1);
+    setShowPassword1(!showPassword1)
   }
   const handleClickShowPassword2 = () => {
-    setShowPassword2(!showPassword2);
+    setShowPassword2(!showPassword2)
   }
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDidAgree(event.target.checked);
+    setDidAgree(event.target.checked)
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
     setLoading(true)
     try {
-      const response = await Axios.post(`${API_BASE_URL}/auth/registration/`, values);
+      const response = await Axios.post(`${API_BASE_URL}/auth/registration/`, values)
 
       setOpenModal(true)
       setLoading(false)
     } catch (error) {
       if (Axios.isAxiosError(error) && error.response) {
-        const errors = error.response.data || {};
+        const errors = error.response.data || {}
 
-        setErrors(errors);
+        setErrors(errors)
       } else {
-        console.error('An unexpected error occurred: ', error);
+        console.error('An unexpected error occurred: ', error)
       }
       setLoading(false)
     }
-  }
-
-  if (isAuthenticated) {
-    router.push('/')
   }
 
   return (
@@ -222,8 +222,25 @@ const RegisterPage = () => {
             <Typography variant='body2'>Make your job application process easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField fullWidth label='Username' sx={{ marginBottom: 4 }} onChange={handleChange('username')} value={values.username} helperText={errors?.username} error={!!errors?.username} />            
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange('email')} value={values.email} helperText={errors?.email} error={!!errors?.email} />            
+            <TextField
+              fullWidth
+              label='Username'
+              sx={{ marginBottom: 4 }}
+              onChange={handleChange('username')}
+              value={values.username}
+              helperText={errors?.username}
+              error={!!errors?.username}
+            />
+            <TextField
+              fullWidth
+              type='email'
+              label='Email'
+              sx={{ marginBottom: 4 }}
+              onChange={handleChange('email')}
+              value={values.email}
+              helperText={errors?.email}
+              error={!!errors?.email}
+            />
             <FormControl fullWidth error={!!errors?.password1}>
               <InputLabel htmlFor='auth-register-password1'>Password</InputLabel>
               <OutlinedInput
@@ -245,12 +262,10 @@ const RegisterPage = () => {
                   </InputAdornment>
                 }
               />
-              {errors?.password1 && (
-                <FormHelperText>{errors.password1}</FormHelperText>
-              )}
+              {errors?.password1 && <FormHelperText>{errors.password1}</FormHelperText>}
             </FormControl>
 
-            <FormControl fullWidth error={!!errors?.password2} margin="normal">
+            <FormControl fullWidth error={!!errors?.password2} margin='normal'>
               <InputLabel htmlFor='auth-register-password2'>Confirm Password</InputLabel>
               <OutlinedInput
                 label='Confirm Password'
@@ -271,14 +286,10 @@ const RegisterPage = () => {
                   </InputAdornment>
                 }
               />
-              {errors?.password2 && (
-                <FormHelperText>{errors.password2}</FormHelperText>
-              )}
+              {errors?.password2 && <FormHelperText>{errors.password2}</FormHelperText>}
             </FormControl>
-            {errors?.non_field_errors && (
-                <FormHelperText error>{errors.non_field_errors}</FormHelperText>
-              )}
-            
+            {errors?.non_field_errors && <FormHelperText error>{errors.non_field_errors}</FormHelperText>}
+
             <FormControlLabel
               control={<Checkbox onChange={handleCheckboxChange} checked={didAgree} />}
               label={
@@ -292,8 +303,22 @@ const RegisterPage = () => {
                 </Fragment>
               }
             />
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }} disabled={!didAgree}>
-              {isLoading ? <>Sending Confirmation Email<CircularProgress size={26} sx={{color: 'white', marginLeft: 5}}/></> : 'Sign up'}
+            <Button
+              fullWidth
+              size='large'
+              type='submit'
+              variant='contained'
+              sx={{ marginBottom: 7 }}
+              disabled={!didAgree}
+            >
+              {isLoading ? (
+                <>
+                  Sending Confirmation Email
+                  <CircularProgress size={26} sx={{ color: 'white', marginLeft: 5 }} />
+                </>
+              ) : (
+                'Sign up'
+              )}
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
@@ -336,7 +361,7 @@ const RegisterPage = () => {
       <FooterIllustrationsV1 />
 
       <Dialog onClose={() => setOpenModal(false)} open={modalOpened}>
-        <DialogTitle sx={{textAlign: "center"}}>You're all set!</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center' }}>You're all set!</DialogTitle>
         <DialogContent>
           <Typography variant='body2'>Please check your email to verify your account.</Typography>
           <Button fullWidth size='medium' variant='contained' sx={{ marginY: 4 }} onClick={() => setOpenModal(false)}>
@@ -344,7 +369,6 @@ const RegisterPage = () => {
           </Button>
         </DialogContent>
       </Dialog>
-
     </Box>
   )
 }

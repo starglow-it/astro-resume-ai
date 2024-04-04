@@ -32,7 +32,7 @@ const TabInfo = () => {
 
   return (
     <CardContent>
-      <form>
+      <form onSubmit={e => e.preventDefault()}>
         <Grid container spacing={7}>
           <Grid item xs={12} sx={{ marginTop: 4.8 }}>
             <TextField

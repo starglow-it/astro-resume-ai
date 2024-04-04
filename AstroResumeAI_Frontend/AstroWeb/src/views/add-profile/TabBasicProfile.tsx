@@ -47,17 +47,17 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 interface TabBasicProfileProps {
-  handleSetTab: (tab: string) => void;
+  handleSetTab: (tab: string) => void
 }
 
-const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
+const TabBasicProfile: React.FC<TabBasicProfileProps> = ({ handleSetTab }) => {
   // ** State
   const [openAlert, setOpenAlert] = useState<boolean>(true)
-  const [fileName, setFileName] = useState<string>("")
-  const [uploadTime, setUploadTime] = useState<string>("")
+  const [fileName, setFileName] = useState<string>('')
+  const [uploadTime, setUploadTime] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const {profileData, setProfileData} = useProfileData();
+  const { profileData, setProfileData } = useProfileData()
 
   const onFileChange = async (file: ChangeEvent) => {
     const reader = new FileReader()
@@ -65,20 +65,20 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
     if (files && files.length !== 0) {
       setIsLoading(true) // Start Loading
 
-      const file = files[0];
+      const file = files[0]
 
       try {
-        const formData = new FormData();
-        formData.append('file', file);
+        const formData = new FormData()
+        formData.append('file', file)
         const response = await axios.post(`${API_BASE_URL}/parse-resume/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        });
+        })
 
-        setProfileData(response.data);
+        setProfileData(response.data)
 
-        setIsLoading(false);
+        setIsLoading(false)
         setFileName(file.name)
         setUploadTime(new Date().toLocaleString())
       } catch (error) {
@@ -89,7 +89,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
     }
   }
 
-  const handleChange = (prop: string) => (event: React.ChangeEvent<HTMLInputElement>)=> {
+  const handleChange = (prop: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setProfileData({
       ...profileData,
       [prop]: event.target.value
@@ -110,7 +110,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
 
   return (
     <CardContent>
-      <form>
+      <form onSubmit={e => e.preventDefault()}>
         <Grid container spacing={7}>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -126,15 +126,31 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
                     id='add-profile-upload-resume'
                   />
                 </ButtonStyled>
-                {isLoading ? <LinearProgress sx={{ marginTop: 5 }} /> : <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  {fileName ? <>{fileName} <br /> {"Uploaded at " + uploadTime}</> : "Allowed PDF, DOCX, DOC or TXT."}
-                </Typography>}
+                {isLoading ? (
+                  <LinearProgress sx={{ marginTop: 5 }} />
+                ) : (
+                  <Typography variant='body2' sx={{ marginTop: 5 }}>
+                    {fileName ? (
+                      <>
+                        {fileName} <br /> {'Uploaded at ' + uploadTime}
+                      </>
+                    ) : (
+                      'Allowed PDF, DOCX, DOC or TXT.'
+                    )}
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Name' placeholder='John Doe' value={profileData.name} onChange = {handleChange('name')} />
+            <TextField
+              fullWidth
+              label='Name'
+              placeholder='John Doe'
+              value={profileData.name}
+              onChange={handleChange('name')}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl>
@@ -153,7 +169,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
               label='Email'
               placeholder='johnDoe@example.com'
               value={profileData.email}
-              onChange = {handleChange('email')}
+              onChange={handleChange('email')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -162,7 +178,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
               label='Recent Role'
               placeholder='Senior Full Stack Developer'
               value={profileData.recent_role}
-              onChange = {handleChange('recent_role')}
+              onChange={handleChange('recent_role')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -172,7 +188,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
               label='Location'
               placeholder='New York, NY'
               value={profileData.location}
-              onChange = {handleChange('location')}
+              onChange={handleChange('location')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -182,10 +198,10 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
               label='Phone'
               placeholder='+1 234 567 8900'
               value={profileData.phone}
-              onChange = {handleChange('phone')}
+              onChange={handleChange('phone')}
             />
           </Grid>
-          
+
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -194,7 +210,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
               type='text'
               label='Summary'
               value={profileData.summary}
-              onChange = {handleChange('summary')}
+              onChange={handleChange('summary')}
             />
           </Grid>
 
@@ -218,7 +234,7 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
           ) : null} */}
 
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('work_experience')}>
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handleSetTab('skills')}>
               Next
             </Button>
             <Button type='reset' variant='outlined' color='secondary' onClick={handleReset}>
@@ -231,4 +247,4 @@ const TabBasicProfile: React.FC<TabBasicProfileProps> = ({handleSetTab}) => {
   )
 }
 
-export default TabBasicProfile;
+export default TabBasicProfile

@@ -15,16 +15,18 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 import InformationOutline from 'mdi-material-ui/InformationOutline'
 import WorkIcon from '@mui/icons-material/Work'
 import SchoolIcon from '@mui/icons-material/School'
+import ComputerIcon from '@mui/icons-material/Computer'
 
 // ** Demo Tabs Imports
-import TabInfo from 'src/views/add-profile/TabInfo'
 import TabBasicProfile from 'src/views/add-profile/TabBasicProfile'
+import TabSkills from 'src/views/add-profile/TabSkills'
 import TabWorkExperience from 'src/views/add-profile/TabWorkExperience'
+import TabEducation from 'src/views/add-profile/TabEducation'
+import TabInfo from 'src/views/add-profile/TabInfo'
 
 // ** Third Party Styles Imports
 import 'react-datepicker/dist/react-datepicker.css'
-import TabEducation from 'src/views/add-profile/TabEducation'
-import withAuth from 'src/@core/components/withAuth'
+import { withAuth } from 'src/@core/components/withAuth'
 import { useProfileData } from 'src/@core/context/profileDataContext'
 import { useRouter } from 'next/router'
 
@@ -45,6 +47,9 @@ const TabName = styled('span')(({ theme }) => ({
     display: 'none'
   }
 }))
+
+// Check Authorization
+export const getServerSideProps = withAuth()
 
 const EditProfile = () => {
   // ** State
@@ -92,6 +97,15 @@ const EditProfile = () => {
             }
           />
           <Tab
+            value='skills'
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <ComputerIcon />
+                <TabName>Skills</TabName>
+              </Box>
+            }
+          />
+          <Tab
             value='work_experience'
             label={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -123,6 +137,9 @@ const EditProfile = () => {
         <TabPanel sx={{ p: 0 }} value='basic_profile'>
           <TabBasicProfile handleSetTab={handleSetTab} />
         </TabPanel>
+        <TabPanel sx={{ p: 0 }} value='skills'>
+          <TabSkills handleSetTab={handleSetTab} />
+        </TabPanel>
         <TabPanel sx={{ p: 0 }} value='work_experience'>
           <TabWorkExperience handleSetTab={handleSetTab} />
         </TabPanel>
@@ -137,4 +154,4 @@ const EditProfile = () => {
   )
 }
 
-export default withAuth(EditProfile)
+export default EditProfile

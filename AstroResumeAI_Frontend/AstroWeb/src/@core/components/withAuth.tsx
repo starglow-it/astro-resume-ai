@@ -1,27 +1,40 @@
-import { useRouter } from 'next/router';
-import React, { ComponentType, useEffect, ReactElement } from 'react';
-import { useAuth } from '../context/authContext';
+import { ConsoleLine } from 'mdi-material-ui'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next/types'
+import { parseCookies } from 'nookies'
 
-interface WithAuthProps {
-  // You can add specific props for the HOC here if needed
-}
+export function withAuth(gssp?: GetServerSideProps): GetServerSideProps {
+  return async (context: GetServerSidePropsContext) => {
+    const { req, resolvedUrl } = context
+    const cookies = parseCookies({ req })
+    const token = cookies.token
 
-function withAuth<P extends object>(WrappedComponent: ComponentType<P>): ComponentType<P & WithAuthProps> {
-  // This component now returns a function that explicitly accepts all props P
-  // and returns a ReactElement or null.
-  return function WithAuthComponent(props: P): ReactElement | null {
-    const { isAuthenticated, token } = useAuth();
-    const router = useRouter();
+    // Check if the current URL is the login or register page
+    const isAuthPage = resolvedUrl.startsWith('/pages/login') || resolvedUrl.startsWith('/pages/register')
 
-    useEffect(() => {
-      if (token === null) {
-        router.push('/pages/login');
+    if (token && isAuthPage) {
+      // If the user is already authenticated and tries to access login or register pages, redirect to home
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
       }
-    }, [isAuthenticated, token]);
+    } else if (!token && !isAuthPage) {
+      // If the user is not authenticated and is trying to access a protected route, redirect to login
+      return {
+        redirect: {
+          destination: '/pages/login',
+          permanent: false
+        }
+      }
+    }
 
-    // Correctly spread the props to the WrappedComponent
-    return <WrappedComponent {...props} />;
-  };
+    // If there is a token and gssp is provided, call it for further page-specific data fetching
+    if (token && gssp) {
+      return gssp(context)
+    }
+
+    // If no gssp is provided, or the user is accessing an unprotected route without authentication, just proceed with rendering the page
+    return { props: {} }
+  }
 }
-
-export default withAuth;
