@@ -21,6 +21,7 @@
 \usepackage{tabularx}
 \usepackage{hyphenat}
 \usepackage{fontawesome}
+\usepackage{xcolor} % Include the xcolor package
 
 %---------- FONT OPTIONS ----------
 % sans-serif
@@ -134,45 +135,55 @@
 \begin{center}
     \textbf{\Huge \scshape {{ name }}} \\ \vspace{3pt}
     \small
-    \faMobile \hspace{.5pt} \href{tel:{{ phone }}}{ {{ phone }} }
+    {% if phone %}
+    \faMobile \hspace{.5pt} \href{tel:{{ phone|safe }}}{ {{ phone|safe }} }
     $|$
-    \faAt \hspace{.5pt} \href{mailto:{{ email }}}{ {{ email }} }
+    {% endif %}
+
+    {% if email %}
+    \faAt \hspace{.5pt} \href{mailto:{{ email|safe }}}{ {{ email|safe }} }
     $|$
-    \faLinkedinSquare \hspace{.5pt} \href{ {{ linkedin }}}{ {{ linkedin }} }
+    {% endif %}
+    {% if linkedin %}
+    \faLinkedinSquare \hspace{.5pt} \href{ {{ linkedin|safe }}}{ {{ linkedin|safe }} }
     $|$
-    \faGithub \hspace{.5pt} \href{ {{ github }}}{ {{ github }} }
+    {% endif %}
+    {% if github %}
+    \faGithub \hspace{.5pt} \href{ {{ github|safe }}}{ {{ github|safe }} }
     $|$
-    \faGlobe \hspace{.5pt} \href{ {{ portfolio }}}{ {{ portfolio }} }
+    {% endif %}
+
+    {% if portfolio %}
+    \faGlobe \hspace{.5pt} \href{ {{ portfolio|safe }}}{ {{ portfolio|safe }} }
     $|$
-    \faMapMarker \hspace{.5pt} \href{ {{ location }}}{ {{ location }} }
+    {% endif %}
+    {% if location %}
+    \faMapMarker \hspace{.5pt} \href{ {{ location|safe }}}{ {{ location|safe }} }
+    {% endif %}
+
 \end{center}
 
 %----------- EDUCATION -----------
+{% if education %}
 
 \section*{Education}
 \begin{itemize}[leftmargin=*,label={}]
     {% for edu in education %}
-    \item \textbf{Degree:} {{ edu.educationLevel }}
+    \item \textbf{Degree:} {{ edu.education_level|safe }}
     \begin{itemize}
-        \item \textit{University Name:} {{ edu.university }}
-        \item \textit{Years:} {{ edu.dates }}
+        \item \textit{University Name:} {{ edu.university|safe }} - {{ edu.major|safe }}
+        \item \textit{Years:} {{ edu.graduation_year|safe }}
     \end{itemize}
     {% endfor %}
 \end{itemize}
+{% endif %}
 
 
-%----------- SKILLS -----------
-
-\section{Skills}
-\begin{itemize}
-{% for skill in skills %}
-    \item {{ skill }}
-{% endfor %}
-\end{itemize}
 
 
 
 %----------- EXPERIENCE -----------
+{% if experience %}
 
 \section{Experience}
 \vspace{3pt}
@@ -180,34 +191,47 @@
 
 {% for exp in experience %}
     \resumeSubheading
-      { {{ exp.company }} }
-      { {{ exp.location }} }
-      { {{ exp.jobTitle }} }
-      { {{ exp.duration }} }
+      { {{ exp.company|safe }} }
+      { {{ exp.location|safe }} }
+      { {{ exp.job_title|safe }} }
+      { {{ exp.duration|safe }} }
         \resumeItemListStart
-            {% for resp in exp.jobTitle %}
-            \resumeItem{ {{ resp }} }
+            {% for resp in exp.description %}
+            \resumeItem{ {{ resp|safe}} }
             {% endfor %}
         \resumeItemListEnd
 {% endfor %}
 
 \resumeSubHeadingListEnd
+{% endif %}
 
+%----------- SKILLS -----------
+{% if skills %}
+
+\section{Skills}
+\begin{itemize}
+{% for skill in skills %}
+    \item {{ skill|safe }}
+{% endfor %}
+\end{itemize}
+{% endif %}
 %----------- CERTIFICATES -----------
+{% if certifications %}
 
 \section*{Certificates}
 \begin{itemize}[leftmargin=*,label={}]
     {% for cert in certifications %}
-    \item \textbf{Program:} {{ cert.program }}
+    \item \textbf{Program:} {{ cert.program|safe }}
     \begin{itemize}
-        \item \textit{Date:} {{ cert.date }}
+        \item \textit{Date:} {{ cert.date|safe }}
     \end{itemize}
     {% endfor %}
 \end{itemize}
+{% endif %}
 
 \begingroup
-\fontsize{4.08003pt}{4.08003pt}\selectfont % 1px = 0.3528pt
-\textcolor{white}{{hide_text}}
+\fontsize{0.3528pt}{0.3528pt}\selectfont % 1px = 0.3528pt
+\textcolor{white}{ {{hide_text|safe}} }
 \endgroup
 
 \end{document}

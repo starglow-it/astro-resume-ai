@@ -22,6 +22,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from django.template.loader import render_to_string, get_template
+from jinja2 import Environment, FileSystemLoader
+from markupsafe import Markup
 
 # Load a pre-trained model
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -84,7 +86,7 @@ def generate_resume(request):
         # job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
         # resume_obj = save_resume_data_to_db(resume_data)
         score = get_matching_score(str(resume_data), job_description_text)
-
+        print (score)
         # resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
         resume_pdf_path = generate_pdf_from_resume_data_beta(resume_data, title)
         return Response({
@@ -151,7 +153,7 @@ def escape_latex_special_chars(text):
             text = text.replace(char, escape_sequences[char])
         else:
             # Prepend a backslash to the character to escape it
-            text = text.replace(char, f"\\{char}")
+            text = text.replace(char, f"\{char}")
     
     return text
 
@@ -189,11 +191,16 @@ def process_json(input_json):
 
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt = (f"Given the following resume: {json.dumps(origin_resume, indent=2)} and the job description: Title ==> {title} Description ==> {job_description}, update the resume to match the job description 100%. Provide the updated resume in JSON format. In this case, don't use ( '_' ) unerscore for filed name "
-              f"Also get all keywords (400 + words) as much as (get really many keywords as possible) can from the job description and add them as string to the 'hide_text' filed in resume json. get really many keywords so that we can increase the matching score."
-              f"Also every experience description value should be random number between 5-7 sentences. And you should not use exact sentence that is in the job description. You should also avoid making resume exactly the same as the job description."
-              f"You can change job_title to match the job description but you shouldn't change job_tile, location and duration."
-              f"Please update profile.overview, experience ( title, responsibilities) and skills for perfect match with job description. Actually your provided resume matched about 50%. I have to increase this to about 100%."
+    prompt = (f"""Given the resume and job description provided below, please update the resume to better match the job description. The goal is to enhance the resume to closely align with the job's requirements, aiming for a near-perfect match. Here are the specific adjustments needed:
+                Resume Format Update: Present the updated resume in JSON format. Keep the structure. Use underscores (_) for field names to maintain consistency.
+                Keyword Extraction: From the job description, extract a comprehensive list of keywords—aim for a thorough collection to significantly improve the resume's matching score. Add these keywords as a single string under the hide_text field in the resume's JSON. And add job title to hide_text.
+                Experience Descriptions: For each entry under experience, generate descriptions containing between 5 to 7 sentences. These sentences must be unique (not directly taken from the job description) and tailored to reflect the skills and responsibilities highlighted in the job description.
+                Job Title Alignment: Adjust the job_title within the resume to better reflect the job description. However, do not change the job_title, location, and duration fields within each work experience entry.
+                Profile Overview, Experience, and Skills Enhancement: Update the profile.overview, experience (including titles and responsibilities), and skills sections to align perfectly with the job description, thereby improving the resume's match to the job requirements.
+                """
+              f"origin_resume: {origin_resume}"
+              f"Title: [{title}] Description: [{job_description}]"
+              f"Please ensure that the updated resume reflects the candidate's qualifications accurately, matching the job description as closely as possible."
               )
     chat_completion = client.chat.completions.create(
         messages=[
@@ -239,7 +246,7 @@ def generate_pdf_from_resume_data(resume_data, title):
     latex_content = latex_content.replace('{{experiences}}', experience)
     latex_content = latex_content.replace('{{education}}', education)
     latex_content = latex_content.replace('{{skills}}', skills)
-    latex_content = latex_content.replace('{{hide_text}}', f"{{{resume_data['hideText']}}}")
+    latex_content = latex_content.replace('{{hide_text}}', f"{{{resume_data['hide_text']}}}")
     current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     # Write filled content to a temporary .tex file
     file_name = sanitize_for_filename(f"{resume_data['name']}_{title}_{current_datetime}.tex")
@@ -262,25 +269,28 @@ def generate_pdf_from_resume_data(resume_data, title):
 
 def generate_pdf_from_resume_data_beta(resume_data, title):
     try:
-        template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')
+        template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template_1.tex')
         output_dir = os.path.join(settings.BASE_DIR, 'output')
         os.makedirs(output_dir, exist_ok=True)
-        
+        cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template_1.cls')
+        shutil.copy(cls_path, output_dir)
+        print (resume_data)
         experience = resume_data['experience']
         for exp in experience:
             if 'description' in exp:
-                exp['description'] = exp['description'].join('. ')
+                exp['description'] = exp['description'].strip().split("\n")
 
         data = {
             'name': resume_data['name'],
             'email': resume_data['email'],
             'phone': resume_data['phone'],
-            'linkedin': resume_data['linkedin'],
-            'location': resume_data['location'],
-            'education': resume_data['education'],
+            'linkedin': resume_data['linkedin'] if resume_data['linkedin'] else "",
+            'location': resume_data['location'] if resume_data['location'] else "",
+            'education': resume_data['education'] if resume_data['education'] else "",
+            'summary': resume_data['summary'] if resume_data['summary'] else "",
             'experience': experience,
             'skills': resume_data['skills'],
-            "hide_text": resume_data['hideText']
+            "hide_text": resume_data['hide_text']
             # 'certifications': resume_data['certifications'],
             # 'projects': resume_data['projects'],
         }
@@ -295,7 +305,14 @@ def generate_pdf_from_resume_data_beta(resume_data, title):
         with open(temp_tex_path, 'w') as file:
             file.write(latex_content)
 
-        subResult = subprocess.check_call(['pdflatex', temp_tex_path])
+        compile_success = subprocess.run(['latexmk', '-xelatex', '-outdir=' + output_dir, temp_tex_path])
+        
+
+        # Clean up auxiliary files, leaving only the PDF
+        subprocess.run(['latexmk', '-c', '-outdir=' + output_dir, temp_tex_path])
+
+        if compile_success.returncode != 0:
+            raise Exception("LaTeX compilation failed")
         result = os.path.splitext(temp_tex_path)[0] + '.pdf'
 
         return result
