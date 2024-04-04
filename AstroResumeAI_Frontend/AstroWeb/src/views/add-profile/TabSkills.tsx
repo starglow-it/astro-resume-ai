@@ -86,20 +86,26 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
   }
 
   const handleChangeTempSkill = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
-    setTempSkills({ ...tempSkills, [index]: event.target.value })
+    const updatedTempSkills = [...tempSkills]
+
+    updatedTempSkills[index] = event.target.value
+
+    setTempSkills(updatedTempSkills)
   }
 
-  const addSkill = (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
+  const addSkill = (index: number) => () => {
     const updatedSkills = [...profileData.skills]
+    const updatedTempSkills = [...tempSkills]
 
     updatedSkills[index].skills.push(tempSkills[index])
+    updatedTempSkills[index] = ''
 
     setProfileData({
       ...profileData,
       skills: updatedSkills
     })
 
-    setTempSkills({ ...tempSkills, [index]: '' })
+    setTempSkills(updatedTempSkills)
   }
 
   const addCategory = () => {
@@ -144,7 +150,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
 
   return (
     <CardContent sx={{ marginTop: 4.75 }}>
-      <form>
+      <form onSubmit={e => e.preventDefault()}>
         {profileData.skills.map((skill, index) => (
           <Grid container spacing={7} sx={{ marginBottom: 10 }} key={index}>
             <Grid item xs={12} sm={6}>
@@ -164,6 +170,11 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
                   inputProps={{ 'aria-label': 'add new skill' }}
                   value={tempSkills[index]}
                   onChange={handleChangeTempSkill(index)}
+                  onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                    if (event.key === 'Enter') {
+                      addSkill(index)
+                    }
+                  }}
                 />
                 {/* <IconButton type='button' sx={{ p: '10px' }} aria-label='search'>
                   <SearchIcon />

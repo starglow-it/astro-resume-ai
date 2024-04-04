@@ -81,7 +81,7 @@ const TabInfo: React.FC<TabInfoProps> = ({ isUpdate = false }) => {
 
   return (
     <CardContent sx={{ marginTop: 4.75 }}>
-      <form>
+      <form onSubmit={e => e.preventDefault()}>
         <Grid container spacing={7}>
           <Grid item xs={12} sm={6}>
             <TextField

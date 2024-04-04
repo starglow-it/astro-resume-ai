@@ -75,7 +75,7 @@ const TabSecurity = () => {
   }
 
   return (
-    <form>
+    <form onSubmit={e => e.preventDefault()}>
       <CardContent sx={{ paddingBottom: 0 }}>
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
