@@ -115,6 +115,8 @@ const LoginPage = () => {
       const response = await Axios.post(`${API_BASE_URL}/auth/login/`, values)
 
       login(response.data.key)
+
+      router.push('/')
     } catch (error) {
       if (Axios.isAxiosError(error) && error.response) {
         setErrors(error.response.data)

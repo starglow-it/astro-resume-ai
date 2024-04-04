@@ -97,8 +97,7 @@ const CardProfile: React.FC<CardProfileProps> = ({ profile, editProfile, deleteP
                 </Typography>
               </Box>
               <Box sx={{ mb: 5 }}>
-                {profile.skills.length > 0 &&
-                  profile.skills.map(skill => <Chip label={skill} size='small' sx={{ margin: 1 }} />)}
+                <Typography variant='h6'>{profile.recent_role}</Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                 <Button variant='outlined' size='small' onClick={() => editProfile(profile.id)} sx={{ marginRight: 5 }}>
