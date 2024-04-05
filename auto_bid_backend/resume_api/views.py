@@ -153,7 +153,7 @@ def escape_latex_special_chars(text):
             text = text.replace(char, escape_sequences[char])
         else:
             # Prepend a backslash to the character to escape it
-            text = text.replace(char, f"\{char}")
+            text = text.replace(char, f"\\{char}")
     
     return text
 
@@ -207,6 +207,78 @@ def generate_resume_data(title, job_description, origin_resume):
         messages=[
             {"role": "user", "content": prompt}
         ],
+        functions = [
+            {
+                "name": "createProfileObject",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string", "format": "email" },
+                    "phone": { "type": ["string", "null"], "maxLength": 255 },
+                    "location": { "type": ["string", "null"], "maxLength": 255 },
+                    "summary": { "type": ["string", "null"] },
+                    "skills": {
+                        "type": "array",
+                        "items": {
+                        "type": "object",
+                        "properties": {
+                            "category_name": { "type": "string" },
+                            "proficiency_list": { 
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                            }
+                        },
+                        "required": ["category_name", "proficiency_list"]
+                        },
+                        "default": []
+                    },
+                    "website": { "type": ["string", "null"], "maxLength": 255 },
+                    "linkedin": { "type": ["string", "null"], "maxLength": 255 },
+                    "github": { "type": ["string", "null"], "maxLength": 255 },
+                    "education": {
+                        "type": "array",
+                        "items": {
+                        "type": "object",
+                        "properties": {
+                            "university": { "type": "string" },
+                            "education_level": { "type": ["string", "null"], "maxLength": 255 },
+                            "graduation_year": { "type": ["string", "null"], "maxLength": 255 },
+                            "major": { "type": ["string", "null"], "maxLength": 255 }
+                        },
+                        "required": ["university", "education_level", "graduation_year", "major"]
+                        }
+                    },
+                    "experience": {
+                        "type": "array",
+                        "items": {
+                        "type": "object",
+                        "properties": {
+                            "job_title": { "type": "string" },
+                            "company": { "type": ["string", "null"], "maxLength": 255 },
+                            "location": { "type": ["string", "null"], "maxLength": 255 },
+                            "duration": { "type": ["string", "null"], "maxLength": 255 },
+                            "description": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                }
+                            },
+                        },
+                        "required": ["job_title", "company", "location", "duration", "description"]
+                        }
+                    },
+                    "hide_text": {
+                        "type": "string"
+                    }
+                    },
+                    "required": ["name", "email", "phone", "summary", "skills", "education", "experience", "hide_text"]
+                }
+            }
+        ],
+        function_call = { "name": "createProfileObject" },
         # model="gpt-4",
         model="gpt-3.5-turbo-0125",
         # model="text-babbage-002",
@@ -216,7 +288,7 @@ def generate_resume_data(title, job_description, origin_resume):
 
     # Extract and print the assistant's response
     response_message = chat_completion.choices[0].message
-    resume_json = process_json(json.loads(response_message.content))
+    resume_json = process_json(json.loads(response_message.function_call.arguments))
     return resume_json
 
 def save_resume_data_to_db(resume_data):
@@ -277,10 +349,7 @@ def generate_pdf_from_resume_data_beta(resume_data, title):
         shutil.copy(cls_path, output_dir)
         print (resume_data)
         experience = resume_data['experience']
-        for exp in experience:
-            if 'description' in exp:
-                exp['description'] = exp['description'].strip().split("\n")
-
+        
         data = {
             'name': resume_data['name'],
             'email': resume_data['email'],
@@ -289,7 +358,7 @@ def generate_pdf_from_resume_data_beta(resume_data, title):
             'location': resume_data['location'] if resume_data['location'] else "",
             'education': resume_data['education'] if resume_data['education'] else "",
             'summary': resume_data['summary'] if resume_data['summary'] else "",
-            'experience': experience,
+            'experience': resume_data['experience'],
             'skills': resume_data['skills'],
             "hide_text": resume_data['hide_text']
             # 'certifications': resume_data['certifications'],

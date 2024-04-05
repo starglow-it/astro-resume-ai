@@ -33,7 +33,7 @@
     {% for category in skills %}
     \entry{ {{category.category_name}} }
     {
-        {% for skill in category.skills %} {{skill|safe}} {% endfor %}
+        {% for skill in category.proficiency_list %} {{skill|safe}} {% endfor %}
     }
     {% endfor %}
 }
