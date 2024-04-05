@@ -8,7 +8,7 @@ export type ProfileData = {
   summary: string
   skills: {
     category_name: string
-    skills: string[]
+    proficiency_list: string[]
   }[]
   education: {
     university: string
@@ -40,7 +40,7 @@ export type FetchedProfileData = {
   summary: string
   skills: {
     category_name: string
-    skills: string[]
+    proficiency_list: string[]
   }[]
   education: {
     id: string

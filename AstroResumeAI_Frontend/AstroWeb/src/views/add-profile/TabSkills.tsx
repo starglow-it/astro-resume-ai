@@ -71,12 +71,12 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
     })
   }
 
-  const handleSetSkills = (index: number) => (skills: string[]) => {
+  const handleSetSkills = (index: number) => (proficiency_list: string[]) => {
     const updatedSkills = [...profileData.skills]
 
     updatedSkills[index] = {
       ...updatedSkills[index],
-      skills
+      proficiency_list
     }
 
     setProfileData({
@@ -97,7 +97,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
     const updatedSkills = [...profileData.skills]
     const updatedTempSkills = [...tempSkills]
 
-    updatedSkills[index].skills.push(tempSkills[index])
+    updatedSkills[index].proficiency_list.push(tempSkills[index])
     updatedTempSkills[index] = ''
 
     setProfileData({
@@ -113,7 +113,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
 
     updatedSkills.push({
       category_name: '',
-      skills: []
+      proficiency_list: []
     })
 
     setProfileData({
@@ -177,9 +177,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
                     }
                   }}
                 />
-                {/* <IconButton type='button' sx={{ p: '10px' }} aria-label='search'>
-                  <SearchIcon />
-                </IconButton> */}
+
                 <Divider sx={{ height: 28, m: 0.5 }} orientation='vertical' />
                 <IconButton color='primary' sx={{ p: '10px' }} aria-label='directions' onClick={addSkill(index)}>
                   <PlusCircle />
@@ -188,7 +186,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
             </Grid>
 
             <Grid item xs={12}>
-              <SkillChips skills={skill.skills} setSkills={handleSetSkills(index)} />
+              <SkillChips skills={skill.proficiency_list} setSkills={handleSetSkills(index)} />
             </Grid>
 
             <Grid item xs={12} container justifyContent='flex-end'>
