@@ -23,7 +23,7 @@ const SkillChips: React.FC<SkillChipsProps> = ({ skills, setSkills }) => {
     <Paper
       sx={{
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         flexWrap: 'wrap',
         listStyle: 'none',
         p: 0.5,
