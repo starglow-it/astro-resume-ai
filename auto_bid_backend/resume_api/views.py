@@ -191,18 +191,21 @@ def process_json(input_json):
 
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt = (f"""Given the resume and job description provided below, please update the resume to better match the job description. The goal is to enhance the resume to closely align with the job's requirements, aiming for a near-perfect match. Here are the specific adjustments needed:
-                Resume Format Update: Present the updated resume in JSON format. Keep the structure. Use underscores (_) for field names to maintain consistency.
+    prompt = (f"""Update the resume provided below to be more aligned with the job title and description given. Ensure the resume is structured and formatted in a way that is easily readable by both ATS systems and human recruiters. Use the job description to extract relevant keywords and skills, and incorporate these into the resume, especially in the skills and experience sections. Add a 'hide_text' field to the resume's JSON object, which includes a comma-separated list of these keywords plus the job title, to enhance ATS compatibility.
                 Keyword Extraction: From the job description, extract a comprehensive list of keywords—aim for a thorough collection to significantly improve the resume's matching score. Add these keywords as a single string under the hide_text field in the resume's JSON. And add job title to hide_text.
-                Experience Descriptions: For each entry under experience, generate descriptions containing between 5 to 7 sentences. These sentences must be unique (not directly taken from the job description) and tailored to reflect the skills and responsibilities highlighted in the job description.
-                Job Title Alignment: Adjust the job_title within the resume to better reflect the job description. However, do not change the job_title, location, and duration fields within each work experience entry.
-                Profile Overview, Experience, and Skills Enhancement: Update the profile.overview, experience (including titles and responsibilities), and skills sections to align perfectly with the job description, thereby improving the resume's match to the job requirements.
-                The return value should be same structure of origin resume.
-                """
-              f"origin_resume: {origin_resume}"
-              f"Title: [{title}] Description: [{job_description}]"
-              f"Please ensure that the updated resume reflects the candidate's qualifications accurately, matching the job description as closely as possible."
-              )
+              Original Resume: {origin_resume}
+              Job Title:
+              {title}
+              
+              Job Description:
+              {job_description}
+              Instructions:
+            - Do not change existing job titles, company names, locations, or durations.
+            - Enhance the resume by incorporating keywords and skills from the job description.
+            - Ensure all modifications make the resume more relevant to the job title and description provided.
+            - Append a 'hide_text' field to the JSON object with keywords and the job title for ATS optimization.
+
+              """)
     chat_completion = client.chat.completions.create(
         messages=[
             {"role": "user", "content": prompt}
