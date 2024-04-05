@@ -1,30 +1,11 @@
 \documentclass[]{resume_template_1}
 \fullname{ {{name|safe}} }
-\usepackage{xcolor} % Include the xcolor package
-
 % \jobtitle{Software Engineer} % Uncomment and replace if needed
 
 \begin{document}
 \resumeheader
 
-{% if linkedin %}
-{\linkedin{ {{linkedin|safe}} }}
-{% endif %}
-{% if email %}
-{\email{ {{email|safe}} }}
-{% endif %}
-{% if github %}
-{\github{ {{github|safe}} }}
-{% endif %}
-{% if phone %}
-{\phone{ {{phone|safe}} }}
-{% endif %}
-{% if website %}
-{\website{ {{website|safe}} }}
-{% endif %}
-{% if nationality %}
-{\nationality{ {{nationality|safe}} }}
-{% endif %}
+{% if linkedin %}{\linkedin{ {{linkedin|safe}} }}{% endif %} {% if email %}{\email{ {{email|safe}} }}{% endif %} {% if github %}{\github{ {{github|safe}} }}{% endif %} {% if phone %}{\phone{ {{phone|safe}} }}{% endif %} {% if website %}{\website{ {{website|safe}} }}{% endif %} {% if nationality %}{\nationality{ {{nationality|safe}} }}{% endif %} {% if not linkedin %}{}{% endif %} {% if not email %}{}{% endif %} {% if not github %}{}{% endif %} {% if not phone %}{}{% endif %} {% if not website %}{}{% endif %} {% if not nationality %}{}{% endif %}
 
 \begin{section}{Summary}
     { {{summary|safe}} }
@@ -32,8 +13,8 @@
 
 \begin{section}{Education}
     {% for edu in education %}
-    \begin{subsectionnobullet}{ {{edu.education_level|safe}} }{ {{edu.university|safe}} }{ {{edu.graduation_year|safe}} }{ {{edu.university|safe}} }
-        \italicitem{ {{edu.major|safe}} }
+    \begin{subsectionnobullet}{ {{edu.education_level|safe}} in {{edu.major|safe}} }{ {{edu.university|safe}} }{ {{edu.graduation_year|safe}} }{}
+        \italicitem{}
     \end{subsectionnobullet}
     {% endfor %}
 \end{section}
@@ -48,18 +29,20 @@
     {% endfor %}
 \end{section}
 
-% \sectiontable{Skills}{
-%         {% for skill in skills %}
-%         {{skill|safe}}
-%         {% endfor %}
-
-% }
+\sectiontable{Skills}{
+    {% for category in skills %}
+    \entry{ {{category.category_name}} }
+    {
+        {% for skill in category.skills %} {{skill|safe}} {% endfor %}
+    }
+    {% endfor %}
+}
 
 
 % Practically invisible text
 \begingroup
 \fontsize{0.3528pt}{0.3528pt}\selectfont % 1px = 0.3528pt
-\textcolor{white}{{hide_text|safe}}
+\textcolor{white}{ {{hide_text|safe}} }
 \endgroup
 % Add other sections as needed, with appropriate placeholders
 % ...

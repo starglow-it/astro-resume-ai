@@ -197,6 +197,7 @@ def generate_resume_data(title, job_description, origin_resume):
                 Experience Descriptions: For each entry under experience, generate descriptions containing between 5 to 7 sentences. These sentences must be unique (not directly taken from the job description) and tailored to reflect the skills and responsibilities highlighted in the job description.
                 Job Title Alignment: Adjust the job_title within the resume to better reflect the job description. However, do not change the job_title, location, and duration fields within each work experience entry.
                 Profile Overview, Experience, and Skills Enhancement: Update the profile.overview, experience (including titles and responsibilities), and skills sections to align perfectly with the job description, thereby improving the resume's match to the job requirements.
+                The return value should be same structure of origin resume.
                 """
               f"origin_resume: {origin_resume}"
               f"Title: [{title}] Description: [{job_description}]"
