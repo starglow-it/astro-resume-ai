@@ -59,8 +59,6 @@ interface DescriptionTableProps {
 const DescriptionTable: React.FC<DescriptionTableProps> = ({ description, setDescription }) => {
   const [rows, setRows] = React.useState<GridRowsProp>([])
 
-  console.log('Description', description)
-
   React.useEffect(() => {
     if (description.length > 0) {
       console.log(description)
