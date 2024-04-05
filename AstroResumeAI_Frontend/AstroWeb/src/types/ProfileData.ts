@@ -21,7 +21,7 @@ export type ProfileData = {
     company: string
     location: string
     duration: string
-    description: string
+    description: string[]
   }[]
   WorkAuthorization: string
   website: string
@@ -55,7 +55,7 @@ export type FetchedProfileData = {
     company: string
     location: string
     duration: string
-    description: string
+    description: string[]
   }[]
   WorkAuthorization: string
   website: string
