@@ -16,11 +16,21 @@ const descriptionSelector = document.getElementById('descriptionSelector');
 
 function setInitialStatus() {
   document.getElementById('login-board').style.display = 'block';
-  document.getElementById('navbar').style.display = 'none';
   document.getElementById('scan-job-board').style.display = 'none';
+  document.getElementById('navbar').style.display = 'none';
   document.getElementById('score-board').style.display = 'none';
   document.getElementById('support').style.display = 'none';
   document.getElementById('no-item-text').innerText = '';
+  document.getElementById('func-btns').style.display = 'none';
+  document.querySelectorAll('.custom-collection-item').forEach(function (item) {
+    item.remove();
+  });
+  document.getElementById('login-btn').innerText = 'LOGIN';
+}
+
+async function handleLogout() {
+  await chrome.storage.local.remove(['isAuthorized', 'token']);
+  setInitialStatus();
 }
 
 function updateInputValue(element, newValue) {
@@ -45,7 +55,7 @@ function handleScore() {
           const selectEl = document.getElementById("resume-select");
           const selectUl = document.querySelector('.select-wrapper .dropdown-content');
           const liElements = selectUl.getElementsByTagName('li');
-          
+
           for (var i = 0; i < selectEl.options.length; i++) {
             if (selectEl.options[i].value === selectedResumeId) {
               selectEl.value = liElements[i].innerText;
@@ -153,33 +163,43 @@ descriptionSelector.addEventListener('valueChange', function (event) {
   jobDescription = event.target.value;
 });
 
-function toggleScoreBoard(isShow) {
+async function toggleScoreBoard(isShow) {
   const scoreBoard = document.getElementById("score-board");
   const scoreNavItem = document.getElementById("score-nav-item");
 
-  if (isShow) {
-    scoreBoard.style.display = "block";
-    scoreNavItem.style.backgroundColor = '#9155FD';
-    scoreNavItem.style.color = 'white';
-  } else {
-    scoreBoard.style.display = "none";
-    scoreNavItem.style.backgroundColor = 'white';
-    scoreNavItem.style.color = 'black';
+  const isAuthenticated = await chrome.storage.local.get('isAuthorized');
+
+  if (isAuthenticated) {
+    if (isShow) {
+      scoreBoard.style.display = "block";
+      scoreNavItem.style.backgroundColor = '#9155FD';
+      scoreNavItem.style.color = 'white';
+      document.getElementById('refresh-btn').style.display = 'block';
+    } else {
+      scoreBoard.style.display = "none";
+      scoreNavItem.style.backgroundColor = 'white';
+      scoreNavItem.style.color = 'black';
+      document.getElementById('refresh-btn').style.display = 'none';
+    }
   }
 }
 
-function toggleScanJobBoard(isShow) {
+async function toggleScanJobBoard(isShow) {
   const scanJobBoard = document.getElementById("scan-job-board");
   const scanJobNavItem = document.getElementById("scan-job-nav-item");
 
-  if (isShow) {
-    scanJobBoard.style.display = "block";
-    scanJobNavItem.style.backgroundColor = '#9155FD';
-    scanJobNavItem.style.color = 'white';
-  } else {
-    scanJobBoard.style.display = "none";
-    scanJobNavItem.style.backgroundColor = 'white';
-    scanJobNavItem.style.color = 'black';
+  const isAuthenticated = await chrome.storage.local.get('isAuthorized');
+
+  if (isAuthenticated) {
+    if (isShow) {
+      scanJobBoard.style.display = "block";
+      scanJobNavItem.style.backgroundColor = '#9155FD';
+      scanJobNavItem.style.color = 'white';
+    } else {
+      scanJobBoard.style.display = "none";
+      scanJobNavItem.style.backgroundColor = 'white';
+      scanJobNavItem.style.color = 'black';
+    }
   }
 }
 
@@ -201,6 +221,7 @@ const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
   await fetchResumes(token);
 
   document.getElementById("navbar").style.display = "flex";
+  document.getElementById("func-btns").style.display = "flex";
   document.getElementById("login-board").style.display = "none";
   toggleScoreBoard(true);
 
@@ -246,11 +267,7 @@ const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
       return;
     }
   }
-
-
   await chrome.storage.local.set({ jobQueries: jobContentQuery });
-
-  
 };
 
 
@@ -316,6 +333,8 @@ document.getElementById("login-btn").addEventListener('click', async function ()
     }
   }
 });
+
+document.getElementById("logout-btn").addEventListener('click', handleLogout);
 
 //Navbar actions
 document.getElementById("scan-job-nav-item").addEventListener('click', function (event) {
@@ -553,7 +572,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'jobContentChanged':
       if (isAuthenticated && token && message.description) {
         try {
-          
+
           updateScores({ isLoading: true, scores: {} });
           const requestData = {
             description: message.description
@@ -584,7 +603,16 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 });
 
-
+document.getElementById('refresh-btn').addEventListener('click', async function () {
+  chrome.storage.local.get('isAuthenticated', async function (data) {
+    const isAuthenticated = data.isAuthenticated;
+    if (isAuthenticated) {
+      await handleLogInSuccess();
+    } else {
+      setInitialStatus();
+    }
+  });
+});
 
 document.addEventListener('DOMContentLoaded', async function () {
   chrome.storage.local.get('isAuthenticated', async function (data) {

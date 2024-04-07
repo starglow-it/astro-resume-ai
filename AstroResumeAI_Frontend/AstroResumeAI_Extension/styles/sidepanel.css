@@ -16,11 +16,23 @@ html {
     width: 100%;
     background-color: white;
     display: none;
+    gap: 8px;
 }
 
 .btn {
     background-color: #9155FD;
     border-radius: 4px;
+}
+
+.logout-item {
+    font-size: 16px;
+    padding: 8px;
+    color: black;
+    transition: all .2s;
+}
+
+.logout-item:hover {
+    color: #9155FD;
 }
 
 input[type=text]:not(.browser-default) {
@@ -231,7 +243,7 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 
 .custom-collection {
     height: fit-content;
-    width: 90%;
+    width: 100%;
     margin-top: 8px;
 }
 
@@ -242,10 +254,9 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
     background-color: white;
     padding: 10px 20px;
     margin: 0px;
+    border: 1px solid rgb(240, 236, 236);
     border-radius: 4px;
-    box-shadow: 0px 0px 8px rgb(213, 208, 208);
     margin-bottom: 20px;
-    margin-left: 8px;
     cursor: pointer;
     transition: background-color .2s;
 }
@@ -269,14 +280,17 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 /*transform: rotate(90deg);*/
 .cssprogresscontainer {
     text-align: center;
-    padding: 0px; /* Adjusted padding */
+    padding: 0px;
+    /* Adjusted padding */
 }
 
 .svgcontainer {
     position: relative;
     display: inline-block;
-    width: 70px; /* Adjusted width */
-    height: 70px; /* Adjusted height */
+    width: 70px;
+    /* Adjusted width */
+    height: 70px;
+    /* Adjusted height */
 }
 
 .svg {
@@ -289,12 +303,14 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
     z-index: 0;
     position: absolute;
     top: 0px;
-    box-shadow: 2px 2px 2px 2px #333; /* Adjusted box shadow */
+    box-shadow: 2px 2px 2px 2px #333;
+    /* Adjusted box shadow */
     stroke: #fbfbfb;
 }
 
 .progress {
-    stroke-dashoffset: 35px; /* Adjusted stroke dash offset */
+    stroke-dashoffset: 35px;
+    /* Adjusted stroke dash offset */
     stroke: #7df;
     transition: stroke 1s linear;
     stroke-linecap: round;
@@ -304,7 +320,7 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 }
 
 .resume-title {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 #score-preloader {
@@ -313,9 +329,8 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 
 .custom-progress-bar {
     position: relative;
-    margin-left: 8px;
     height: 4px;
-    width: 98%;
+    width: 100%;
     background-color: #acece6;
     border-radius: 2px;
     overflow: hidden;
@@ -328,4 +343,29 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 
 .unregisted {
     font-size: 12px;
+}
+
+#func-btns {
+    position: absolute;
+    bottom: 30px;
+    right: 0px;
+    width: fit-content;
+    padding: 8px;
+    margin: 0px 20px;
+    border-radius: 8px;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#refresh-btn {
+    padding: 8px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+#refresh-btn:hover {
+    color: #9155FD;
+    z-index: 9999;
 }
