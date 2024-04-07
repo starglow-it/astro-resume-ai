@@ -191,20 +191,41 @@ def process_json(input_json):
 
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
-    prompt = (f"""Update the resume provided below to be more aligned with the job title and description given. Ensure the resume is structured and formatted in a way that is easily readable by both ATS systems and human recruiters. Use the job description to extract relevant keywords and skills, and incorporate these into the resume, especially in the skills and experience sections. Add a 'hide_text' field to the resume's JSON object, which includes a comma-separated list of these keywords plus the job title, to enhance ATS compatibility.
-                Keyword Extraction: From the job description, extract a comprehensive list of keywords—aim for a thorough collection to significantly improve the resume's matching score. Add these keywords as a single string under the hide_text field in the resume's JSON. And add job title to hide_text.
+    prompt = (f"""
+              I'm aiming to tailor my resume for a specific job application to ensure it's optimized for ATS systems. Below is my original resume in JSON format, along with the job title and detailed description I'm targeting. Based on this information, I need:
+                1. A new summary that highlights my suitability for the job, drawing on the job description.
+                2. An updated experience section where:
+                - Experience title are adjusted to reflect those in the job description.
+                - Descriptions are rewritten to incorporate keywords and duties from the job description, making sure they're comprehensive and at least four sentences long. [ 4+ bullets as array: one sentence is one item in array. ]
+                for example: 
+                experience: [
+                    {{title: 'Software Engineer',
+                    description: [
+                        "",
+                        "",
+                        ""
+                    ]}},
+                    {{title: 'Senior developer',
+                    description: [
+                        "",
+                        "",
+                        ""
+                    ]}},
+                    // and etc.
+                ]
+                Add experience the count of origin experience section.
+                - Skills are replaced with those listed in the job description, supplemented by related skills.
+                3. A revised skills section that includes all skills from the job description plus any additional, relevant skills.
+                4. A 'hide_text' field added to my resume's JSON, containing a comma-separated list of keywords from the job description and the job title to improve ATS matching.  Keyword Extraction: From the job description, extract a comprehensive list of keywords—aim for a thorough collection to significantly improve the resume's matching score. Add these keywords as a single string under the hide_text field in the resume's JSON. And add job title and 3+ times mentioned keywords of job description to hide_text.
+                    
+
+                I'm open to suggestions and further customization to ensure the resume closely matches the job description. Here's my resume and the job details:
               Original Resume: {origin_resume}
               Job Title:
               {title}
               
               Job Description:
               {job_description}
-              Instructions:
-            - Do not change existing job titles, company names, locations, or durations.
-            - Enhance the resume by incorporating keywords and skills from the job description.
-            - Ensure all modifications make the resume more relevant to the job title and description provided.
-            - Append a 'hide_text' field to the JSON object with keywords and the job title for ATS optimization.
-
               """)
     chat_completion = client.chat.completions.create(
         messages=[
@@ -216,68 +237,44 @@ def generate_resume_data(title, job_description, origin_resume):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                    "name": { "type": "string" },
-                    "email": { "type": "string", "format": "email" },
-                    "phone": { "type": ["string", "null"], "maxLength": 255 },
-                    "location": { "type": ["string", "null"], "maxLength": 255 },
-                    "summary": { "type": ["string", "null"] },
-                    "skills": {
-                        "type": "array",
-                        "items": {
-                        "type": "object",
-                        "properties": {
-                            "category_name": { "type": "string" },
-                            "proficiency_list": { 
+                        "summary": { "type": "string" },
+                        "skills": {
                             "type": "array",
                             "items": {
-                                "type": "string"
-                            }
-                            }
-                        },
-                        "required": ["category_name", "proficiency_list"]
-                        },
-                        "default": []
-                    },
-                    "website": { "type": ["string", "null"], "maxLength": 255 },
-                    "linkedin": { "type": ["string", "null"], "maxLength": 255 },
-                    "github": { "type": ["string", "null"], "maxLength": 255 },
-                    "education": {
-                        "type": "array",
-                        "items": {
-                        "type": "object",
-                        "properties": {
-                            "university": { "type": "string" },
-                            "education_level": { "type": ["string", "null"], "maxLength": 255 },
-                            "graduation_year": { "type": ["string", "null"], "maxLength": 255 },
-                            "major": { "type": ["string", "null"], "maxLength": 255 }
-                        },
-                        "required": ["university", "education_level", "graduation_year", "major"]
-                        }
-                    },
-                    "experience": {
-                        "type": "array",
-                        "items": {
-                        "type": "object",
-                        "properties": {
-                            "job_title": { "type": "string" },
-                            "company": { "type": ["string", "null"], "maxLength": 255 },
-                            "location": { "type": ["string", "null"], "maxLength": 255 },
-                            "duration": { "type": ["string", "null"], "maxLength": 255 },
-                            "description": {
+                            "type": "object",
+                            "properties": {
+                                "category_name": { "type": "string" },
+                                "proficiency_list": { 
                                 "type": "array",
                                 "items": {
-                                    "type": "string",
+                                    "type": "string"
+                                }
                                 }
                             },
+                            "required": ["category_name", "proficiency_list"]
+                            }
                         },
-                        "required": ["job_title", "company", "location", "duration", "description"]
+                        "experience": {
+                            "type": "array",
+                            "items": {
+                            "type": "object",
+                            "properties": {
+                                "title": { "type": "string" },
+                                "description": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                    }
+                                },
+                            },
+                            "required": ["title", "description"]
+                            }
+                        },
+                        "hide_text": {
+                            "type": "string"
                         }
                     },
-                    "hide_text": {
-                        "type": "string"
-                    }
-                    },
-                    "required": ["name", "email", "phone", "summary", "skills", "education", "experience", "hide_text"]
+                    "required": ["summary", "skills", "experience", "hide_text"]
                 }
             }
         ],
