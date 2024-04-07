@@ -11,6 +11,8 @@ import Button, { ButtonProps } from '@mui/material/Button'
 // Context API
 import { useProfileData } from 'src/@core/context/profileDataContext'
 
+import DescriptionTable from './DescriptionTable'
+
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 80,
   height: 80,
@@ -58,6 +60,17 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
       })
     }
 
+  const handleSetDescription = (index: number) => (newDescription: string[]) => {
+    const updatedExperience = [...profileData.experience]
+
+    updatedExperience[index].description = newDescription
+
+    setProfileData({
+      ...profileData,
+      experience: updatedExperience
+    })
+  }
+
   const addExperience = () => {
     const updatedExperience = [...profileData.experience]
 
@@ -66,7 +79,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
       company: '',
       duration: '',
       location: '',
-      description: ''
+      description: []
     })
 
     setProfileData({
@@ -138,7 +151,7 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
+              {/* <TextField
                 fullWidth
                 multiline
                 maxRows={5}
@@ -146,7 +159,9 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
                 label='Description'
                 value={exp.description}
                 onChange={handleChange(index, 'description')}
-              />
+              /> */}
+
+              <DescriptionTable description={exp.description} setDescription={handleSetDescription(index)} />
             </Grid>
 
             <Grid item xs={12} container justifyContent='flex-end'>

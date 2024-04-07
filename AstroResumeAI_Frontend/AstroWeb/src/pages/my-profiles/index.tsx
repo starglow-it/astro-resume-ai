@@ -56,7 +56,6 @@ const MyProfiles = () => {
       })
 
       setProfileList(profileList.filter(profile => profile.id !== id))
-
     } catch (error) {
       console.log(error)
     }
@@ -80,8 +79,8 @@ const MyProfiles = () => {
           </Button>
         </Box>
       )}
-      {profileList.map(profile => (
-        <Grid item xs={12}>
+      {profileList.map((profile, index) => (
+        <Grid item xs={12} key={index}>
           <CardProfile profile={profile} editProfile={editProfile} deleteProfile={deleteProfile} />
         </Grid>
       ))}

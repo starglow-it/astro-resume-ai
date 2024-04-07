@@ -29,4 +29,4 @@ class Experience(models.Model):
     company = models.CharField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     duration = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField()
+    description = models.JSONField(default=list)

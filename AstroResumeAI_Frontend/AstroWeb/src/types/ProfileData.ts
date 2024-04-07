@@ -8,7 +8,7 @@ export type ProfileData = {
   summary: string
   skills: {
     category_name: string
-    skills: string[]
+    proficiency_list: string[]
   }[]
   education: {
     university: string
@@ -21,7 +21,7 @@ export type ProfileData = {
     company: string
     location: string
     duration: string
-    description: string
+    description: string[]
   }[]
   WorkAuthorization: string
   website: string
@@ -40,7 +40,7 @@ export type FetchedProfileData = {
   summary: string
   skills: {
     category_name: string
-    skills: string[]
+    proficiency_list: string[]
   }[]
   education: {
     id: string
@@ -55,7 +55,7 @@ export type FetchedProfileData = {
     company: string
     location: string
     duration: string
-    description: string
+    description: string[]
   }[]
   WorkAuthorization: string
   website: string
