@@ -24,6 +24,7 @@ import numpy as np
 from django.template.loader import render_to_string, get_template
 from jinja2 import Environment, FileSystemLoader
 from markupsafe import Markup
+import copy
 
 # Load a pre-trained model
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -88,7 +89,7 @@ def generate_resume(request):
         score = get_matching_score(str(resume_data), job_description_text)
         print (score)
         # resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
-        resume_pdf_path = generate_pdf_from_resume_data_beta(resume_data, title)
+        resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
         return Response({
             'message': 'Resume PDF generated successfully',
             'url': resume_pdf_path,
@@ -189,41 +190,54 @@ def process_json(input_json):
     return escaped_obj
 
 
+def update_resume_data(origin_resume, resume_json):
+    updated_resume = copy.deepcopy(origin_resume)
+    updated_resume['skills'] = resume_json['skills']
+    updated_resume['summary'] = resume_json['summary']
+    for i, exp in enumerate(resume_json['experience']):
+        updated_resume['experience'][i]['job_title'] = exp['job_title']
+        updated_resume['experience'][i]['description'] = exp['description'] 
+    updated_resume['hide_text'] = resume_json['hide_text']
+    return updated_resume
+
+
+
+
+
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
     prompt = (f"""
-              I'm aiming to tailor my resume for a specific job application to ensure it's optimized for ATS systems. Below is my original resume in JSON format, along with the job title and detailed description I'm targeting. Based on this information, I need:
-                1. A new summary that highlights my suitability for the job, drawing on the job description.
-                2. An updated experience section where:
-                - Experience title are adjusted to reflect those in the job description.
-                - Descriptions are rewritten to incorporate keywords and duties from the job description, making sure they're comprehensive and at least four sentences long. [ 4+ bullets as array: one sentence is one item in array. ]
-                for example: 
-                experience: [
-                    {{title: 'Software Engineer',
-                    description: [
-                        "",
-                        "",
-                        ""
-                    ]}},
-                    {{title: 'Senior developer',
-                    description: [
-                        "",
-                        "",
-                        ""
-                    ]}},
-                    // and etc.
-                ]
-                Add experience the count of origin experience section.
-                - Skills are replaced with those listed in the job description, supplemented by related skills.
-                3. A revised skills section that includes all skills from the job description plus any additional, relevant skills.
-                4. A 'hide_text' field added to my resume's JSON, containing a comma-separated list of keywords from the job description and the job title to improve ATS matching.  Keyword Extraction: From the job description, extract a comprehensive list of keywords—aim for a thorough collection to significantly improve the resume's matching score. Add these keywords as a single string under the hide_text field in the resume's JSON. And add job title and 3+ times mentioned keywords of job description to hide_text.
-                    
+                In order to fine-tune my resume for a specific job application and enhance its compatibility with Applicant Tracking Systems (ATS), I require assistance with the following revisions, based on the job title and description provided:
+                1. Summary Update: Please draft a new summary that effectively demonstrates my qualifications for the position, drawing directly from the job description to emphasize my suitability.
+                2.Keyword Optimization:
+                    Introduce a 'hide_text' field within my resumes JSON structure. This field should be populated with a comprehensive list of keywords extracted from the job description, formatted as a single, comma-separated string. The goal is to incorporate an extensive selection of keywords to significantly enhance the resume's ATS matching capability.
+                    Ensure the job title and any keywords mentioned three or more times in the job description are included in the 'hide_text' field to improve ATS visibility.
+                3. Skills Section Revision: Expand the skills section to cover all skills listed in the job description, alongside any other skills that are relevant and beneficial.              
+                4. generate new experiences includes at least 3 roles that aligns with the job description.
+                    structure example:   // at least 3 items.
+                       experience: [
+                           {{
+                               "job_title" : "",
+                               "description" : ["", "", "", ""]
+                           }},
+                           {{
+                               "job_title" : "",
+                               "description" : ["", "", "", ""]
+                           }},
+                           {{
+                               "job_title" : "",
+                               "description" : ["", "", "", ""]
+                           }}
+                       ]
+                I am seeking guidance and am open to any adjustments necessary to ensure my resume aligns precisely with the job description. Please find my resume and the job specifics below for your consideration:
+                
 
-                I'm open to suggestions and further customization to ensure the resume closely matches the job description. Here's my resume and the job details:
-              Original Resume: {origin_resume}
-              Job Title:
-              {title}
+              Original Resume: 
+               summary: {json.dumps(origin_resume['summary'])}
+               skills: {json.dumps(origin_resume['skills'])}
+               experience: {json.dumps(origin_resume['experience'])}
               
+              Job Title: {title}
               Job Description:
               {job_description}
               """)
@@ -259,7 +273,7 @@ def generate_resume_data(title, job_description, origin_resume):
                             "items": {
                             "type": "object",
                             "properties": {
-                                "title": { "type": "string" },
+                                "job_title": { "type": "string" },
                                 "description": {
                                     "type": "array",
                                     "items": {
@@ -289,58 +303,14 @@ def generate_resume_data(title, job_description, origin_resume):
     # Extract and print the assistant's response
     response_message = chat_completion.choices[0].message
     resume_json = process_json(json.loads(response_message.function_call.arguments))
-    return resume_json
+    new_resume = update_resume_data(origin_resume, resume_json)
+    return new_resume
 
 def save_resume_data_to_db(resume_data):
     resume_data_without_id = {key: value for key, value in resume_data.items() if key != 'id'}
     return Resume.objects.create(**resume_data_without_id)
 
 def generate_pdf_from_resume_data(resume_data, title):
-    # Paths for the LaTeX template and output directory
-    template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.tex')
-    output_dir = os.path.join(settings.BASE_DIR, 'output')
-    os.makedirs(output_dir, exist_ok=True)
-    cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template.cls')
-    shutil.copy(cls_path, output_dir)
-    
-    experience = format_experience_section(resume_data['experience'])
-    education = format_education_section(resume_data['education'])
-    skills = format_skills_section(resume_data['skills'])
-
-    # Fill out the LaTeX template with sanitized data
-    with open(template_path, 'r') as file:
-        latex_content = file.read()
-    latex_content = latex_content.replace('{{name}}', f"{{{resume_data['name']}}}")
-    latex_content = latex_content.replace('{{linkedin}}', f"{{{resume_data['linkedin']}}}")
-    latex_content = latex_content.replace('{{email}}', f"{{{resume_data['email']}}}")
-    latex_content = latex_content.replace('{{phone}}', f"{{{resume_data['phone']}}}")
-    latex_content = latex_content.replace('{{website}}', f"{{{resume_data['website']}}}")  # Use the actual website data
-    latex_content = latex_content.replace('{{summary}}', resume_data['summary'])
-    latex_content = latex_content.replace('{{experiences}}', experience)
-    latex_content = latex_content.replace('{{education}}', education)
-    latex_content = latex_content.replace('{{skills}}', skills)
-    latex_content = latex_content.replace('{{hide_text}}', f"{{{resume_data['hide_text']}}}")
-    current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # Write filled content to a temporary .tex file
-    file_name = sanitize_for_filename(f"{resume_data['name']}_{title}_{current_datetime}.tex")
-    temp_tex_path = os.path.join(output_dir, file_name)
-    print(temp_tex_path)
-    with open(temp_tex_path, 'w') as file:
-        file.write(latex_content)
-
-    # Compile LaTeX to PDF
-    compile_success = subprocess.run(['latexmk', '-xelatex', '-outdir=' + output_dir, temp_tex_path])
-
-    # Clean up auxiliary files, leaving only the PDF
-    subprocess.run(['latexmk', '-c', '-outdir=' + output_dir, temp_tex_path])
-
-    if compile_success.returncode != 0:
-        raise Exception("LaTeX compilation failed")
-
-    # Return path to the generated PDF
-    return os.path.splitext(temp_tex_path)[0] + '.pdf'
-
-def generate_pdf_from_resume_data_beta(resume_data, title):
     try:
         template_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template_1.tex')
         output_dir = os.path.join(settings.BASE_DIR, 'output')
@@ -348,7 +318,6 @@ def generate_pdf_from_resume_data_beta(resume_data, title):
         cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template_1.cls')
         shutil.copy(cls_path, output_dir)
         print (resume_data)
-        experience = resume_data['experience']
         
         data = {
             'name': resume_data['name'],
@@ -405,39 +374,6 @@ def cleanup_generated_files(pdf_path):
         tex_path = pdf_path.replace('.pdf', '.tex')
         if os.path.exists(tex_path):
             os.remove(tex_path)
-
-# Function to format the experience section
-def format_experience_section(experiences):
-    formatted = ""
-    for exp in experiences:
-        formatted += f"\\begin{{subsection}}{{{exp['title']}}}{{{exp['company']}}}{{{exp['duration']}}}{{}}\n"
-        for responsibility in exp['responsibilities']:
-            formatted += f"\\item {responsibility}\n"
-        formatted += "\\end{subsection}\n\n"
-    return formatted
-
-# Function to format the education section
-def format_education_section(education):
-    formatted = ""
-    for edu in education:
-        formatted += f"\\begin{{subsectionnobullet}}{{{edu['educationLevel']}}}{{{edu['major']}}}{{{edu['university']}}}{{{edu['graduationYear']}}}{{}}\n\\italicitem{{}}\\end{{subsectionnobullet}}\n\n"
-    return formatted
-
-
-# Function to format the education section
-# Function to format skills section for sectiontable in LaTeX
-# def format_skills_section(skills):
-#     formatted_skills = ""
-#     for category, skill_list in skills.items():
-#         formatted_skills += "\\entry{" + category.replace("programmingLangage", "Programming Languages").title() + "}\n"
-#         formatted_skills += f"{{{', '.join(skill_list)}}}"  # Assuming no description for each skill
-#     return formatted_skills
-def format_skills_section(skills):
-    formatted_skills = ""
-    for skill in skills:
-        formatted_skills += f"{{{skill}}}"  # Assuming no description for each skill
-        formatted_skills += ", "
-    return formatted_skills
 
 @api_view(['GET', 'POST'])
 def resumes(request):
