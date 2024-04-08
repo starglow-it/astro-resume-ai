@@ -61,7 +61,6 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ description, setDes
 
   React.useEffect(() => {
     if (description.length > 0) {
-      console.log(description)
       setRows(description.map(desc => ({ id: uuidv4(), sentence: desc })))
     }
   }, [description])
