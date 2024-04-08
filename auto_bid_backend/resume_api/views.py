@@ -71,6 +71,27 @@ def get_matching_score(resume, job_description):
     score = calculate_similarity(resume_embedding, job_description_embedding)
     return score
 
+def deep_values_to_string(nested_dict, separator=' '):
+    """
+    Recursively traverses a nested dictionary, converts all values to strings,
+    and joins them into a single string.
+
+    Parameters:
+    - nested_dict: The nested dictionary to process.
+    - separator: The string used to separate values in the final output.
+
+    Returns:
+    - A string containing all values from the nested dictionary.
+    """
+    values = []
+    for value in nested_dict.values():
+        if isinstance(value, dict):
+            # If the value is a dictionary, recursively process it
+            values.append(deep_values_to_string(value, separator))
+        else:
+            values.append(str(value))  # Convert non-dictionary values to string
+    return separator.join(values)
+
 @api_view(['POST'])
 def generate_resume(request):
     job_description_text = request.data.get('job_description')
@@ -86,7 +107,7 @@ def generate_resume(request):
         # Save the job description and generated resume to the database
         # job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
         # resume_obj = save_resume_data_to_db(resume_data)
-        score = get_matching_score(str(resume_data), job_description_text)
+        score = get_matching_score(deep_values_to_string(resume_data), job_description_text)
         print (score)
         # resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
         resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
@@ -329,7 +350,7 @@ def generate_pdf_from_resume_data(resume_data, title):
             'summary': resume_data['summary'] if resume_data['summary'] else "",
             'experience': resume_data['experience'],
             'skills': resume_data['skills'],
-            "hide_text": resume_data['hide_text']
+            "hide_text": resume_data['hide_text'] + title
             # 'certifications': resume_data['certifications'],
             # 'projects': resume_data['projects'],
         }

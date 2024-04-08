@@ -4,8 +4,7 @@
 
 \begin{document}
 \resumeheader
-
-{% if linkedin %}{\linkedin{ {{linkedin|safe}} }}{% endif %} {% if email %}{\email{ {{email|safe}} }}{% endif %} {% if github %}{\github{ {{github|safe}} }}{% endif %} {% if phone %}{\phone{ {{phone|safe}} }}{% endif %} {% if website %}{\website{ {{website|safe}} }}{% endif %} {% if nationality %}{\nationality{ {{nationality|safe}} }}{% endif %} {% if not linkedin %}{}{% endif %} {% if not email %}{}{% endif %} {% if not github %}{}{% endif %} {% if not phone %}{}{% endif %} {% if not website %}{}{% endif %} {% if not nationality %}{}{% endif %}
+{% if linkedin %}{\linkedin{ {{linkedin|safe}} }}{% endif %}{% if email %}{\email{ {{email|safe}} }}{% endif %}{% if github %}{\github{ {{github|safe}} }}{% endif %}{% if phone %}{\phone{ {{phone|safe}} }}{% endif %}{% if website %}{\website{ {{website|safe}} }}{% endif %}{% if location %}{\address{ {{location|safe}} }}{% endif %}{% if not linkedin %}{}{% endif %}{% if not email %}{}{% endif %}{% if not github %}{}{% endif %}{% if not phone %}{}{% endif %} {% if not website %}{}{% endif %}{% if not nationality %}{}{% endif %}
 
 \begin{section}{Summary}
     { {{summary|safe}} }
