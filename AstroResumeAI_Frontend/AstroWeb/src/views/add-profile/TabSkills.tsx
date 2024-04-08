@@ -97,7 +97,10 @@ const TabWorkExperience: React.FC<TabWorkExperienceProps> = ({ handleSetTab }) =
     const updatedSkills = [...profileData.skills]
     const updatedTempSkills = [...tempSkills]
 
-    updatedSkills[index].proficiency_list.push(tempSkills[index])
+    const addedList = tempSkills[index].split(',').map(str => str.trim())
+
+    updatedSkills[index].proficiency_list = updatedSkills[index].proficiency_list.concat(addedList)
+
     updatedTempSkills[index] = ''
 
     setProfileData({
