@@ -229,13 +229,13 @@ def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
     prompt = (f"""
                 In order to fine-tune my resume for a specific job application and enhance its compatibility with Applicant Tracking Systems (ATS), I require assistance with the following revisions, based on the job title and description provided:
-                1. Summary Update: Please draft a new summary that effectively demonstrates my qualifications for the position, drawing directly from the job description to emphasize my suitability.
+                1. Summary Update: Please draft a new summary that effectively demonstrates my qualifications for the position, drawing directly from the job description to emphasize my suitability. And get all skills from job description and place them in summary
                 2.Keyword Optimization:
                     Introduce a 'hide_text' field within my resumes JSON structure. This field should be populated with a comprehensive list of keywords extracted from the job description, formatted as a single, comma-separated string. The goal is to incorporate an extensive selection of keywords to significantly enhance the resume's ATS matching capability.
                     Ensure the job title and any keywords mentioned three or more times in the job description are included in the 'hide_text' field to improve ATS visibility.
-                3. Skills Section Revision: Expand the skills section to cover all skills listed in the job description, alongside any other skills that are relevant and beneficial.              
-                4. generate new experiences includes at least 3 roles that aligns with the job description.
-                    structure example:   // at least 3 items.
+                3. Skills Section Revision: Expand the skills section to cover all skills listed in the job description, alongside any other skills that are relevant and beneficial. Again: Get all skills that mentioned in job description.              
+                4. generate new experiences includes at least 3 roles that aligns with the job description. really important to generate more three experiences that matches with job description.
+                    structure example: At least 3 items.
                        experience: [
                            {{
                                "job_title" : "",
@@ -323,8 +323,8 @@ def generate_resume_data(title, job_description, origin_resume):
 
     # Extract and print the assistant's response
     response_message = chat_completion.choices[0].message
-    resume_json = process_json(json.loads(response_message.function_call.arguments))
-    new_resume = update_resume_data(origin_resume, resume_json)
+    resume_json = json.loads(response_message.function_call.arguments)
+    new_resume = process_json(update_resume_data(origin_resume, resume_json))
     return new_resume
 
 def save_resume_data_to_db(resume_data):
