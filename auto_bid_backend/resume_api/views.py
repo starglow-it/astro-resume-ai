@@ -338,7 +338,6 @@ def generate_pdf_from_resume_data(resume_data, title):
         os.makedirs(output_dir, exist_ok=True)
         cls_path = os.path.join(settings.BASE_DIR, 'latex_templates', 'resume_template_1.cls')
         shutil.copy(cls_path, output_dir)
-        print (resume_data)
         
         data = {
             'name': resume_data['name'],
@@ -357,7 +356,6 @@ def generate_pdf_from_resume_data(resume_data, title):
 
         template = get_template(template_path)
         latex_content = template.render(data)
-        print(latex_content)
 
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         file_name = f"{resume_data['name']}_Resume_{current_datetime}.tex"
@@ -496,7 +494,6 @@ def cal_matching_scores(request):
             description = request.data.get('description', '')
             profiles = Profile.objects.filter(user = request.user)
             profileSerializer = ProfileSerializer(profiles, many=True)
-            print(profileSerializer.data)
             
             if not profileSerializer:
                 return Response({'message': 'No resumes found', 'scores': {}}, status=status.HTTP_200_OK)
@@ -509,7 +506,6 @@ def cal_matching_scores(request):
                 descriptions.append(description)
 
             scores = {}
-            print(resumesText)
             for idx, score in enumerate(get_matching_scores(resumesText, descriptions)):
                 scores[profileSerializer.data[idx]['id']] = score
 

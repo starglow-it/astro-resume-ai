@@ -11,6 +11,7 @@ var defaultResumes = [];
 var defaultResumeId = '';
 var scores_g = {};
 var isResumeGenerated = false;
+var resumesGlobal = [];
 const titleSelector = document.getElementById('titleSelector');
 const descriptionSelector = document.getElementById('descriptionSelector');
 
@@ -133,6 +134,81 @@ function displayResumes(resumes) {
   M.FormSelect.init(elems);
 }
 
+function attachProfile(resume) {
+  if (resume) {
+    let profileBoard = document.getElementById("profile-board");
+
+    let profileInfo = `
+        <h6>Contact info</h6>
+        <p class="title">${resume.name}</p>
+        <p>${resume.recent_role}</p>
+        <p>${resume.email}</p>
+        <p>${resume.phone}</p>
+        <p>${resume.location}</p>
+    `;
+
+    if (resume.linkedin) {
+      profileInfo += `<p>${resume.linkedin}</p>`;
+    }
+
+    if (resume.website) {
+      profileInfo += `<p>${resume.website}</p>`;
+    }
+
+    if (resume.github) {
+      profileInfo += `<p>${resume.github}</p>`;
+    }
+
+    profileInfo += `
+      <hr>
+      <h6>Summary</h6>
+        <p>${resume.summary}</p>
+      <hr>
+    `;
+
+    profileInfo += "<h6>Education</h6>";
+
+    resume.education.forEach(edu => {
+      profileInfo += `
+      <p class="title">${edu.education_level} - ${edu.major}</p>
+      <p>${edu.university}</p>
+      <p>${edu.graduation_year}</p>
+  `;
+    });
+
+    profileInfo += "<hr><h6>Experience</h6>";
+
+    for (const exp of resume.experience) {
+      profileInfo += `
+        <p class="title">${exp.job_title}</p>
+        <p>${exp.company}</p>
+        <p>${exp.location}</p>
+        <p>${exp.duration}</p>
+    `;
+
+      for (const desc of exp.description) {
+        profileInfo += `<p>- ${desc}</p>`;
+      }
+    }
+
+    profileBoard.innerHTML = profileInfo;
+
+    profileBoard.addEventListener('click', function (event) {
+      const target = event.target;
+
+      if ((target.tagName === 'P')) {
+        navigator.clipboard.writeText(target.textContent).then(() => {
+          console.log('Text copied to clipboard');
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+      }
+    });
+
+
+  }
+}
+
 //fetch resumes from db
 async function fetchResumes(token) {
   try {
@@ -146,6 +222,8 @@ async function fetchResumes(token) {
 
       if (response.ok) {
         const resumes = await response.json();
+        console.log(resumes);
+        attachProfile(resumes[0]);
         displayResumes(resumes);
       }
     }
@@ -199,6 +277,25 @@ async function toggleScanJobBoard(isShow) {
       scanJobBoard.style.display = "none";
       scanJobNavItem.style.backgroundColor = 'white';
       scanJobNavItem.style.color = 'black';
+    }
+  }
+}
+
+async function toggleProfileBoard(isShow) {
+  const profileBoard = document.getElementById("profile-board");
+  const profileNavItem = document.getElementById("profile-nav-item");
+
+  const isAuthenticated = await chrome.storage.local.get('isAuthorized');
+
+  if (isAuthenticated) {
+    if (isShow) {
+      profileBoard.style.display = "block";
+      profileNavItem.style.backgroundColor = '#9155FD';
+      profileNavItem.style.color = 'white';
+    } else {
+      profileBoard.style.display = "none";
+      profileNavItem.style.backgroundColor = 'white';
+      profileNavItem.style.color = 'black';
     }
   }
 }
@@ -339,13 +436,15 @@ document.getElementById("logout-btn").addEventListener('click', handleLogout);
 //Navbar actions
 document.getElementById("scan-job-nav-item").addEventListener('click', function (event) {
   event.preventDefault();
-  toggleScanJobBoard(true)
   toggleScoreBoard(false);
+  toggleProfileBoard(false);
+  toggleScanJobBoard(true);
 });
 
 document.getElementById("score-nav-item").addEventListener('click', async function (event) {
   event.preventDefault();
-  toggleScanJobBoard(false)
+  toggleScanJobBoard(false);
+  toggleProfileBoard(false);
   toggleScoreBoard(true);
 
   if (isResumeGenerated) {
@@ -354,6 +453,15 @@ document.getElementById("score-nav-item").addEventListener('click', async functi
     document.getElementById('generate-resume-btn').innerText = 'GENERATE RESUME';
     isResumeGenerated = false;
   }
+});
+
+document.getElementById("profile-nav-item").addEventListener('click', function (event) {
+  event.preventDefault();
+  toggleScanJobBoard(false)
+  toggleScoreBoard(false);
+  toggleProfileBoard(true);
+
+
 });
 
 document.getElementById("login-email").addEventListener("keypress", function (event) {
