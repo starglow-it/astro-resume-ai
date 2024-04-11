@@ -1,7 +1,13 @@
+from django.db.models import Q
+from functools import reduce
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.generics import ListAPIView
+
 from urllib.parse import urlparse
 
 from .models import JobPost
@@ -23,6 +29,10 @@ class ScrapeJobsView(APIView):
     """
     Scrapes jobs from a given site and returns a list of JobPost objects.
     """
+    filter_backends = (SearchFilter, OrderingFilter)
+    ordering_fields = 'all'
+
+
     def post(self, request, *args, **kwargs):
         # Extract parameters from the request
         params = request.data
@@ -77,7 +87,28 @@ class ScrapeJobsView(APIView):
         return Response({"message": "Jobs scraped and saved successfully"}, status=status.HTTP_200_OK)
     
     def get(self, request, *args, **kwargs):
-        queryset = JobPost.objects.all().order_by('-date_posted')  # Assuming you want the newest jobs first
+        queryset = JobPost.objects.all()  # Assuming you want the newest jobs first
+        # Example URL https://example.com/jobs?filters=location:usa,is_remote:false&sort=title:asc
+
+        # Filter by search term
+        filter_params = self.request.query_params.get('filters')
+
+        if filter_params:
+            filter_terms = filter_params.split(',')
+            queryset = queryset.filter(
+                reduce(
+                    lambda q, term: q & Q(**{term.split(':')[0] + '__contains': term.split(':')[1]}),
+                    filter_terms,
+                    Q()
+                )
+            )
+
+        # Sort by date posted and title
+        sort_by = self.request.query_params.get('sort')
+
+        if sort_by:
+            field, order = sort_by.split(':')
+            queryset = queryset.order_by(f"{field}{'-' if order == 'desc' else ''}")
 
         # Pagination
         paginator = PageNumberPagination()

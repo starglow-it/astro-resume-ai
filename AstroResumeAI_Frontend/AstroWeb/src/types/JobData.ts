@@ -3,6 +3,7 @@ export type JobData = {
   site: string
   title: string
   company: string
+  is_easy_apply: boolean
   job_url: string | null
   job_url_direct: string | null
   location: string | null

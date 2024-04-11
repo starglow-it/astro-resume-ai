@@ -17,43 +17,55 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
+import { DataGrid, GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid'
+
 import { useJobsData } from 'src/@core/context/jobsDataContext'
 import { API_BASE_URL } from 'src/configs/apiConfig'
+import { ConsoleLine } from 'mdi-material-ui'
 
 interface Column {
-  id: 'site' | 'title' | 'is_easy_apply' | 'is_remote' | 'company' | 'location' | 'job_type' | 'salary' | 'date_posted'
-  label: string
+  field:
+    | 'site'
+    | 'title'
+    | 'is_easy_apply'
+    | 'is_remote'
+    | 'company'
+    | 'location'
+    | 'job_type'
+    | 'salary'
+    | 'date_posted'
+  headerName: string
   minWidth?: number
 }
 
 const columns: readonly Column[] = [
-  { id: 'site', label: 'Site', minWidth: 100 },
-  { id: 'title', label: 'Title', minWidth: 100 },
-  { id: 'is_easy_apply', label: 'Easy Apply', minWidth: 50 },
-  { id: 'is_remote', label: 'Remote', minWidth: 50 },
+  { field: 'site', headerName: 'Site', minWidth: 100 },
+  { field: 'title', headerName: 'Title', minWidth: 100 },
+  { field: 'is_easy_apply', headerName: 'Easy Apply', minWidth: 50 },
+  { field: 'is_remote', headerName: 'Remote', minWidth: 50 },
   {
-    id: 'company',
-    label: 'Company',
+    field: 'company',
+    headerName: 'Company',
     minWidth: 170
   },
   {
-    id: 'location',
-    label: 'Location',
+    field: 'location',
+    headerName: 'Location',
     minWidth: 170
   },
   {
-    id: 'job_type',
-    label: 'Job Type',
+    field: 'job_type',
+    headerName: 'Job Type',
     minWidth: 170
   },
   {
-    id: 'salary',
-    label: 'Salary',
+    field: 'salary',
+    headerName: 'Salary',
     minWidth: 170
   },
   {
-    id: 'date_posted',
-    label: 'Date Posted',
+    field: 'date_posted',
+    headerName: 'Date Posted',
     minWidth: 170
   }
 ]
@@ -61,6 +73,8 @@ const columns: readonly Column[] = [
 interface Data {
   site: string
   title: string
+  is_easy_apply: boolean
+  is_remote: boolean
   company: string
   location: string
   job_type: string
@@ -70,23 +84,44 @@ interface Data {
 
 const Jobs = () => {
   // ** States
-  const [page, setPage] = useState<number>(0)
+  // const [page, setPage] = useState<number>(0)
   const { jobsData, setJobsData, count, setCount, pageNumber, setPageNumber } = useJobsData()
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    const targetPage = newPage + 1
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] })
+  const [sortModel, setSortModel] = useState<GridSortModel>([])
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 20 })
 
-    setPageNumber(targetPage)
-    fetchJobs(targetPage)
-  }
+  // const handleChangePage = (event: unknown, newPage: number) => {
+  //   const targetPage = newPage + 1
+  //   setPageNumber(targetPage)
+  //   fetchJobs(targetPage)
+  // }
 
   useEffect(() => {
-    fetchJobs(pageNumber)
+    fetchJobs(filterModel, sortModel, paginationModel)
   }, [])
 
-  const fetchJobs = async (pageNumber: number) => {
+  const fetchJobs = async (
+    filterModel: GridFilterModel,
+    sortModel: GridSortModel,
+    paginationModel: GridPaginationModel
+  ) => {
     try {
-      const response = await Axios.get(`${API_BASE_URL}/job/scrape/?page=${pageNumber}`)
+      const filterParams = new URLSearchParams()
+      filterModel.items.forEach(item => {
+        filterParams.append(item.field, item.value)
+      })
+
+      const sortParams = new URLSearchParams()
+      sortModel.forEach(item => {
+        sortParams.append('sort', `${item.field},${item.sort}`)
+      })
+
+      const response = await Axios.get(
+        `${API_BASE_URL}/job/scrape/?page=${
+          paginationModel.page + 1
+        }&${filterParams.toString()}&${sortParams.toString()}`
+      )
 
       setJobsData(response.data.results)
       setCount(response.data.count)
@@ -95,17 +130,27 @@ const Jobs = () => {
     }
   }
 
-  const slotProps = {
-    action: {
-      nextButton: () => {
-        console.log('next')
-      }
-    }
+  const handleFilterModelChange = (newFilterModel: GridFilterModel) => {
+    console.log('NEW FILTER MODEL: ', newFilterModel)
+    setFilterModel(newFilterModel)
+    fetchJobs(newFilterModel, sortModel, paginationModel)
+  }
+
+  const handleSortModelChange = (newSortModel: GridSortModel) => {
+    console.log('NEW SORT MODEL: ', newSortModel)
+    setSortModel(newSortModel)
+    fetchJobs(filterModel, newSortModel, paginationModel)
+  }
+
+  const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
+    console.log('NEW PAGINATION MODEL: ', newPaginationModel)
+    setPaginationModel(newPaginationModel)
+    fetchJobs(filterModel, sortModel, newPaginationModel)
   }
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Card>
           <CardHeader title='Jobs Scraped' titleTypographyProps={{ variant: 'h6' }} />
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -134,10 +179,12 @@ const Jobs = () => {
                                 : null
                           } else if (column.id === 'title') {
                             value = (
-                              <Link passHref href={row.job_url_direct || row.job_url} replace>
+                              <Link passHref href={row.job_url_direct || row.job_url || '#'} replace>
                                 {row.title}
                               </Link>
                             )
+                          } else if (column.id === 'is_easy_apply' || column.id === 'is_remote') {
+                            value = row[column.id] ? 'Yes' : 'No'
                           } else {
                             value = row[column.id]
                           }
@@ -164,6 +211,22 @@ const Jobs = () => {
             />
           </Paper>
         </Card>
+      </Grid> */}
+
+      <Grid item xs={12}>
+        <DataGrid
+          rows={jobsData}
+          columns={columns}
+          filterMode='server'
+          filterModel={filterModel}
+          onFilterModelChange={handleFilterModelChange}
+          sortingMode='server'
+          sortModel={sortModel}
+          onSortModelChange={handleSortModelChange}
+          paginationMode='server'
+          paginationModel={paginationModel}
+          onPaginationModelChange={handlePaginationModelChange}
+        />
       </Grid>
     </Grid>
   )
