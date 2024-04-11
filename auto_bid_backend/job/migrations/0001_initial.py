@@ -15,8 +15,9 @@ class Migration(migrations.Migration):
             name='JobPost',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('site', models.CharField(max_length=255)),
                 ('title', models.CharField(max_length=255)),
-                ('company_name', models.CharField(blank=True, max_length=255, null=True)),
+                ('company', models.CharField(blank=True, max_length=255, null=True)),
                 ('job_url', models.URLField()),
                 ('job_url_direct', models.URLField(blank=True, null=True)),
                 ('location', models.CharField(blank=True, null=True)),
