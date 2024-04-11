@@ -31,6 +31,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import '../../styles/globals.css'
 import { ProfileDataProvider } from 'src/@core/context/profileDataContext'
 import { AuthProvider } from 'src/@core/context/authContext'
+import { JobsDataProvider } from 'src/@core/context/jobsDataContext'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -73,13 +74,15 @@ const App = (props: ExtendedAppProps) => {
       </Head>
       <AuthProvider>
         <ProfileDataProvider>
-          <SettingsProvider>
-            <SettingsConsumer>
-              {({ settings }) => {
-                return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
+          <JobsDataProvider>
+            <SettingsProvider>
+              <SettingsConsumer>
+                {({ settings }) => {
+                  return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
+                }}
+              </SettingsConsumer>
+            </SettingsProvider>
+          </JobsDataProvider>
         </ProfileDataProvider>
       </AuthProvider>
     </CacheProvider>

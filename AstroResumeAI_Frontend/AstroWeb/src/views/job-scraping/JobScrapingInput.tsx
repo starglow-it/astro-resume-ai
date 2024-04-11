@@ -31,7 +31,7 @@ const CustomInput = forwardRef((props, ref) => {
 })
 
 interface ScrapingParams {
-  site_name: string
+  site_name: string[]
   search_term: string
   location: string
   is_remote: boolean
@@ -46,7 +46,7 @@ interface Error {
 
 const JobScrapingInput = () => {
   const initialValues = {
-    site_name: '',
+    site_name: [],
     search_term: '',
     location: '',
     is_remote: false,
@@ -67,12 +67,12 @@ const JobScrapingInput = () => {
   }
 
   // Handle Select
-  const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    // if (typeof event.target.value === 'string') {
-    //   setValues({ ...values, site_name: [event.target.value] })
-    // } else {
-    setValues({ ...values, site_name: event.target.value })
-    // }
+  const handleSelectChange = (event: SelectChangeEvent<string[]>) => {
+    if (typeof event.target.value === 'string') {
+      setValues({ ...values, site_name: [event.target.value] })
+    } else {
+      setValues({ ...values, site_name: event.target.value })
+    }
   }
 
   const handleIsRemote = (event: SelectChangeEvent<number>) => {
@@ -118,7 +118,7 @@ const JobScrapingInput = () => {
               <FormControl fullWidth>
                 <InputLabel id='form-layouts-separator-multiple-select-label'>Site Name</InputLabel>
                 <Select
-                  // multiple
+                  multiple
                   value={values.site_name}
                   onChange={handleSelectChange}
                   id='form-layouts-separator-multiple-select'
