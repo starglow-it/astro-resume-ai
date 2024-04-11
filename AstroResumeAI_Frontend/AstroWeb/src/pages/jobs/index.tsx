@@ -17,11 +17,22 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import { DataGrid, GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  GridSortModel,
+  GridFilterModel,
+  GridPaginationModel,
+  GridPagination,
+  useGridApiContext,
+  gridPageCountSelector,
+  useGridSelector
+} from '@mui/x-data-grid'
+import { ConsoleLine } from 'mdi-material-ui'
+import MuiPagination from '@mui/material/Pagination'
+import { TablePaginationProps } from '@mui/material/TablePagination'
 
 import { useJobsData } from 'src/@core/context/jobsDataContext'
 import { API_BASE_URL } from 'src/configs/apiConfig'
-import { ConsoleLine } from 'mdi-material-ui'
 
 interface Column {
   field:
@@ -82,6 +93,31 @@ interface Data {
   date_posted: string
 }
 
+function Pagination({
+  page,
+  onPageChange,
+  className
+}: Pick<TablePaginationProps, 'page' | 'onPageChange' | 'className'>) {
+  const apiRef = useGridApiContext()
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector)
+
+  return (
+    <MuiPagination
+      color='primary'
+      className={className}
+      count={pageCount}
+      page={page + 1}
+      onChange={(event, newPage) => {
+        onPageChange(event as any, newPage - 1)
+      }}
+    />
+  )
+}
+
+function CustomPagination(props: any) {
+  return <GridPagination ActionsComponent={Pagination} {...props} />
+}
+
 const Jobs = () => {
   // ** States
   // const [page, setPage] = useState<number>(0)
@@ -90,6 +126,7 @@ const Jobs = () => {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] })
   const [sortModel, setSortModel] = useState<GridSortModel>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 20 })
+  const [loading, setLoading] = useState<boolean>(false)
 
   // const handleChangePage = (event: unknown, newPage: number) => {
   //   const targetPage = newPage + 1
@@ -107,31 +144,71 @@ const Jobs = () => {
     paginationModel: GridPaginationModel
   ) => {
     try {
-      const filterParams = new URLSearchParams()
-      filterModel.items.forEach(item => {
-        filterParams.append(item.field, item.value)
-      })
+      const params = new URLSearchParams()
+      if (filterModel.items.length > 0) {
+        let filterParams: string[] = []
 
-      const sortParams = new URLSearchParams()
+        filterModel.items.forEach(item => {
+          if (item.field === 'is_easy_apply' || item.field === 'is_remote') {
+            if (item.value === 'Yes') {
+              item.value = 't'
+            } else {
+              item.value = 'f'
+            }
+          }
+
+          filterParams.push(`${item.field}:${item.value}`)
+        })
+
+        params.append('filters', filterParams.join(','))
+      }
+
       sortModel.forEach(item => {
-        sortParams.append('sort', `${item.field},${item.sort}`)
+        params.append('sort', `${item.field}:${item.sort}`)
       })
 
+      console.log('PARAMS: ', params.toString())
+
+      setLoading(true)
       const response = await Axios.get(
-        `${API_BASE_URL}/job/scrape/?page=${
-          paginationModel.page + 1
-        }&${filterParams.toString()}&${sortParams.toString()}`
+        `${API_BASE_URL}/job/scrape/?page=${paginationModel.page + 1}&${params.toString()}`
       )
 
+      setLoading(false)
       setJobsData(response.data.results)
       setCount(response.data.count)
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
   }
 
   const handleFilterModelChange = (newFilterModel: GridFilterModel) => {
     console.log('NEW FILTER MODEL: ', newFilterModel)
+
+    // // Create a new filter model by merging old and new filters
+    // const updatedFilterItems = [...filterModel.items]
+
+    // newFilterModel.items.forEach(newItem => {
+    //   const index = updatedFilterItems.findIndex(item => item.field === newItem.field)
+    //   if (index > -1) {
+    //     // Update existing filter
+    //     updatedFilterItems[index] = newItem
+    //   } else {
+    //     // Add new filter if it doesn't already exist
+    //     updatedFilterItems.push(newItem)
+    //   }
+    // })
+
+    // const updatedFilterModel = {
+    //   ...filterModel,
+    //   items: updatedFilterItems
+    // }
+
+    // if (JSON.stringify(newFilterModel.items) !== JSON.stringify(filterModel.items)) {
+    //   setFilterModel(updatedFilterModel)
+    //   fetchJobs(newFilterModel, sortModel, paginationModel)
+    // }
     setFilterModel(newFilterModel)
     fetchJobs(newFilterModel, sortModel, paginationModel)
   }
@@ -226,6 +303,13 @@ const Jobs = () => {
           paginationMode='server'
           paginationModel={paginationModel}
           onPaginationModelChange={handlePaginationModelChange}
+          rowCount={count}
+          loading={loading}
+          slots={{
+            pagination: CustomPagination
+          }}
+          checkboxSelection
+          disableRowSelectionOnClick
         />
       </Grid>
     </Grid>

@@ -71,6 +71,11 @@ class ScrapeJobsView(APIView):
             job_url_direct_domain = domain_from_url(job_data.get('job_url_direct', ''))
             job_data['is_easy_apply'] = job_url_domain == job_url_direct_domain
 
+            # Check if the job_url already exists in the DB
+            if JobPost.objects.filter(job_url=job_data.get('job_url', '')).exists():
+                print(f'Job with URL {job_data.get("job_url", "")} already exists in the DB')
+                pass
+
             # Convert dataframe to dict            
             job_data_dict = job_data.to_dict()
 
@@ -97,7 +102,7 @@ class ScrapeJobsView(APIView):
             filter_terms = filter_params.split(',')
             queryset = queryset.filter(
                 reduce(
-                    lambda q, term: q & Q(**{term.split(':')[0] + '__contains': term.split(':')[1]}),
+                    lambda q, term: q & Q(**{term.split(':')[0] + '__icontains': term.split(':')[1]}),
                     filter_terms,
                     Q()
                 )
@@ -108,7 +113,7 @@ class ScrapeJobsView(APIView):
 
         if sort_by:
             field, order = sort_by.split(':')
-            queryset = queryset.order_by(f"{field}{'-' if order == 'desc' else ''}")
+            queryset = queryset.order_by(f"{'-' if order == 'desc' else ''}{field}")
 
         # Pagination
         paginator = PageNumberPagination()
