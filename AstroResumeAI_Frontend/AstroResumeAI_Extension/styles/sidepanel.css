@@ -350,13 +350,14 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
     bottom: 30px;
     right: 0px;
     width: fit-content;
-    padding: 8px;
+    padding: 4px;
     margin: 0px 20px;
     border-radius: 8px;
     background-color: white;
     display: flex;
     justify-content: flex-end;
     gap: 8px;
+    box-shadow: 0px 0px 4px #a7a1a1;
 }
 
 #refresh-btn {
@@ -368,6 +369,10 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 #refresh-btn:hover {
     color: #9155FD;
     z-index: 9999;
+}
+
+.profile-wrapper {
+    display: none;
 }
 
 .profile-wrapper p {

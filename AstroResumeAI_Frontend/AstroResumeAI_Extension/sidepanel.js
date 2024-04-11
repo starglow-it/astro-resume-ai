@@ -27,6 +27,7 @@ function setInitialStatus() {
     item.remove();
   });
   document.getElementById('login-btn').innerText = 'LOGIN';
+  document.getElementById('profile-board').style.display = 'none';
 }
 
 async function handleLogout() {
@@ -292,10 +293,12 @@ async function toggleProfileBoard(isShow) {
       profileBoard.style.display = "block";
       profileNavItem.style.backgroundColor = '#9155FD';
       profileNavItem.style.color = 'white';
+      document.getElementById('refresh-btn').style.display = 'block';
     } else {
       profileBoard.style.display = "none";
       profileNavItem.style.backgroundColor = 'white';
       profileNavItem.style.color = 'black';
+      document.getElementById('refresh-btn').style.display = 'none';
     }
   }
 }
@@ -527,6 +530,7 @@ document.getElementById('resume-select').addEventListener('change', function (ev
 document.getElementById('generate-resume-btn').addEventListener('click', async function () {
   try {
     if (selectedResumeId && jobTitle && jobDescription) {
+      // Update button to show loading state
       this.innerHTML = `
         <div class="preloader-wrapper small active">
           <div class="spinner-layer spinner-green-only spinner-white">
@@ -544,6 +548,20 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
       `;
       this.style.pointerEvents = 'none';
 
+      // Wrap chrome.tabs.query in a promise and await its resolution for jobUrl
+      const jobUrl = await new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.sendMessage(tabs[0].id, { action: "get_job_url" }, (response) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(response);
+            }
+          });
+        });
+      });
+
+      // Proceed with fetching and handling the response
       const response = await fetch("http://localhost:8000/api/resumes/generate-resume/", {
         method: 'POST',
         headers: {
@@ -551,36 +569,36 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
         },
         body: JSON.stringify({
           resume_id: selectedResumeId,
-          job_url: 'value2',
+          job_url: jobUrl,
           title: jobTitle,
           job_description: jobDescription
         })
       });
 
-      if (response.ok) {
-        const { url, score } = await response.json();
-        renderedResumeUrl = url;
-        this.innerHTML = `<i class="material-icons">done</i>`;
-        const downloadBtn = document.getElementById("download-resume-btn");
-        downloadBtn.disabled = false;
-        downloadBtn.innerText = `DOWNLOAD ( SCORE: ${Math.round(score * 100)} )`;
-        document.getElementById("generate-resume-error-msg").innerText = '';
-        isResumeGenerated = true;
-        this.style.pointerEvents = 'auto';
-      } else {
-        this.style.pointerEvents = 'auto';
-        throw new Error('something went wrong. Please try again.');
-      }
-    } else {
-      if (!selectedResumeId) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please select your resume.';
+      if (!response.ok) {
+        throw new Error('Something went wrong. Please try again.');
       }
 
-      if (!jobTitle || !jobDescription) {
+      const { url, score } = await response.json();
+      // Update UI upon successful resume generation
+      this.innerHTML = `<i class="material-icons">done</i>`;
+      const downloadBtn = document.getElementById("download-resume-btn");
+      downloadBtn.disabled = false;
+      downloadBtn.innerText = `DOWNLOAD ( SCORE: ${Math.round(score * 100)} )`;
+      document.getElementById("generate-resume-error-msg").innerText = '';
+      this.style.pointerEvents = 'auto';
+
+    } else {
+      // Update UI to show error message if preconditions are not met
+      if (!selectedResumeId) {
+        document.getElementById("generate-resume-error-msg").innerText = 'Please select your resume.';
+      } else if (!jobTitle || !jobDescription) {
         document.getElementById("generate-resume-error-msg").innerText = 'Please scan job first.';
       }
     }
   } catch (error) {
+    // Handle any errors that occur during the process
+    console.error(error);
     this.style.pointerEvents = 'auto';
     this.innerHTML = "GENERATE RESUME";
     document.getElementById("generate-resume-error-msg").innerText = error.message;

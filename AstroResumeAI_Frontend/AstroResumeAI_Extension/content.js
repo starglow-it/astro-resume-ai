@@ -44,7 +44,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ jobTitle, jobDescription });
       break;
 
-    case 'sendPanelBehavior':
+    case 'get_job_url':
+      sendResponse(window.location.href);
 
     default:
       break;

@@ -24,6 +24,8 @@ import numpy as np
 from django.template.loader import render_to_string, get_template
 from jinja2 import Environment, FileSystemLoader
 from markupsafe import Markup
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 import copy
 
 # Load a pre-trained model
@@ -106,7 +108,7 @@ def generate_resume(request):
         resume_data = generate_resume_data(title, job_description_text, origin_resume)
         # Save the job description and generated resume to the database
         # job_description_obj = JobDescription.objects.create(job_url=job_url, title=title, description=job_description_text)
-        # resume_obj = save_resume_data_to_db(resume_data)
+        save_resume_data_to_db(resume_data, job_url, resume_id)
         score = get_matching_score(deep_values_to_string(resume_data), job_description_text)
         print (score)
         # resume_pdf_path = generate_pdf_from_resume_data(resume_data, title)
@@ -221,10 +223,6 @@ def update_resume_data(origin_resume, resume_json):
     updated_resume['hide_text'] = resume_json['hide_text']
     return updated_resume
 
-
-
-
-
 def generate_resume_data(title, job_description, origin_resume):
     client = OpenAI(api_key=settings.OPENAI_API_KEY)
     prompt = (f"""
@@ -327,9 +325,28 @@ def generate_resume_data(title, job_description, origin_resume):
     new_resume = process_json(update_resume_data(origin_resume, resume_json))
     return new_resume
 
-def save_resume_data_to_db(resume_data):
-    resume_data_without_id = {key: value for key, value in resume_data.items() if key != 'id'}
-    return Resume.objects.create(**resume_data_without_id)
+def save_resume_data_to_db(resume_data, job_url, resume_id):
+    try:
+        profile = Profile.objects.get(id=resume_id)
+        formatted_resume = {
+            "job_url": job_url,
+            "profile": profile,
+            "summary": resume_data.get('summary', ''),
+            "experience": resume_data.get('experience', {}),
+            "skills": resume_data.get('skills', []),
+            "hide_text": resume_data.get('hide_text', '')
+        }
+        resume = Resume.objects.create(**formatted_resume)
+        return resume
+    except ObjectDoesNotExist:
+        print(f"No profile found with ID {resume_id}.")
+    except KeyError as e:
+        print(f"Missing key in resume_data: {e}")
+    except IntegrityError as e:
+        print(f"Database integrity error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+    return None
 
 def generate_pdf_from_resume_data(resume_data, title):
     try:
@@ -401,8 +418,9 @@ def resumes(request):
             
         resumes_data = [{
             "id": str(resume.id),
-            "personal_information": resume.personal_information,
+            "job_url": resume.job_url,
             "profile": resume.profile,
+            "summary": resume.summary,
             "experience": resume.experience,
             "skills": resume.skills,
             "hide_text": resume.hide_text,
@@ -410,17 +428,17 @@ def resumes(request):
         return Response(resumes_data, status=status.HTTP_200_OK)
     elif request.method == 'POST':
         data = request.data
-        user_id = data.get('user_id', '')
-        personal_information = data.get('personal_information', {})
+        job_url = data.get('job_url', '')
         profile = data.get('profile', {})
+        summary = data.get('summary', {})
         experience = data.get('experience', [])
         skills = data.get('skills', {})
         hide_text = data.get('hide_text', '')
         
         resume_obj = Resume.objects.create(
-                user_id = user_id,
-                personal_information=personal_information,
+                job_url=job_url,
                 profile=profile,
+                summary=summary,
                 experience=experience,
                 skills=skills,
                 hide_text=hide_text
