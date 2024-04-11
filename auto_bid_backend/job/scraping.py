@@ -85,7 +85,7 @@ def get_job_url_direct(jobs):
 def scrape_jobs_modified(site_name, search_term, location, is_remote, hours_old, country_indeed, results_wanted):
     jobs = scrape_jobs(
         # site_name=["indeed", "linkedin", "zip_recruiter", "glassdoor"],
-        site_name=[site_name],
+        site_name=site_name,
         search_term=search_term,
         location=location,
         is_remote=is_remote,

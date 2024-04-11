@@ -15,6 +15,7 @@ import GroupIcon from '@mui/icons-material/Group'
 
 // ** Type import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
+import { Work } from '@mui/icons-material'
 
 const navigation = (): VerticalNavItemsType => {
   return [
@@ -38,6 +39,11 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       sectionTitle: 'Jobs'
+    },
+    {
+      title: 'Jobs',
+      icon: Work,
+      path: '/jobs'
     },
     {
       title: 'Job Scraping',

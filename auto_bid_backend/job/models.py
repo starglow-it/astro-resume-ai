@@ -28,7 +28,8 @@ class JobPost(models.Model):
     currency = models.CharField(max_length=3, default='USD', null=True, blank=True)
     date_posted = models.DateField(null=True, blank=True)
     emails = models.TextField(null=True, blank=True)
-    is_remote = models.BooleanField(null=True, blank=True)
+    is_remote = models.BooleanField(null=True, blank=True, default=False)
+    is_easy_apply = models.BooleanField(null=True, blank=True, default=False)
     
     # indeed specific fields
     company_addresses = models.TextField(null=True, blank=True)
