@@ -79,11 +79,12 @@ const MyProfiles = () => {
           </Button>
         </Box>
       )}
-      {profileList.map((profile, index) => (
-        <Grid item xs={12} key={index}>
-          <CardProfile profile={profile} editProfile={editProfile} deleteProfile={deleteProfile} />
-        </Grid>
-      ))}
+      {profileList.length > 0 &&
+        profileList.map((profile, index) => (
+          <Grid item xs={12} key={index}>
+            <CardProfile profile={profile} editProfile={editProfile} deleteProfile={deleteProfile} />
+          </Grid>
+        ))}
     </Grid>
   )
 }

@@ -116,9 +116,12 @@
        \end{tabular}
     } & {
         \begin{tabular}[c]{l@{\hspace{1em}}l}
-            \entry{\small#4}{\small#1}
-            \entry{\small#5}{\small#2}
-            \entry{\small#6}{\small#3}
+            \entry{}{\small#1}
+            \entry{}{\small#2}
+            \entry{}{\small#3}
+            \entry{}{\small#4}
+            \entry{}{\small#5}
+            \entry{}{\small#6}
         \end{tabular}
     }
     \end{tabularx}
