@@ -1,7 +1,7 @@
 # Create your models here.
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from profile_management.models import Profile
 class CompensationInterval(models.TextChoices):
     YEARLY = 'yearly', _('Yearly')
     MONTHLY = 'monthly', _('Monthly')
@@ -44,3 +44,15 @@ class JobPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Score(models.Model):
+    job = models.ForeignKey(JobPost, related_name="job", on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name="profile", on_delete=models.CASCADE)
+    score = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('job', 'profile')
+
+    def __str__(self):
+        return f"{self.job} - {self.profile} - {self.score}"

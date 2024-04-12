@@ -25,7 +25,9 @@ import {
   GridPagination,
   useGridApiContext,
   gridPageCountSelector,
-  useGridSelector
+  useGridSelector,
+  GridColDef,
+  GridRenderCellParams
 } from '@mui/x-data-grid'
 import { ConsoleLine } from 'mdi-material-ui'
 import MuiPagination from '@mui/material/Pagination'
@@ -49,9 +51,20 @@ interface Column {
   minWidth?: number
 }
 
-const columns: readonly Column[] = [
+const columns: readonly GridColDef[] = [
   { field: 'site', headerName: 'Site', minWidth: 100 },
-  { field: 'title', headerName: 'Title', minWidth: 100 },
+  {
+    field: 'title',
+    headerName: 'Title',
+    minWidth: 100,
+    renderCell: params => (
+      <Link href={params.row.job_url_direct || params.row.job_url || '#'} passHref>
+        <a target='_blank' rel='noopener noreferrer'>
+          {params.row.title}
+        </a>
+      </Link>
+    )
+  },
   { field: 'is_easy_apply', headerName: 'Easy Apply', minWidth: 50 },
   { field: 'is_remote', headerName: 'Remote', minWidth: 50 },
   {
@@ -225,74 +238,28 @@ const Jobs = () => {
     fetchJobs(filterModel, sortModel, newPaginationModel)
   }
 
+  const rows = jobsData.map(job => ({
+    ...job,
+    is_easy_apply: job.is_easy_apply ? 'Yes' : 'No',
+    is_remote: job.is_remote === null ? 'N/A' : job.is_remote ? 'Yes' : 'No',
+    salary:
+      job.min_amount && job.max_amount && job.interval
+        ? job.min_amount + '-' + job.max_amount + job.currency + '/' + job.interval
+        : 'N/A',
+    title: (
+      <Link href={job.job_url_direct || job.job_url || '#'} passHref>
+        <a target='_blank' rel='noopener noreferrer'>
+          {job.title}
+        </a>
+      </Link>
+    )
+  }))
+
   return (
     <Grid container spacing={6}>
-      {/* <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Jobs Scraped' titleTypographyProps={{ variant: 'h6' }} />
-          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 650 }}>
-              <Table stickyHeader aria-label='sticky table'>
-                <TableHead>
-                  <TableRow>
-                    {columns.map(column => (
-                      <TableCell key={column.id} align='right' sx={{ minWidth: column.minWidth }}>
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {jobsData.map(row => {
-                    return (
-                      <TableRow hover role='checkbox' tabIndex={-1} key={row.id}>
-                        {columns.map(column => {
-                          var value
-
-                          if (column.id === 'salary') {
-                            value =
-                              row.currency && row.min_amount && row.max_amount
-                                ? '' + row.currency + row.min_amount + '-' + row.max_amount + ' ' + row.interval
-                                : null
-                          } else if (column.id === 'title') {
-                            value = (
-                              <Link passHref href={row.job_url_direct || row.job_url || '#'} replace>
-                                {row.title}
-                              </Link>
-                            )
-                          } else if (column.id === 'is_easy_apply' || column.id === 'is_remote') {
-                            value = row[column.id] ? 'Yes' : 'No'
-                          } else {
-                            value = row[column.id]
-                          }
-
-                          return (
-                            <TableCell key={column.id} align='right'>
-                              {value}
-                            </TableCell>
-                          )
-                        })}
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[20]}
-              component='div'
-              count={count}
-              rowsPerPage={20}
-              page={pageNumber - 1}
-              onPageChange={handleChangePage}
-            />
-          </Paper>
-        </Card>
-      </Grid> */}
-
       <Grid item xs={12}>
         <DataGrid
-          rows={jobsData}
+          rows={rows}
           columns={columns}
           filterMode='server'
           filterModel={filterModel}

@@ -1,4 +1,6 @@
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.core.serializers import serialize
 from functools import reduce
 
 from rest_framework.views import APIView
@@ -11,11 +13,17 @@ from rest_framework.generics import ListAPIView
 from urllib.parse import urlparse
 
 from .models import JobPost
-from .serializers import JobPostSerializer
+from .serializers import JobPostSerializer, ScoreSerializer
 from .scraping import scrape_jobs_modified
+from resume_api.views import get_matching_scores
+from profile_management.models import Profile
+from profile_management.serializers import ProfileSerializer
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import json
+
 
 def domain_from_url(url):
     """
@@ -24,6 +32,13 @@ def domain_from_url(url):
     parsed_url = urlparse(url)
     return parsed_url.netloc
 
+def check_easy_apply(url):
+    domain = urlparse(url).netloc
+
+    if domain in ('www.linkedin.com', 'www.indeed.com', 'www.ziprecruiter.com', 'www.glassdoor.com'):
+        return True
+    else :
+        return False
 
 class ScrapeJobsView(APIView):
     """
@@ -67,9 +82,10 @@ class ScrapeJobsView(APIView):
                     job_data_dict[key] = None
 
             # Calculate 'is_easy_apply'
-            job_url_domain = domain_from_url(job_data.get('job_url', ''))
-            job_url_direct_domain = domain_from_url(job_data.get('job_url_direct', ''))
-            job_data['is_easy_apply'] = job_url_domain == job_url_direct_domain
+            # job_url_domain = domain_from_url(job_data.get('job_url', ''))
+            # job_url_direct_domain = domain_from_url(job_data.get('job_url_direct', ''))
+            # job_data['is_easy_apply'] = job_url_domain == job_url_direct_domain
+            job_data['is_easy_apply'] = check_easy_apply(job_data.get('job_url_direct', ''))
 
             # Check if the job_url already exists in the DB
             if JobPost.objects.filter(job_url=job_data.get('job_url', '')).exists():
@@ -128,4 +144,49 @@ class ScrapeJobsView(APIView):
 
         return Response(serializer.data)
     
+    
+class AnalyzeJobsView(APIView):
+    """
+    Analyze a given job and recommend top-score profile and the score
+    """
+
+    def post(self, request, *args, **kwargs):
+        job_ids = request.data.get('jobs', [])
+        user_profiles = Profile.objects.filter(user=request.user)
+
+        result = {}
+
+        for job_id in job_ids:
+            job = get_object_or_404(JobPost, id=job_id)
+            
+            max_score = 0.0
+            top_profile = None
+
+            for profile in user_profiles:
+                profileSerializer = ProfileSerializer(profile)
+
+                # Calculate score for given job and profile            
+                calculated_score = get_matching_scores([json.dumps(profileSerializer.data)], [job.description])[0]
+
+                # Check if the score is higher than the max score
+                if calculated_score > max_score:
+                    max_score = calculated_score
+                    top_profile = profile.id
+
+                # Save or update the score
+                serializer = ScoreSerializer(data={"job": job_id, "profile": profile.id, "score": calculated_score})
+
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    print(serializer.errors)
+                    pass
+            
+            # Save or update the max score and top profile to results
+            result[job_id] = {
+                "max_score": max_score,
+                "top_profile": top_profile
+            }
+
+        return Response({'message': 'Successfully analyzed jobs', 'results': result}, status=status.HTTP_200_OK)
     
