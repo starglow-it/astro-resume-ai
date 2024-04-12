@@ -575,25 +575,19 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Something went wrong. Please try again.');
-      }
-
-      const { url, score } = await response.json();
-      // Update UI upon successful resume generation
-      this.innerHTML = `<i class="material-icons">done</i>`;
-      const downloadBtn = document.getElementById("download-resume-btn");
-      downloadBtn.disabled = false;
-      downloadBtn.innerText = `DOWNLOAD ( SCORE: ${Math.round(score * 100)} )`;
-      document.getElementById("generate-resume-error-msg").innerText = '';
-      this.style.pointerEvents = 'auto';
-
-    } else {
-      // Update UI to show error message if preconditions are not met
-      if (!selectedResumeId) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please select your resume.';
-      } else if (!jobTitle || !jobDescription) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please scan job first.';
+      if (response.ok) {
+        const { url, score } = await response.json();
+        renderedResumeUrl = url;
+        this.innerHTML = `<i class="material-icons">done</i>`;
+        const downloadBtn = document.getElementById("download-resume-btn");
+        downloadBtn.disabled = false;
+        downloadBtn.innerText = `DOWNLOAD ( SCORE: ${Math.round(score * 100)} )`;
+        document.getElementById("generate-resume-error-msg").innerText = '';
+        isResumeGenerated = true;
+        this.style.pointerEvents = 'auto';
+      } else {
+        this.style.pointerEvents = 'auto';
+        throw new Error('something went wrong. Please try again.');
       }
     }
   } catch (error) {
@@ -641,6 +635,7 @@ document.getElementById("scan-job-content").addEventListener('click', async func
 });
 
 document.getElementById('download-resume-btn').addEventListener('click', function () {
+  console.log(renderedResumeUrl);
   if (renderedResumeUrl) {
     const link = document.createElement('a');
     link.href = renderedResumeUrl;
