@@ -1,10 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import JobPostViewSet
-
-router = DefaultRouter()
-router.register(r'jobposts', JobPostViewSet)
+from django.urls import path
+from .views import ScrapeJobsView, AnalyzeJobsView
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('scrape/', ScrapeJobsView.as_view(), name='scrape_jobs'),
+    path('analyze/', AnalyzeJobsView.as_view(), name='analyze_jobs'),
 ]

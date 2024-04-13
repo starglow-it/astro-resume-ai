@@ -34,7 +34,7 @@ const AppBarContent = (props: Props) => {
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+      {/* <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
         {hidden ? (
           <IconButton
             color='inherit'
@@ -55,7 +55,8 @@ const AppBarContent = (props: Props) => {
             )
           }}
         />
-      </Box>
+      </Box> */}
+      <Box></Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />
         <NotificationDropdown />
