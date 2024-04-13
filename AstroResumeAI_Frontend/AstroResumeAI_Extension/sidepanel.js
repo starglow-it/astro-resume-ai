@@ -318,57 +318,62 @@ const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
     return;
   }
 
-  await fetchResumes(token);
+  try {
+    await fetchResumes(token);
 
-  document.getElementById("navbar").style.display = "flex";
-  document.getElementById("func-btns").style.display = "flex";
-  document.getElementById("login-board").style.display = "none";
-  toggleScoreBoard(true);
+    document.getElementById("navbar").style.display = "flex";
+    document.getElementById("func-btns").style.display = "flex";
+    document.getElementById("login-board").style.display = "none";
+    toggleScoreBoard(true);
 
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const url = new URL(tabs[0].url);
-  const hostname = url.hostname;
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const url = new URL(tabs[0].url);
+    const hostname = url.hostname;
 
-  const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
+    const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
 
-  if (!response.ok) {
-    // Handle API request failure
-    return;
-  }
-
-  const jsonResponse = await response.json();
-  jobContentQuery.title = jsonResponse.title_query || '';
-  jobContentQuery.description = jsonResponse.description_query || '';
-
-  const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
-
-  if (!!jobData.jobDescription) {
-    updateScores({ isLoading: true, scores: {} });
-    const requestData = {
-      description: jobData.jobDescription
-    };
-
-    const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': `token ${token}`
-      },
-      body: JSON.stringify(requestData)
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      document.getElementById('no-item-text').display = "none";
-      updateScores({ isLoading: false, scores: data.scores });
-    } else {
+    if (!response.ok) {
       // Handle API request failure
-      updateScores({ isLoading: false, scores: {} });
       return;
     }
+
+    const jsonResponse = await response.json();
+    jobContentQuery.title = jsonResponse.title_query || '';
+    jobContentQuery.description = jsonResponse.description_query || '';
+
+    const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
+
+    if (!!jobData.jobDescription) {
+      updateScores({ isLoading: true, scores: {} });
+      const requestData = {
+        description: jobData.jobDescription
+      };
+
+      const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `token ${token}`
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById('no-item-text').display = "none";
+        updateScores({ isLoading: false, scores: data.scores });
+      } else {
+        // Handle API request failure
+        updateScores({ isLoading: false, scores: {} });
+        return;
+      }
+    }
+    await chrome.storage.local.set({ jobQueries: jobContentQuery });
+  } catch (error) {
+    console.log(error);
   }
-  await chrome.storage.local.set({ jobQueries: jobContentQuery });
 };
+
 
 
 document.getElementById("login-btn").addEventListener('click', async function () {
@@ -652,31 +657,32 @@ document.getElementById('download-resume-btn').addEventListener('click', functio
 });
 
 document.getElementById("support-btn").addEventListener("click", async function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    const url = new URL(tabs[0].url);
-    const hostname = url.hostname;
-    const requestData = {
-      url: hostname,
-      content: errorForSupport
-    }
+  // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+  //   const url = new URL(tabs[0].url);
+  //   const hostname = url.hostname;
+  //   const requestData = {
+  //     url: hostname,
+  //     content: errorForSupport
+  //   }
 
-    const response = await fetch('http://localhost:8000/api/supports/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    });
+  //   const response = await fetch('http://localhost:8000/api/supports/', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(requestData)
+  //   });
 
-    if (response.ok) {
-      M.toast({
-        html: 'Thank you for your support. You will get it shortly.'
-      });
+  //   if (response.ok) {
+  //     M.toast({
+  //       html: 'Thank you for your support. You will get it shortly.'
+  //     });
 
-      document.getElementById("support-text").innerText = "Successfully supported."
-      this.disabled = true;
-    }
-  });
+  //     document.getElementById("support-text").innerText = "Successfully supported."
+  //     this.disabled = true;
+  //   }
+  // });
+  console.log('supported');
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
