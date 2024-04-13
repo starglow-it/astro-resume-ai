@@ -49,6 +49,37 @@ def get_data_from_linkedin(soup, url):
         'job_description': job_description,
         'job_url': job_url
     }
+
+def get_direct_url_from_glassdoor(soup, url):
+    company_name = soup.find('a', {'data-tracking-control-name': 'public_jobs_topcard-org-name'})
+    if company_name:
+        company_url = company_name['href']
+    
+    job_title = soup.find('h1', class_='top-card-layout__title').text.strip()
+    # if job_title:
+    #     print(job_title.text.strip())
+        
+    job_description = soup.find('div', class_='show-more-less-html__markup').text.strip()
+    # if job_description:
+    #     print(job_description.text.strip())
+    job_url = url
+    apply_url_element = soup.find(id='applyUrl')
+    if apply_url_element:
+        comment = apply_url_element.find(string=lambda text: isinstance(text, Comment))
+        if comment:
+            # Remove the comment markers (<!-- and -->) and extra quotes
+            comment_text = comment.strip('"')
+            # Now you can parse the URL as needed
+            parsed_url = urlparse(comment_text)
+            query_params = parse_qs(parsed_url.query)
+            job_url = query_params.get('url', [None])[0]
+    return {
+        'company_name': company_name,
+        'company_url': company_url,
+        'job_title': job_title,
+        'job_description': job_description,
+        'job_url': job_url
+    }
     
 def fetch_with_retry(url, retries=3, retry_delay=3):
     try:
@@ -93,6 +124,8 @@ def scrape_jobs_modified(site_name, search_term, location, is_remote, hours_old,
         country_indeed=country_indeed,  # only needed for indeed / glassdoor
         results_wanted=results_wanted
     )
+
+    print(jobs)
 
     if site_name == 'linkedin':
         jobs = get_job_url_direct(jobs)

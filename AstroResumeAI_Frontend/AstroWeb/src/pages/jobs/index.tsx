@@ -1,22 +1,12 @@
 // ** React Imports
-import { useState, ChangeEvent, useEffect } from 'react'
+import React, { useState, ChangeEvent, useEffect } from 'react'
 import Link from 'next/link'
 // ** Axios Imports
 import Axios from 'axios'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableHead from '@mui/material/TableHead'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TablePagination from '@mui/material/TablePagination'
+
 import {
   DataGrid,
   GridSortModel,
@@ -29,12 +19,17 @@ import {
   GridColDef,
   GridRenderCellParams
 } from '@mui/x-data-grid'
-import { ConsoleLine } from 'mdi-material-ui'
+import { ConsoleLine, Magnify } from 'mdi-material-ui'
 import MuiPagination from '@mui/material/Pagination'
 import { TablePaginationProps } from '@mui/material/TablePagination'
 
 import { useJobsData } from 'src/@core/context/jobsDataContext'
 import { API_BASE_URL } from 'src/configs/apiConfig'
+import { Box, InputAdornment, TextField } from '@mui/material'
+
+interface FilterValue {
+  [key: string]: string
+}
 
 interface Column {
   field:
@@ -49,6 +44,18 @@ interface Column {
     | 'date_posted'
   headerName: string
   minWidth?: number
+}
+
+interface Data {
+  site: string
+  title: string
+  is_easy_apply: boolean
+  is_remote: boolean
+  company: string
+  location: string
+  job_type: string
+  salary: string
+  date_posted: string
 }
 
 const columns: readonly GridColDef[] = [
@@ -94,16 +101,11 @@ const columns: readonly GridColDef[] = [
   }
 ]
 
-interface Data {
-  site: string
-  title: string
-  is_easy_apply: boolean
-  is_remote: boolean
-  company: string
-  location: string
-  job_type: string
-  salary: string
-  date_posted: string
+const initialFilterValue = {
+  site: '',
+  title: '',
+  is_easy_apply: '',
+  is_remote: ''
 }
 
 function Pagination({
@@ -133,56 +135,53 @@ function CustomPagination(props: any) {
 
 const Jobs = () => {
   // ** States
-  // const [page, setPage] = useState<number>(0)
   const { jobsData, setJobsData, count, setCount, pageNumber, setPageNumber } = useJobsData()
+  const [filterValue, setFilterValue] = useState<FilterValue>(initialFilterValue)
 
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({ items: [] })
   const [sortModel, setSortModel] = useState<GridSortModel>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 20 })
   const [loading, setLoading] = useState<boolean>(false)
 
-  // const handleChangePage = (event: unknown, newPage: number) => {
-  //   const targetPage = newPage + 1
-  //   setPageNumber(targetPage)
-  //   fetchJobs(targetPage)
-  // }
-
   useEffect(() => {
-    fetchJobs(filterModel, sortModel, paginationModel)
+    fetchJobs(filterValue, sortModel, paginationModel)
   }, [])
 
   const fetchJobs = async (
-    filterModel: GridFilterModel,
+    filterValue: FilterValue,
     sortModel: GridSortModel,
     paginationModel: GridPaginationModel
   ) => {
     try {
       const params = new URLSearchParams()
-      if (filterModel.items.length > 0) {
-        let filterParams: string[] = []
 
-        filterModel.items.forEach(item => {
-          if (item.field === 'is_easy_apply' || item.field === 'is_remote') {
-            if (item.value === 'Yes') {
-              item.value = 't'
-            } else {
-              item.value = 'f'
-            }
+      /**
+       * Add filer parameters to the query string
+       *  */
+      let filterParams: string[] = []
+
+      Object.keys(filterValue).forEach((field: string) => {
+        if (filterValue[field].trim() !== '') {
+          if (field === 'is_remote' || field === 'is_easy_apply') {
+            filterParams.push(`${field}:${filterValue[field] === 'Yes' ? 't' : filterValue[field] === 'No' ? 'f' : ''}`)
+          } else {
+            filterParams.push(`${field}:${filterValue[field]}`)
           }
+        }
+      })
 
-          filterParams.push(`${item.field}:${item.value}`)
-        })
-
+      if (filterParams.length > 0) {
         params.append('filters', filterParams.join(','))
       }
 
+      /**
+       * Add sort parameters to the query string
+       *  */
       sortModel.forEach(item => {
         params.append('sort', `${item.field}:${item.sort}`)
       })
 
-      console.log('PARAMS: ', params.toString())
-
       setLoading(true)
+
       const response = await Axios.get(
         `${API_BASE_URL}/job/scrape/?page=${paginationModel.page + 1}&${params.toString()}`
       )
@@ -196,46 +195,29 @@ const Jobs = () => {
     }
   }
 
-  const handleFilterModelChange = (newFilterModel: GridFilterModel) => {
-    console.log('NEW FILTER MODEL: ', newFilterModel)
-
-    // // Create a new filter model by merging old and new filters
-    // const updatedFilterItems = [...filterModel.items]
-
-    // newFilterModel.items.forEach(newItem => {
-    //   const index = updatedFilterItems.findIndex(item => item.field === newItem.field)
-    //   if (index > -1) {
-    //     // Update existing filter
-    //     updatedFilterItems[index] = newItem
-    //   } else {
-    //     // Add new filter if it doesn't already exist
-    //     updatedFilterItems.push(newItem)
-    //   }
-    // })
-
-    // const updatedFilterModel = {
-    //   ...filterModel,
-    //   items: updatedFilterItems
-    // }
-
-    // if (JSON.stringify(newFilterModel.items) !== JSON.stringify(filterModel.items)) {
-    //   setFilterModel(updatedFilterModel)
-    //   fetchJobs(newFilterModel, sortModel, paginationModel)
-    // }
-    setFilterModel(newFilterModel)
-    fetchJobs(newFilterModel, sortModel, paginationModel)
-  }
-
   const handleSortModelChange = (newSortModel: GridSortModel) => {
-    console.log('NEW SORT MODEL: ', newSortModel)
     setSortModel(newSortModel)
-    fetchJobs(filterModel, newSortModel, paginationModel)
+    fetchJobs(filterValue, newSortModel, paginationModel)
   }
 
   const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
-    console.log('NEW PAGINATION MODEL: ', newPaginationModel)
     setPaginationModel(newPaginationModel)
-    fetchJobs(filterModel, sortModel, newPaginationModel)
+    fetchJobs(filterValue, sortModel, newPaginationModel)
+  }
+
+  const handleChangeFilter = (prop: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterValue({
+      ...filterValue,
+      [prop]: event.target.value
+    })
+  }
+
+  const handleKeyDown = (prop: keyof FilterValue) => (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+
+      fetchJobs(filterValue, sortModel, paginationModel)
+    }
   }
 
   const rows = jobsData.map(job => ({
@@ -257,13 +239,89 @@ const Jobs = () => {
 
   return (
     <Grid container spacing={6}>
+      <Grid item container xs={12}>
+        <Grid item xs={12} sm={3}>
+          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+            <TextField
+              size='small'
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+              placeholder='Site search'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Magnify fontSize='small' />
+                  </InputAdornment>
+                )
+              }}
+              value={filterValue.site}
+              onChange={handleChangeFilter('site')}
+              onKeyDown={handleKeyDown('site')}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+            <TextField
+              size='small'
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+              placeholder='Job title search'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Magnify fontSize='small' />
+                  </InputAdornment>
+                )
+              }}
+              value={filterValue.title}
+              onChange={handleChangeFilter('title')}
+              onKeyDown={handleKeyDown('title')}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+            <TextField
+              size='small'
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+              placeholder='Easy Apply Yes/No'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Magnify fontSize='small' />
+                  </InputAdornment>
+                )
+              }}
+              value={filterValue.is_easy_apply}
+              onChange={handleChangeFilter('is_easy_apply')}
+              onKeyDown={handleKeyDown('is_easy_apply')}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+            <TextField
+              size='small'
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+              placeholder='Remote search Yes/No'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Magnify fontSize='small' />
+                  </InputAdornment>
+                )
+              }}
+              value={filterValue.is_remote}
+              onChange={handleChangeFilter('is_remote')}
+              onKeyDown={handleKeyDown('is_remote')}
+            />
+          </Box>
+        </Grid>
+      </Grid>
+
       <Grid item xs={12}>
         <DataGrid
           rows={rows}
           columns={columns}
-          filterMode='server'
-          filterModel={filterModel}
-          onFilterModelChange={handleFilterModelChange}
           sortingMode='server'
           sortModel={sortModel}
           onSortModelChange={handleSortModelChange}

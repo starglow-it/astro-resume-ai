@@ -54,6 +54,7 @@ const TabInfo: React.FC<TabInfoProps> = ({ isUpdate = false }) => {
     setLoading(true)
     try {
       if (!isUpdate) {
+        console.log(profileData)
         const response = await Axios.post(`${API_BASE_URL}/profile/create/`, profileData, {
           headers: {
             Authorization: 'Token ' + token
