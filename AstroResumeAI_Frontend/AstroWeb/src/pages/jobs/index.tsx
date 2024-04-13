@@ -71,7 +71,7 @@ const columns: readonly GridColDef[] = [
   {
     field: 'title',
     headerName: 'Title',
-    minWidth: 100,
+    minWidth: 200,
     renderCell: params => (
       <Link href={params.row.job_url_direct || params.row.job_url || '#'} passHref>
         <a target='_blank' rel='noopener noreferrer'>
