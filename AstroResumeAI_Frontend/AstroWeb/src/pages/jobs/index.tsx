@@ -416,6 +416,7 @@ const Jobs = () => {
             keepNonExistentRowsSelected
             rowSelectionModel={rowSelectionModel}
             onRowSelectionModelChange={handleRowSelectionModelChange}
+            autoHeight
           />
         </Grid>
         <Grid item xs={12}>
@@ -430,7 +431,7 @@ const Jobs = () => {
         <DialogTitle id='scroll-dialog-title'>Here are best profiles for given jobs.</DialogTitle>
         <DialogContent dividers>
           <DialogContentText id='scroll-dialog-description' ref={descriptionElementRef} tabIndex={-1}>
-            <DataGrid rows={analyzeResultRows} columns={analyzeResultColumns} hideFooterPagination />
+            <DataGrid rows={analyzeResultRows} columns={analyzeResultColumns} hideFooter />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
