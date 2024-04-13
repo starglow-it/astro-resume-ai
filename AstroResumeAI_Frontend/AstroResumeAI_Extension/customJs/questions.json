@@ -1,0 +1,290 @@
+[
+    {
+        "questionText": "answered Date",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": ""
+    },
+    {
+        "questionText": "Candidate Name",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "Jerry Green"
+    },
+    {
+        "questionText": "disability form selection",
+        "optionalQuestion": false,
+        "inputType": "checkbox",
+        "answer": "I do not have a disability"
+    },
+    {
+        "questionText": "Ethnicity",
+        "optionalQuestion": false,
+        "inputType": "select",
+        "answer": "Asian"
+    },
+    {
+        "questionText": "Race",
+        "optionalQuestion": false,
+        "inputType": "select",
+        "answer": "Asian"
+    },
+    {
+        "questionText": "Experience:",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "authorized to work",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Are you currently authorized",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "visa sponsorship",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "W2 position",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Will you be able to relocate",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "Will you be able to reliably commute",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "How many years of",
+        "optionalQuestion": false,
+        "inputType": "number",
+        "answer": 7
+    },
+    {
+        "questionText": "What is the highest level of education",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Master's"
+    },
+    {
+        "questionText": "What is your highest level of completed education",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Masters Degree or higher"
+    },
+    {
+        "questionText": "following US states",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Do you speak",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "English"
+    },
+    {
+        "questionText": "Do you speak",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Gender",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Male"
+    },
+    {
+        "questionText": "you are a U.S. Citizen",
+        "optionalQuestion": false,
+        "inputType": "checkbox",
+        "answer": "No"
+    },
+    {
+        "questionText": "Do you have experience with",
+        "optionalQuestion": false,
+        "inputType": "textarea",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "list all active certifications",
+        "optionalQuestion": false,
+        "inputType": "textarea",
+        "answer": "AWS Certified Cloud Practitioner"
+    },
+    {
+        "questionText": "Certification",
+        "optionalQuestion": false,
+        "inputType": "checkbox",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Do you have experience with",
+        "optionalQuestion": false,
+        "inputType": "checkbox",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "desired salary",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "$9000 / month"
+    },
+    {
+        "questionText": "Have you been previously employed at",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "Please confirm your legal first and last name",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "Jerry Green"
+    },
+    {
+        "questionText": "located in",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "Are you open to",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Have you ever held",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "U.S. citizenship",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "active security clearance",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "desired compensation",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "$9000 / month"
+    },
+    {
+        "questionText": "level of security clearance",
+        "optionalQuestion": false,
+        "inputType": "select",
+        "answer": "Background Check"
+    },
+    {
+        "questionText": "Recent Job Title",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "Lead Full Stack Developer"
+    },
+    {
+        "questionText": "Recent Employer",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "Soft Elegance"
+    },
+    {
+        "questionText": "number to receive text",
+        "optionalQuestion": false,
+        "inputType": "text",
+        "answer": "+13465610919"
+    },
+    {
+        "questionText": "It is okay to send me text messages",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "proceed with this",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "Have you",
+        "optionalQuestion": false,
+        "inputType": "Checkbox",
+        "answer": "Yes"
+    },
+    {
+        "questionText": "assistance",
+        "optionalQuestion": false,
+        "inputType": "radio",
+        "answer": "No"
+    },
+    {
+        "questionText": "Current Location",
+        "optionalQuestion": true,
+        "inputType": "text",
+        "answer": "Killeen, TX"
+    },
+    {
+        "questionText": "Where are you located",
+        "optionalQuestion": true,
+        "inputType": "textarea",
+        "answer": "Killeen, TX"
+    },
+    {
+        "questionText": "phone",
+        "optionalQuestion": true,
+        "inputType": "text",
+        "answer": "+13465610919"
+    },
+    {
+        "questionText": "address",
+        "optionalQuestion": true,
+        "inputType": "textarea",
+        "answer": "Killeen, TX"
+    },
+    {
+        "questionText": "city",
+        "optionalQuestion": true,
+        "inputType": "text",
+        "answer": "Killeen"
+    },
+    {
+        "questionText": "state",
+        "optionalQuestion": true,
+        "inputType": "text",
+        "answer": "TX"
+    },
+    {
+        "questionText": "zip",
+        "optionalQuestion": true,
+        "inputType": "text",
+        "answer": "76549"
+    }
+]
