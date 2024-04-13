@@ -11,6 +11,7 @@ var defaultResumes = [];
 var defaultResumeId = '';
 var scores_g = {};
 var isResumeGenerated = false;
+var resumesGlobal = [];
 const titleSelector = document.getElementById('titleSelector');
 const descriptionSelector = document.getElementById('descriptionSelector');
 
@@ -26,6 +27,7 @@ function setInitialStatus() {
     item.remove();
   });
   document.getElementById('login-btn').innerText = 'LOGIN';
+  document.getElementById('profile-board').style.display = 'none';
 }
 
 async function handleLogout() {
@@ -133,6 +135,81 @@ function displayResumes(resumes) {
   M.FormSelect.init(elems);
 }
 
+function attachProfile(resume) {
+  if (resume) {
+    let profileBoard = document.getElementById("profile-board");
+
+    let profileInfo = `
+        <h6>Contact info</h6>
+        <p class="title">${resume.name}</p>
+        <p>${resume.recent_role}</p>
+        <p>${resume.email}</p>
+        <p>${resume.phone}</p>
+        <p>${resume.location}</p>
+    `;
+
+    if (resume.linkedin) {
+      profileInfo += `<p>${resume.linkedin}</p>`;
+    }
+
+    if (resume.website) {
+      profileInfo += `<p>${resume.website}</p>`;
+    }
+
+    if (resume.github) {
+      profileInfo += `<p>${resume.github}</p>`;
+    }
+
+    profileInfo += `
+      <hr>
+      <h6>Summary</h6>
+        <p>${resume.summary}</p>
+      <hr>
+    `;
+
+    profileInfo += "<h6>Education</h6>";
+
+    resume.education.forEach(edu => {
+      profileInfo += `
+      <p class="title">${edu.education_level} - ${edu.major}</p>
+      <p>${edu.university}</p>
+      <p>${edu.graduation_year}</p>
+  `;
+    });
+
+    profileInfo += "<hr><h6>Experience</h6>";
+
+    for (const exp of resume.experience) {
+      profileInfo += `
+        <p class="title">${exp.job_title}</p>
+        <p>${exp.company}</p>
+        <p>${exp.location}</p>
+        <p>${exp.duration}</p>
+    `;
+
+      for (const desc of exp.description) {
+        profileInfo += `<p>- ${desc}</p>`;
+      }
+    }
+
+    profileBoard.innerHTML = profileInfo;
+
+    profileBoard.addEventListener('click', function (event) {
+      const target = event.target;
+
+      if ((target.tagName === 'P')) {
+        navigator.clipboard.writeText(target.textContent).then(() => {
+          console.log('Text copied to clipboard');
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+      }
+    });
+
+
+  }
+}
+
 //fetch resumes from db
 async function fetchResumes(token) {
   try {
@@ -146,6 +223,8 @@ async function fetchResumes(token) {
 
       if (response.ok) {
         const resumes = await response.json();
+        console.log(resumes);
+        attachProfile(resumes[0]);
         displayResumes(resumes);
       }
     }
@@ -203,6 +282,27 @@ async function toggleScanJobBoard(isShow) {
   }
 }
 
+async function toggleProfileBoard(isShow) {
+  const profileBoard = document.getElementById("profile-board");
+  const profileNavItem = document.getElementById("profile-nav-item");
+
+  const isAuthenticated = await chrome.storage.local.get('isAuthorized');
+
+  if (isAuthenticated) {
+    if (isShow) {
+      profileBoard.style.display = "block";
+      profileNavItem.style.backgroundColor = '#9155FD';
+      profileNavItem.style.color = 'white';
+      document.getElementById('refresh-btn').style.display = 'block';
+    } else {
+      profileBoard.style.display = "none";
+      profileNavItem.style.backgroundColor = 'white';
+      profileNavItem.style.color = 'black';
+      document.getElementById('refresh-btn').style.display = 'none';
+    }
+  }
+}
+
 //handle login success
 const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
   let token = tokenParam;
@@ -218,57 +318,62 @@ const handleLogInSuccess = async (isRemember = false, tokenParam = '') => {
     return;
   }
 
-  await fetchResumes(token);
+  try {
+    await fetchResumes(token);
 
-  document.getElementById("navbar").style.display = "flex";
-  document.getElementById("func-btns").style.display = "flex";
-  document.getElementById("login-board").style.display = "none";
-  toggleScoreBoard(true);
+    document.getElementById("navbar").style.display = "flex";
+    document.getElementById("func-btns").style.display = "flex";
+    document.getElementById("login-board").style.display = "none";
+    toggleScoreBoard(true);
 
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const url = new URL(tabs[0].url);
-  const hostname = url.hostname;
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const url = new URL(tabs[0].url);
+    const hostname = url.hostname;
 
-  const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
+    const response = await fetch(`http://localhost:8000/api/job_queries/${hostname}`);
 
-  if (!response.ok) {
-    // Handle API request failure
-    return;
-  }
-
-  const jsonResponse = await response.json();
-  jobContentQuery.title = jsonResponse.title_query || '';
-  jobContentQuery.description = jsonResponse.description_query || '';
-
-  const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
-
-  if (!!jobData.jobDescription) {
-    updateScores({ isLoading: true, scores: {} });
-    const requestData = {
-      description: jobData.jobDescription
-    };
-
-    const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': `token ${token}`
-      },
-      body: JSON.stringify(requestData)
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      document.getElementById('no-item-text').display = "none";
-      updateScores({ isLoading: false, scores: data.scores });
-    } else {
+    if (!response.ok) {
       // Handle API request failure
-      updateScores({ isLoading: false, scores: {} });
       return;
     }
+
+    const jsonResponse = await response.json();
+    jobContentQuery.title = jsonResponse.title_query || '';
+    jobContentQuery.description = jsonResponse.description_query || '';
+
+    const jobData = await chrome.tabs.sendMessage(tabs[0].id, { action: "select_by_classname", className: jobContentQuery });
+
+    if (!!jobData.jobDescription) {
+      updateScores({ isLoading: true, scores: {} });
+      const requestData = {
+        description: jobData.jobDescription
+      };
+
+      const response = await fetch('http://localhost:8000/api/resumes/cal_matching_scores/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `token ${token}`
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById('no-item-text').display = "none";
+        updateScores({ isLoading: false, scores: data.scores });
+      } else {
+        // Handle API request failure
+        updateScores({ isLoading: false, scores: {} });
+        return;
+      }
+    }
+    await chrome.storage.local.set({ jobQueries: jobContentQuery });
+  } catch (error) {
+    console.log(error);
   }
-  await chrome.storage.local.set({ jobQueries: jobContentQuery });
 };
+
 
 
 document.getElementById("login-btn").addEventListener('click', async function () {
@@ -339,13 +444,15 @@ document.getElementById("logout-btn").addEventListener('click', handleLogout);
 //Navbar actions
 document.getElementById("scan-job-nav-item").addEventListener('click', function (event) {
   event.preventDefault();
-  toggleScanJobBoard(true)
   toggleScoreBoard(false);
+  toggleProfileBoard(false);
+  toggleScanJobBoard(true);
 });
 
 document.getElementById("score-nav-item").addEventListener('click', async function (event) {
   event.preventDefault();
-  toggleScanJobBoard(false)
+  toggleScanJobBoard(false);
+  toggleProfileBoard(false);
   toggleScoreBoard(true);
 
   if (isResumeGenerated) {
@@ -354,6 +461,15 @@ document.getElementById("score-nav-item").addEventListener('click', async functi
     document.getElementById('generate-resume-btn').innerText = 'GENERATE RESUME';
     isResumeGenerated = false;
   }
+});
+
+document.getElementById("profile-nav-item").addEventListener('click', function (event) {
+  event.preventDefault();
+  toggleScanJobBoard(false)
+  toggleScoreBoard(false);
+  toggleProfileBoard(true);
+
+
 });
 
 document.getElementById("login-email").addEventListener("keypress", function (event) {
@@ -419,6 +535,7 @@ document.getElementById('resume-select').addEventListener('change', function (ev
 document.getElementById('generate-resume-btn').addEventListener('click', async function () {
   try {
     if (selectedResumeId && jobTitle && jobDescription) {
+      // Update button to show loading state
       this.innerHTML = `
         <div class="preloader-wrapper small active">
           <div class="spinner-layer spinner-green-only spinner-white">
@@ -436,6 +553,20 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
       `;
       this.style.pointerEvents = 'none';
 
+      // Wrap chrome.tabs.query in a promise and await its resolution for jobUrl
+      const jobUrl = await new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.sendMessage(tabs[0].id, { action: "get_job_url" }, (response) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(response);
+            }
+          });
+        });
+      });
+
+      // Proceed with fetching and handling the response
       const response = await fetch("http://localhost:8000/api/resumes/generate-resume/", {
         method: 'POST',
         headers: {
@@ -443,7 +574,7 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
         },
         body: JSON.stringify({
           resume_id: selectedResumeId,
-          job_url: 'value2',
+          job_url: jobUrl,
           title: jobTitle,
           job_description: jobDescription
         })
@@ -463,16 +594,10 @@ document.getElementById('generate-resume-btn').addEventListener('click', async f
         this.style.pointerEvents = 'auto';
         throw new Error('something went wrong. Please try again.');
       }
-    } else {
-      if (!selectedResumeId) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please select your resume.';
-      }
-
-      if (!jobTitle || !jobDescription) {
-        document.getElementById("generate-resume-error-msg").innerText = 'Please scan job first.';
-      }
     }
   } catch (error) {
+    // Handle any errors that occur during the process
+    console.error(error);
     this.style.pointerEvents = 'auto';
     this.innerHTML = "GENERATE RESUME";
     document.getElementById("generate-resume-error-msg").innerText = error.message;
@@ -515,6 +640,7 @@ document.getElementById("scan-job-content").addEventListener('click', async func
 });
 
 document.getElementById('download-resume-btn').addEventListener('click', function () {
+  console.log(renderedResumeUrl);
   if (renderedResumeUrl) {
     const link = document.createElement('a');
     link.href = renderedResumeUrl;
@@ -531,31 +657,32 @@ document.getElementById('download-resume-btn').addEventListener('click', functio
 });
 
 document.getElementById("support-btn").addEventListener("click", async function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-    const url = new URL(tabs[0].url);
-    const hostname = url.hostname;
-    const requestData = {
-      url: hostname,
-      content: errorForSupport
-    }
+  // chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+  //   const url = new URL(tabs[0].url);
+  //   const hostname = url.hostname;
+  //   const requestData = {
+  //     url: hostname,
+  //     content: errorForSupport
+  //   }
 
-    const response = await fetch('http://localhost:8000/api/supports/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    });
+  //   const response = await fetch('http://localhost:8000/api/supports/', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(requestData)
+  //   });
 
-    if (response.ok) {
-      M.toast({
-        html: 'Thank you for your support. You will get it shortly.'
-      });
+  //   if (response.ok) {
+  //     M.toast({
+  //       html: 'Thank you for your support. You will get it shortly.'
+  //     });
 
-      document.getElementById("support-text").innerText = "Successfully supported."
-      this.disabled = true;
-    }
-  });
+  //     document.getElementById("support-text").innerText = "Successfully supported."
+  //     this.disabled = true;
+  //   }
+  // });
+  console.log('supported');
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
