@@ -171,7 +171,10 @@ class AnalyzeJobsView(APIView):
                 # Check if the score is higher than the max score
                 if calculated_score > max_score:
                     max_score = calculated_score
-                    top_profile = profile.id
+                    top_profile = {
+                        "id": profile.id,
+                        "recent_role": profile.recent_role
+                    }
 
                 # Save or update the score
                 serializer = ScoreSerializer(data={"job": job_id, "profile": profile.id, "score": calculated_score})
@@ -184,6 +187,7 @@ class AnalyzeJobsView(APIView):
             
             # Save or update the max score and top profile to results
             result[job_id] = {
+                'job_title': job.title,
                 "max_score": max_score,
                 "top_profile": top_profile
             }

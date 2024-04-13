@@ -17,15 +17,29 @@ import {
   gridPageCountSelector,
   useGridSelector,
   GridColDef,
-  GridRenderCellParams
+  GridRenderCellParams,
+  GridRowSelectionModel
 } from '@mui/x-data-grid'
-import { ConsoleLine, Magnify } from 'mdi-material-ui'
+import { ConsoleLine, KeyPlus, Magnify } from 'mdi-material-ui'
 import MuiPagination from '@mui/material/Pagination'
 import { TablePaginationProps } from '@mui/material/TablePagination'
 
 import { useJobsData } from 'src/@core/context/jobsDataContext'
 import { API_BASE_URL } from 'src/configs/apiConfig'
-import { Box, InputAdornment, TextField } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  InputAdornment,
+  TextField
+} from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import { useAuth } from 'src/@core/context/authContext'
+import { responsiveProperty } from '@mui/material/styles/cssUtils'
 
 interface FilterValue {
   [key: string]: string
@@ -46,16 +60,10 @@ interface Column {
   minWidth?: number
 }
 
-interface Data {
-  site: string
+interface AnalyzeResultRow {
   title: string
-  is_easy_apply: boolean
-  is_remote: boolean
-  company: string
-  location: string
-  job_type: string
-  salary: string
-  date_posted: string
+  profile: string
+  score: number
 }
 
 const columns: readonly GridColDef[] = [
@@ -101,6 +109,24 @@ const columns: readonly GridColDef[] = [
   }
 ]
 
+const analyzeResultColumns = [
+  {
+    field: 'title',
+    headerName: 'Job Title',
+    minWidth: 250
+  },
+  {
+    field: 'profile',
+    headerName: 'Best Matched Profile',
+    minWidth: 400
+  },
+  {
+    field: 'score',
+    headerName: 'Score',
+    minWidth: 50
+  }
+]
+
 const initialFilterValue = {
   site: '',
   title: '',
@@ -136,11 +162,17 @@ function CustomPagination(props: any) {
 const Jobs = () => {
   // ** States
   const { jobsData, setJobsData, count, setCount, pageNumber, setPageNumber } = useJobsData()
+  const [analyzeResultRows, setAnalyzeResultRows] = useState<AnalyzeResultRow[]>([])
   const [filterValue, setFilterValue] = useState<FilterValue>(initialFilterValue)
-
   const [sortModel, setSortModel] = useState<GridSortModel>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 20 })
+  const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([])
+
   const [loading, setLoading] = useState<boolean>(false)
+  const [analyzeLoading, setAnalyzeLoading] = useState<boolean>(false)
+  const [isModalOpen, setModalOpen] = useState<boolean>(false)
+
+  const { token } = useAuth()
 
   useEffect(() => {
     fetchJobs(filterValue, sortModel, paginationModel)
@@ -205,6 +237,10 @@ const Jobs = () => {
     fetchJobs(filterValue, sortModel, newPaginationModel)
   }
 
+  const handleRowSelectionModelChange = (newRowSelectionModel: GridRowSelectionModel) => {
+    setRowSelectionModel(newRowSelectionModel)
+  }
+
   const handleChangeFilter = (prop: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterValue({
       ...filterValue,
@@ -217,6 +253,36 @@ const Jobs = () => {
       event.preventDefault()
 
       fetchJobs(filterValue, sortModel, paginationModel)
+    }
+  }
+
+  const handleAnalyze = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+
+    try {
+      setAnalyzeLoading(true)
+      const response = await Axios.post(
+        `${API_BASE_URL}/job/analyze/`,
+        { jobs: rowSelectionModel },
+        {
+          headers: {
+            Authorization: 'Token ' + token
+          }
+        }
+      )
+      setAnalyzeResultRows(
+        Object.keys(response.data.results).map(jobId => ({
+          id: jobId,
+          title: response.data.results[jobId].job_title,
+          profile: response.data.results[jobId].top_profile.recent_role,
+          score: response.data.results[jobId].max_score * 100
+        }))
+      )
+      setModalOpen(true)
+      setAnalyzeLoading(false)
+    } catch (error) {
+      console.log(error)
+      setAnalyzeLoading(false)
     }
   }
 
@@ -237,107 +303,141 @@ const Jobs = () => {
     )
   }))
 
-  return (
-    <Grid container spacing={6}>
-      <Grid item container xs={12}>
-        <Grid item xs={12} sm={3}>
-          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-            <TextField
-              size='small'
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-              placeholder='Site search'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <Magnify fontSize='small' />
-                  </InputAdornment>
-                )
-              }}
-              value={filterValue.site}
-              onChange={handleChangeFilter('site')}
-              onKeyDown={handleKeyDown('site')}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-            <TextField
-              size='small'
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-              placeholder='Job title search'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <Magnify fontSize='small' />
-                  </InputAdornment>
-                )
-              }}
-              value={filterValue.title}
-              onChange={handleChangeFilter('title')}
-              onKeyDown={handleKeyDown('title')}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-            <TextField
-              size='small'
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-              placeholder='Easy Apply Yes/No'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <Magnify fontSize='small' />
-                  </InputAdornment>
-                )
-              }}
-              value={filterValue.is_easy_apply}
-              onChange={handleChangeFilter('is_easy_apply')}
-              onKeyDown={handleKeyDown('is_easy_apply')}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-            <TextField
-              size='small'
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-              placeholder='Remote search Yes/No'
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <Magnify fontSize='small' />
-                  </InputAdornment>
-                )
-              }}
-              value={filterValue.is_remote}
-              onChange={handleChangeFilter('is_remote')}
-              onKeyDown={handleKeyDown('is_remote')}
-            />
-          </Box>
-        </Grid>
-      </Grid>
+  // Modal reference
+  const descriptionElementRef = React.useRef<HTMLElement>(null)
+  useEffect(() => {
+    if (isModalOpen) {
+      const { current: descriptionElement } = descriptionElementRef
+      if (descriptionElement !== null) {
+        descriptionElement.focus()
+      }
+    }
+  }, [isModalOpen])
 
-      <Grid item xs={12}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          sortingMode='server'
-          sortModel={sortModel}
-          onSortModelChange={handleSortModelChange}
-          paginationMode='server'
-          paginationModel={paginationModel}
-          onPaginationModelChange={handlePaginationModelChange}
-          rowCount={count}
-          loading={loading}
-          slots={{
-            pagination: CustomPagination
-          }}
-          checkboxSelection
-          disableRowSelectionOnClick
-        />
+  return (
+    <>
+      <Grid container spacing={6}>
+        <Grid item container xs={12}>
+          <Grid item xs={12} sm={3}>
+            <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+              <TextField
+                size='small'
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+                placeholder='Site search'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Magnify fontSize='small' />
+                    </InputAdornment>
+                  )
+                }}
+                value={filterValue.site}
+                onChange={handleChangeFilter('site')}
+                onKeyDown={handleKeyDown('site')}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+              <TextField
+                size='small'
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+                placeholder='Job title search'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Magnify fontSize='small' />
+                    </InputAdornment>
+                  )
+                }}
+                value={filterValue.title}
+                onChange={handleChangeFilter('title')}
+                onKeyDown={handleKeyDown('title')}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+              <TextField
+                size='small'
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+                placeholder='Easy Apply Yes/No'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Magnify fontSize='small' />
+                    </InputAdornment>
+                  )
+                }}
+                value={filterValue.is_easy_apply}
+                onChange={handleChangeFilter('is_easy_apply')}
+                onKeyDown={handleKeyDown('is_easy_apply')}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+              <TextField
+                size='small'
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+                placeholder='Remote search Yes/No'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Magnify fontSize='small' />
+                    </InputAdornment>
+                  )
+                }}
+                value={filterValue.is_remote}
+                onChange={handleChangeFilter('is_remote')}
+                onKeyDown={handleKeyDown('is_remote')}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            sortingMode='server'
+            sortModel={sortModel}
+            onSortModelChange={handleSortModelChange}
+            paginationMode='server'
+            paginationModel={paginationModel}
+            onPaginationModelChange={handlePaginationModelChange}
+            rowCount={count}
+            loading={loading}
+            slots={{
+              pagination: CustomPagination
+            }}
+            checkboxSelection
+            disableRowSelectionOnClick
+            keepNonExistentRowsSelected
+            rowSelectionModel={rowSelectionModel}
+            onRowSelectionModelChange={handleRowSelectionModelChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          {rowSelectionModel.length > 0 && (
+            <LoadingButton loading={analyzeLoading} variant='contained' onClick={handleAnalyze}>
+              Recommend the best profile for the selected jobs
+            </LoadingButton>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+      <Dialog open={isModalOpen} onClose={() => setModalOpen(false)} scroll='paper' maxWidth='md'>
+        <DialogTitle id='scroll-dialog-title'>Here are best profiles for given jobs.</DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText id='scroll-dialog-description' ref={descriptionElementRef} tabIndex={-1}>
+            <DataGrid rows={analyzeResultRows} columns={analyzeResultColumns} hideFooterPagination />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModalOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 
