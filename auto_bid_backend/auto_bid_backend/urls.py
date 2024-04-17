@@ -30,6 +30,7 @@ urlpatterns = [
     path('parse-resume/', include('resume_parser.urls')),
     path('profile/', include('profile_management.urls')),
     path('job/', include('job.urls')),
+    path('auto-bid/', include('auto_bid.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     urlpatterns += [

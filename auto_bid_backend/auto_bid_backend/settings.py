@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'job_query',
     'support',
     'job',
+    'auto_bid',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

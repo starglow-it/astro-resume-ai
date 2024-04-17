@@ -28,11 +28,11 @@ def find_most_similar(new_question, questions, vectors):
 
 # List of origin questions
 origin_questions = [
-    "First Name",
+    # "First Name",
     "Are you authorized to work in the US?",
     "What is your employment status?",
     "Do you have legal working rights in the United States?",
-    "Are you currently employed?"
+    # "Are you currently employed?"
 ]
 
 # Pre-compute vectors for the origin questions
