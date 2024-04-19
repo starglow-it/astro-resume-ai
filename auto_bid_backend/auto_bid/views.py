@@ -71,6 +71,47 @@ def save_answers(request):
     return Response({'message': 'Answer successfully saved or updated'}, status=status.HTTP_201_CREATED)
     
 
+
+# Save question and standardized question and get answers if exist.
+@api_view(["POST"])        
+def get_answer(request):
+    profile_id = request.data.get('profile_id', None)    
+    question_data = request.data.get('data', [])
+
+    profile = get_object_or_404(Profile, id=profile_id)
+    
+    # Extract question and inputType from the question_data dictionary
+    question = question_data.get('question')
+    inputType = question_data.get('inputType', 'text')
+
+    # Get the standard question for the question
+    standard_question = get_standard_question(question, Question, StandardQuestion)
+
+    # Retrieve the answer based on question and inputType.
+    answer_query = Answer.objects.filter(
+        profile=profile,
+        standard_question=standard_question,
+        inputType=inputType
+    ).first()  # We use first() to get the first matching item.
+
+    answer = {}
+
+    if answer_query:
+        answer['answer'] = answer_query.answer
+    else:
+        answer['answer'] = None  # or any default value you want to provide
+
+    # Add the standard_question to answers_dict
+    answer['standard_question'] = standard_question.id
+
+    return Response({
+        'message': 'Answers successfully retrieved',
+        'answer': answer
+    }, status=status.HTTP_200_OK)
+
+
+
+
 # Save question and standardized question and get answers if exist.
 @api_view(["POST"])        
 def get_answers(request):

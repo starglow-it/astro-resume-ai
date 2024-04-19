@@ -48,3 +48,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 
+// Add an event listener for tab updates
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  // Check if the URL starts with the desired pattern
+  if (tab.url && tab.url.startsWith('https://smartapply.indeed.com/beta/indeedapply/form/questions/')) {
+    // Check if the DOM content is fully loaded
+    if (changeInfo.status === 'complete') {
+      // Fetch answers from the backend.
+    }
+  }
+});
+
