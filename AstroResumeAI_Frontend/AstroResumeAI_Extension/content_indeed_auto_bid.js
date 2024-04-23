@@ -1,8 +1,22 @@
-var $button;
-// Selector for the new form. Adjust this to target the new form specifically.
+/**
+ * Auto bid content.js code for indeed.com.
+ * 
+ * TODO:
+ * 1. Retrieving saved answers for given questions in the form from database.
+ * 2. Saving  user answers for given questions
+ * 3. Auto-flow page with auto filling form with the answers
+ */
+
+
+// Selectors for form, questions and continueButton
 var formSelector = 'main';
 const questionSelector = 'main:first input, main:first textarea, main:first select, main:first button';
+const continueButtonSelector = 'main:first button:has(span:contains("Continue"))';
 
+// Backend API Base Url
+const BACKEND_BASE_URL = 'http://localhost:8000';
+
+// Function that retrieve element after the element is fully loaded
 async function waitForElement(selector) {
     let element = document.querySelector(selector);
     while (!element) {
@@ -12,6 +26,7 @@ async function waitForElement(selector) {
     return element;
 }
 
+// Function that dispatch click event on given element
 async function simulateClick(element) {
     element.dispatchEvent(
         new MouseEvent("click", {
@@ -22,6 +37,7 @@ async function simulateClick(element) {
     );
 }
 
+// Function that dispatch keyboard event on given element to fill the input element
 async function simulateKeyboardInput(element, value) {
     element.value = value;
 
@@ -37,6 +53,40 @@ async function simulateKeyboardInput(element, value) {
     );
 }
 
+// Function that finds label element for given input element
+const findLabelForInput = (input) => {
+    // Case 1: Explicit association via 'for' attribute
+    var id = $(input).attr('id');
+    if (id) {
+        var explicitLabel = $('label[for="' + id + '"]');
+        if (explicitLabel.length) {
+            return explicitLabel.text().trim();
+        }
+    }
+
+    // Case 2: Implicit association by nesting
+    var parentLabel = $(input).closest('label');
+    if (parentLabel.length) {
+        return parentLabel.text().trim();
+    }
+
+    // Case 3: Adjacent elements
+    // Previous element
+    var prevLabel = $(input).prev('label');
+    if (prevLabel.length) {
+        return prevLabel.text();
+    }
+    // Next element
+    var nextLabel = $(input).next('label');
+    if (nextLabel.length) {
+        return nextLabel.text();
+    }
+
+    // If no label found
+    return "No Label Found";
+}
+
+// Function that autofill input element of various input type with given answer 
 function autoFillAnswer(input, inputType, label, answer) {
     switch (inputType) {
         case "radio":
@@ -73,6 +123,7 @@ function autoFillAnswer(input, inputType, label, answer) {
     }
 }
 
+// Function that retrieves the user-input value of the given input element of various input type
 function retrieveUserInputAnswer(input, inputType) {
     // Handle different types of inputs to extract the answer(if any)
     if (inputType === 'number' || inputType === 'text' || inputType === 'textarea') {
@@ -101,7 +152,8 @@ function retrieveUserInputAnswer(input, inputType) {
     return answer;
 }
 
-const fillAnswerForInput = async (questionText, label, isOptional, inputType, input) => {
+// Function that fetch answer for given question from backend API and return answer
+const fetchAnswerForQuestion = async (questionText, label, isOptional, inputType, input) => {
     const payload = {
         "profile_id": 32,
         "data": {
@@ -110,96 +162,71 @@ const fillAnswerForInput = async (questionText, label, isOptional, inputType, in
             "inputType": inputType,
         }
     }
+    try {
+        const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
 
-    const response = await fetch('http://localhost:8000/auto-bid/get-answer/', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json', // Set the content type of the request
-        },
-        body: JSON.stringify(payload),
-    })
+        const response_data = await response.json();
 
-    const response_data = await response.json();
+        $(input).attr('data-standard-id', response_data.answer.standard_question)
 
-    $(input).attr('data-standard-id', response_data.answer.standard_question)
+        const answer = response_data.answer.answer;
 
-    const answer = response_data.answer.answer;
-
-    if (answer) {
-        autoFillAnswer(input, inputType, label, answer);
+        if (answer) {
+            autoFillAnswer(input, inputType, label, answer);
+        }
+    } catch (error) {
+        console.log(error.response.data)
     }
-
-    return {
-        question: questionText,
-        isOptional: isOptional,
-        inputType: inputType,
-        answer: answer
-    };
 }
 
-const saveAnswerForInput = async (userAnswers) => {
+// Function that save user's answers to the database 
+const saveAnswersForQuestions = async (userAnswers) => {
     const payload = {
         "profile_id": 32,
         "data": userAnswers
     }
 
-    const response = await fetch('http://localhost:8000/auto-bid/save-answers/', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    })
+    try {
+        const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/save-answers/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
 
-    const response_data = await response.json();
+        const response_data = await response.json();
 
-    console.log(response_data.message)
+        console.log(response_data.message);
+    } catch (error) {
+        console.log(error.response.data);
+    }
+
 }
 
-// Function to be called when the form is detected
-const onFormLoaded = () => {
+// Function that is called when the form is detected.
+// This is used to give click event listener to continue button
+const onFormLoaded = async () => {
     setTimeout(() => {
-        $('main:first button:has(span:contains("Continue"))').click(async () => {
+
+        $(continueButtonSelector).click(async () => {
             // Code to execute when button is clicked
-            console.log('Continue button clicked')
             await operateAllInputFields('save_answers')();
         });
-
     }, 300);
 }
 
-const findLabelForInput = (input) => {
-    // Case 1: Explicit association via 'for' attribute
-    var id = $(input).attr('id');
-    if (id) {
-        var explicitLabel = $('label[for="' + id + '"]');
-        if (explicitLabel.length) {
-            return explicitLabel.text().trim();
-        }
-    }
-
-    // Case 2: Implicit association by nesting
-    var parentLabel = $(input).closest('label');
-    if (parentLabel.length) {
-        return parentLabel.text().trim();
-    }
-
-    // Case 3: Adjacent elements
-    // Previous element
-    var prevLabel = $(input).prev('label');
-    if (prevLabel.length) {
-        return prevLabel.text();
-    }
-    // Next element
-    var nextLabel = $(input).next('label');
-    if (nextLabel.length) {
-        return nextLabel.text();
-    }
-
-    // If no label found
-    return "No Label Found";
-}
-
+/**
+ * Main operation function for input fields. This fills answers or save answers based on 'command' parameter
+ * @param {string} command -  'fill_answer' or 'save_answers'
+ * @return {void}
+ *  */
 const operateAllInputFields = command => async () => {
     let userAnswers = [];
     // Iterate over each input and print its label
@@ -226,11 +253,9 @@ const operateAllInputFields = command => async () => {
 
             // Adjacent label element for radio/checkbox
             label = findLabelForInput(input);
-            // console.log(`Group Label: ${groupLabel}, Option Label: ${label}`);
         } else {
             // For other inputs like text, select, etc.
             groupLabel = findLabelForInput(input);
-            // console.log(`Label: ${label}, Name: ${input.name}`);
         }
 
         var inputType;
@@ -246,7 +271,7 @@ const operateAllInputFields = command => async () => {
         var isOptional = groupLabel.includes('(optional)');
 
         if (command === 'fill_answer') {
-            await fillAnswerForInput(groupLabel, label, isOptional, inputType, input);
+            await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
         } else if (command === 'save_answers') {
             if (!userAnswers.find(userAnswer => userAnswer.question === groupLabel)) {
                 userAnswers.push({
@@ -261,11 +286,14 @@ const operateAllInputFields = command => async () => {
     };
 
     if (command === 'save_answers') {
-        console.log(userAnswers)
-        await saveAnswerForInput(userAnswers);
+        await saveAnswersForQuestions(userAnswers);
     }
 }
 
+/**
+ * Main function to start the observer
+ * @return {void}
+ *  */
 (function () {
     // Create job bid start button
     const startButton = document.createElement('button');
@@ -277,10 +305,9 @@ const operateAllInputFields = command => async () => {
 
     // Add an event listener to toggle the side panel on click
     startButton.addEventListener('click', async function () {
-        console.log('startButton clicked')
         await operateAllInputFields('fill_answer')();
     });
-    console.log('11111')
+
 
     // Options for the observer (which mutations to observe)
     var config = { attributes: false, childList: true, subtree: true };
@@ -295,8 +322,8 @@ const operateAllInputFields = command => async () => {
                 if (form.length > 0 && questions.length > 0) {
                     clearTimeout(debounceTimer);
                     // observer.disconnect(); // Stop observing
-                    debounceTimer = setTimeout(() => {
-                        onFormLoaded(); // Call the function only if no more mutations within 300ms
+                    debounceTimer = setTimeout(async () => {
+                        await onFormLoaded(); // Call the function only if no more mutations within 300ms
                     }, 500); // Debounce time is set to 300ms
                     break; // Exit the loop
                 }

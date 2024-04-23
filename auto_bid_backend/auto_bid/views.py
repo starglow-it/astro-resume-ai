@@ -8,8 +8,6 @@ from profile_management.models import Profile
 from .models import Answer, Question, StandardQuestion
 from .utils import find_similar_sentence
 
-
-
 def add_question_with_standardization(new_question_text, Question=Question, StandardQuestion=StandardQuestion):
     # First, get all standard questions from the database
     standard_questions = StandardQuestion.objects.all().values_list('standard_question', flat=True)
@@ -71,8 +69,7 @@ def save_answers(request):
     return Response({'message': 'Answer successfully saved or updated'}, status=status.HTTP_201_CREATED)
     
 
-
-# Save question and standardized question and get answers if exist.
+# Save question and standardized question and get answers if exist. ( For single question )
 @api_view(["POST"])        
 def get_answer(request):
     profile_id = request.data.get('profile_id', None)    
@@ -112,7 +109,7 @@ def get_answer(request):
 
 
 
-# Save question and standardized question and get answers if exist.
+# Save question and standardized question and get answers if exist. ( For bulk questions )
 @api_view(["POST"])        
 def get_answers(request):
     profile_id = request.data.get('profile_id', None)    
