@@ -373,12 +373,12 @@ const operateAllInputFields = (command) => async () => {
   const startObserving = () => {
     observer.observe(document.body, config);
     console.log("Observation started/restarted...");
+
+    // Retrieve profile ID from local storage
+    chrome.storage.local.get(["currentId"], function (result) {
+      profileId = result.currentId;
+      console.log("Profile ID retrieved: ", profileId);
+    });
   };
   startObserving();
 })();
-
-// Retrieve profile ID from local storage
-chrome.storage.local.get(["currentId"], function (result) {
-  profileId = result.currentId;
-  console.log("Profile ID retrieved: ", profileId);
-});
