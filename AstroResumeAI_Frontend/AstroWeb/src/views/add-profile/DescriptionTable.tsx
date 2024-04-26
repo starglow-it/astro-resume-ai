@@ -21,6 +21,7 @@ import {
   GridSlots
 } from '@mui/x-data-grid'
 import { v4 as uuidv4 } from 'uuid'
+import { ConsoleLine } from 'mdi-material-ui'
 
 interface EditToolbarProps {
   description: string[]
@@ -35,7 +36,6 @@ function EditToolbar(props: EditToolbarProps) {
   const handleClick = () => {
     const id = uuidv4()
     setRows(oldRows => [...oldRows, { id, sentence: '', isNew: true }])
-    setDescription([...description, ''])
     setRowModesModel(oldModel => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' }
@@ -105,6 +105,8 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ description, setDes
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false }
     setRows(rows.map(row => (row.id === newRow.id ? updatedRow : row)))
+    setDescription([...description, newRow.sentence])
+
     return updatedRow
   }
 
@@ -156,6 +158,8 @@ const DescriptionTable: React.FC<DescriptionTableProps> = ({ description, setDes
       }
     }
   ]
+
+  console.log(rows, rowModesModel, description);
 
   return (
     <Box
