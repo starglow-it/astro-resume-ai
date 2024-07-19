@@ -38,3 +38,47 @@
   color: white;
 }
 
+.astro-bid-auto-bid-ctrl-panel {
+  position: fixed;
+  right: 0px;
+  bottom: 300px;
+  padding: 8px;
+  background: white;
+  border: none;
+  box-shadow: 0px 0px 8px #b5afaf;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.astro-bid-auto-bid-btn {
+  padding: 8px;
+  background: rgb(45, 113, 238);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.astro-bid-auto-bid-btn:hover {
+  background: rgb(17, 96, 243);
+}
+
+.astro-bid-auto-bid-btn:disabled {
+  background: rgb(150, 150, 150);
+  cursor: not-allowed;
+}
+
+.astro-bid-auto-bid-ctrl-panel-buttonWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.astro-bid-auto-bid-notification-text {
+  font-size: 13px;
+  margin: 8px 0px 0px 0px;
+}

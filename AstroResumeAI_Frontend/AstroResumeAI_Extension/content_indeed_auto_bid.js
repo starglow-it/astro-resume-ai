@@ -17,6 +17,20 @@ var profileId = null;
 
 // Backend API Base Url
 const BACKEND_BASE_URL = "http://localhost:8000";
+let autoBidContinue = true;
+let isAutoBidOne = false;
+
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  switch (message.action) {
+    case 'autoBidOneReceived':
+      isAutoBidOne = true;
+      await operateAllInputFields();
+      break;
+
+    default:
+      break;
+  }
+});
 
 // Function that retrieve element after the element is fully loaded
 async function waitForElement(selector) {
@@ -84,8 +98,7 @@ const findLabelForInput = (input) => {
     return nextLabel.text();
   }
 
-  // If no label found
-  return "No Label Found";
+  return null;
 };
 
 // Function that autofill input element of various input type with given answer
@@ -190,26 +203,34 @@ const fetchAnswerForQuestion = async (
       inputType: inputType,
     },
   };
+
   try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    if (payload.question !== null) {
+      const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const response_data = await response.json();
 
-    $(input).attr("data-standard-id", response_data.answer.standard_question);
+      const response_data = await response.json();
+      $(input).attr("data-standard-id", response_data.answer.standard_question);
+      const answer = response_data.answer.answer;
 
-    const answer = response_data.answer.answer;
-
-    if (answer) {
-      autoFillAnswer(input, inputType, label, answer);
+      console.log('answer ++++++');
+      console.log(answer);
+      if (answer) {
+        autoFillAnswer(input, inputType, label, answer);
+        autoBidContinue = true;
+      } else {
+        autoBidContinue = false;
+        chrome.runtime.sendMessage({ action: 'skipCurrentTab' });
+      }
     }
   } catch (error) {
-    console.log(error.response.data);
+    console.log(error);
   }
 };
 
@@ -231,9 +252,8 @@ const saveAnswersForQuestions = async (userAnswers) => {
 
     const response_data = await response.json();
 
-    console.log(response_data.message);
   } catch (error) {
-    console.log(error.response.data);
+    console.log(error);
   }
 };
 
@@ -248,81 +268,170 @@ const onFormLoaded = async () => {
   }, 300);
 };
 
+const handleClickContinueBtn = (btnQuery) => {
+  const buttons = document.querySelectorAll(btnQuery);
+
+  if (buttons.length > 0) {
+    const buttonsArray = Array.from(buttons);  // Convert NodeList to Array
+    const activeBtnIndex = buttonsArray.findIndex(button => {
+      // Do something with each button, such as logging its text content
+      const computedStyle = window.getComputedStyle(button);
+
+      // Check if the display property is 'flex' and the text content is 'Continue'
+      if (computedStyle.display === 'flex' && button.textContent === 'Continue') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (activeBtnIndex !== -1) {
+      console.log('click continue button +++++++');
+      buttons[activeBtnIndex].click();
+
+      setTimeout(async () => { await operateAllInputFields("fill_answer")(); }, 3000);
+    }
+  }
+};
+
+const handleClickApplyBtn = () => {
+  const maxWaitTime = 10000;
+  const intervalTime = 1000;
+  let elapsedTime = 0;
+
+  const checkInterval = setInterval(() => {
+    const button = document.querySelector('#indeedApplyButton');
+    console.log(button);
+    if (button) {
+      button.click();
+      clearInterval(checkInterval);
+      setTimeout(async () => {
+        await operateAllInputFields("fill_answer")();
+      }, 3000);
+    } else {
+      elapsedTime += intervalTime;
+      if (elapsedTime > maxWaitTime) {
+        clearInterval(checkInterval);
+      }
+    }
+  }, intervalTime);
+};
+
 /**
  * Main operation function for input fields. This fills answers or save answers based on 'command' parameter
  * @param {string} command -  'fill_answer' or 'save_answers'
  * @return {void}
  *  */
 const operateAllInputFields = (command) => async () => {
-  let userAnswers = [];
-  // Iterate over each input and print its label
-  for (const input of $(
-    "main:first input, main:first textarea, main:first select"
-  )) {
-    let groupLabel = "";
-    let label = "";
+  try {
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
 
-    // For radio buttons and checkboxes within a fieldset
-    if (input.type === "radio" || input.type === "checkbox") {
-      const fieldset = input.closest("fieldset");
+    const currentUrl = window.location.href || '';
 
-      // Retrieve group label
-      if (fieldset) {
-        const legend = fieldset.querySelector("legend");
-        if (legend) {
-          groupLabel = legend.textContent.trim();
+    if (location.href.includes('www.indeed.com/viewjob' )) {
+      handleClickApplyBtn();
+    }
+
+    if (currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/resume')) {
+      const element = document.querySelector('[data-testid="FileResumeCard-label"]');
+
+      element.dispatchEvent(clickEvent);
+      handleClickContinueBtn('div.ia-BasePage-footer button');
+    }
+
+    if (
+      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/work-experience') ||
+      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/questions') ||
+      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/qualification-questions')
+    ) {
+      let userAnswers = [];
+      // Iterate over each input and print its label
+      for (const input of $(
+        "main:first input, main:first textarea, main:first select"
+      )) {
+        let groupLabel = "";
+        let label = "";
+
+        // For radio buttons and checkboxes within a fieldset
+        if (input.type === "radio" || input.type === "checkbox") {
+          const fieldset = input.closest("fieldset");
+
+          // Retrieve group label
+          if (fieldset) {
+            const legend = fieldset.querySelector("legend");
+            if (legend) {
+              groupLabel = legend.textContent.trim();
+            } else {
+              const label = $(fieldset).siblings("label");
+              if (label.length) {
+                groupLabel = label.text().trim();
+              }
+            }
+          }
+
+          // Adjacent label element for radio/checkbox
+          label = findLabelForInput(input);
         } else {
-          const label = $(fieldset).siblings("label");
-          if (label.length) {
-            groupLabel = label.text().trim();
+          // For other inputs like text, select, etc.
+          groupLabel = findLabelForInput(input);
+        }
+
+        var inputType;
+
+        // Retrieve input type
+        if (input.tagName.toLowerCase() === "input") {
+          inputType = input.type; // This will be 'text', 'radio', 'checkbox', etc.
+        } else {
+          inputType = input.tagName.toLowerCase(); // This will be 'textarea', 'select', 'button'
+        }
+
+        // Retrieve isOption value
+        var isOptional = groupLabel.includes("(optional)");
+
+        if (command === "fill_answer") {
+          await fetchAnswerForQuestion(
+            groupLabel,
+            label,
+            isOptional,
+            inputType,
+            input
+          );
+        } else if (command === "save_answers") {
+          if (
+            !userAnswers.find((userAnswer) => userAnswer.question === groupLabel)
+          ) {
+            userAnswers.push({
+              question: groupLabel,
+              isOptional: isOptional,
+              inputType: inputType,
+              answer: retrieveUserInputAnswer(input, inputType),
+              standard_question: input.getAttribute("data-standard-id"),
+            });
           }
         }
       }
 
-      // Adjacent label element for radio/checkbox
-      label = findLabelForInput(input);
-    } else {
-      // For other inputs like text, select, etc.
-      groupLabel = findLabelForInput(input);
-    }
+      if (command === "save_answers") {
+        await saveAnswersForQuestions(userAnswers);
+      }
 
-    var inputType;
-
-    // Retrieve input type
-    if (input.tagName.toLowerCase() === "input") {
-      inputType = input.type; // This will be 'text', 'radio', 'checkbox', etc.
-    } else {
-      inputType = input.tagName.toLowerCase(); // This will be 'textarea', 'select', 'button'
-    }
-
-    // Retrieve isOption value
-    var isOptional = groupLabel.includes("(optional)");
-
-    if (command === "fill_answer") {
-      await fetchAnswerForQuestion(
-        groupLabel,
-        label,
-        isOptional,
-        inputType,
-        input
-      );
-    } else if (command === "save_answers") {
-      if (
-        !userAnswers.find((userAnswer) => userAnswer.question === groupLabel)
-      ) {
-        userAnswers.push({
-          question: groupLabel,
-          isOptional: isOptional,
-          inputType: inputType,
-          answer: retrieveUserInputAnswer(input, inputType),
-          standard_question: input.getAttribute("data-standard-id"),
-        });
+      if (autoBidContinue) {
+        handleClickContinueBtn('div.ia-BasePage-footer button');
+      } else {
+        console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
       }
     }
-  }
 
-  if (command === "save_answers") {
-    await saveAnswersForQuestions(userAnswers);
+    if (currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/review')) {
+      const submitBtn = document.querySelector('div.ia-BasePage-footer button');
+      submitBtn.click();
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -331,19 +440,6 @@ const operateAllInputFields = (command) => async () => {
  * @return {void}
  *  */
 (function () {
-  // Create job bid start button
-  const startButton = document.createElement("button");
-  startButton.textContent = "Astro Start Job";
-  startButton.className = "astro-bid-start-button";
-  // Define Question Class Name from Page
-  // Append the button to the body of the webpage
-  document.body.appendChild(startButton);
-
-  // Add an event listener to toggle the side panel on click
-  startButton.addEventListener("click", async function () {
-    await operateAllInputFields("fill_answer")();
-  });
-
   // Options for the observer (which mutations to observe)
   var config = { attributes: false, childList: true, subtree: true };
   var debounceTimer;
@@ -381,4 +477,59 @@ const operateAllInputFields = (command) => async () => {
     });
   };
   startObserving();
+  urlChangeHandler();
+
+  //For url change
+  const originalPushState = history.pushState;
+  const originalReplaceState = history.replaceState;
+
+  let intervalId;
+
+  async function urlChangeHandler() {
+    console.log('URL changed to:', location.href);
+    // Add your code to handle the URL change here
+
+    // If the condition is met, clear the interval
+    if (location.href.includes('www.indeed.com/viewjob' || isAutoBidOne)) {
+      isAutoBidOne = false;
+      handleClickApplyBtn();
+    }
+
+    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/resume')) {
+      await operateAllInputFields("fill_answer")();
+    }
+
+    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/review')) {
+      await operateAllInputFields("fill_answer")();
+    }
+
+    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/post-apply')) {
+      clearInterval(intervalId);
+      chrome.runtime.sendMessage({ action: 'closeTab' });
+    }
+  }
+
+  // Override pushState
+  history.pushState = function (...args) {
+    originalPushState.apply(this, args);
+    urlChangeHandler();
+  };
+
+  // Override replaceState
+  history.replaceState = function (...args) {
+    originalReplaceState.apply(this, args);
+    urlChangeHandler();
+  };
+
+  // Listen for popstate event
+  window.addEventListener('popstate', urlChangeHandler);
+
+  // Check URL periodically to catch changes that might not be detected
+  let lastUrl = location.href;
+  intervalId = setInterval(() => {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      urlChangeHandler();
+    }
+  }, 2000);
 })();

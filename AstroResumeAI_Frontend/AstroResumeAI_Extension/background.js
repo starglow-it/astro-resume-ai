@@ -34,6 +34,44 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       });
       break;
 
+    case 'openTab':
+      chrome.tabs.create({ url: message.url }, (tab) => {
+        if (chrome.runtime.lastError) {
+          // Handle any errors that might have occurred
+          sendResponse({ success: false, error: chrome.runtime.lastError.message });
+        } else {
+          // Respond with the new tab's information
+          sendResponse({ success: true, tabId: tab.id, tabUrl: tab.url });
+        }
+      });
+      break;
+
+    case 'closeTab':
+      chrome.tabs.remove(sender.tab.id);
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
+      });
+
+      break;
+
+    case 'skipCurrentTab':
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
+      });
+      break;
+
+    case "createNewTab":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
+      });
+      break;
+
+    case "autoBidOne":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'autoBidOneReceived' });
+      });
+      break;
+
     default:
       break;
   }
