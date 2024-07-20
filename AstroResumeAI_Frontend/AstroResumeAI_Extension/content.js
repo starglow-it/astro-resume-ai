@@ -166,6 +166,5 @@ window.addEventListener("load", async () => {
 });
 
 window.addEventListener('beforeunload', async function (event) {
-  // chrome.runtime.sendMessage({ action: 'pageReloaded' });
 });
 
