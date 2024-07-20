@@ -112,7 +112,6 @@ def get_answer(request):
         'answer': answer
     }, status=status.HTTP_200_OK)
 
-# Save question and standardized question and get answers if exist. ( For bulk questions )
 @api_view(["POST"])        
 def get_answers(request):
     profile_id = request.data.get('profile_id', None)    
