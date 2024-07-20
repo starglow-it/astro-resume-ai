@@ -8,28 +8,6 @@ from profile_management.models import Profile
 from .models import Answer, Question, StandardQuestion
 from .utils import find_similar_sentence
 
-# def add_question_with_standardization(new_question_text):
-#     # First, get all standard questions from the database
-#     # standard_questions = StandardQuestion.objects.all().values_list('standard_question', flat=True)
-
-#     # # Find similar standard questions
-#     # similar_questions = find_similar_sentence(new_question_text, list(standard_questions), score_threshold=0.9)
-#     similar_question = StandardQuestion.objects.get(standard_question=new_question_text)
-#     print(similar_question)
-#     if similar_question:
-#         # If there are similar standard questions, get the most similar one
-#         standard_question = StandardQuestion.objects.filter(standard_question=similar_question)
-#         if standard_question.count() >= 1:
-#             standard_question = standard_question.first()
-#         else:
-#             standard_question = None
-#     else:
-#         # If there are no similar questions, create a new standard question
-#         standard_question = StandardQuestion.objects.create(standard_question=new_question_text)
-#         Question.objects.create(question=new_question_text, standard_question=standard_question)
-    
-#     return standard_question
-
 def get_similar_question(question):
     standard_questions = StandardQuestion.objects.all().values_list('standard_question', flat=True)
     similar_question = find_similar_sentence(question, list(standard_questions), score_threshold=0.7)
