@@ -47,20 +47,14 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
 
     case 'closeTab':
-      chrome.tabs.remove(sender.tab.id);
+      // chrome.tabs.remove(sender.tab.id);
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
       });
 
       break;
 
-    case 'skipCurrentTab':
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
-      });
-      break;
-
-    case "createNewTab":
+    case 'createNewTab' || 'skipCurrentTab':
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'openNewTabReceived' });
       });
@@ -85,7 +79,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   }
 });
 
-
 // Add an event listener for tab updates
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   // Check if the URL starts with the desired pattern
@@ -96,4 +89,3 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     }
   }
 });
-

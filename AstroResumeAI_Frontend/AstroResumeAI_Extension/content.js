@@ -1,6 +1,5 @@
 let isSidePanelOpen = false;
 let autoBidUrls = [];
-let autoBidUrlIndex = 0;
 
 (function () {
   // const link = document.createElement('link');
@@ -90,10 +89,9 @@ let autoBidUrlIndex = 0;
   checkConditionAndUpdate();
 
   autoBidStartButton.addEventListener("click", () => {
-    if (autoBidUrls[autoBidUrlIndex]) {
-      chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[autoBidUrlIndex] });
-      autoBidUrls.splice(autoBidUrlIndex, 1);
-      urlLoadButton.disabled = true;
+    if (autoBidUrls[0]) {
+      chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[0] });
+      autoBidUrls.shift();
     }
   });
 
@@ -102,10 +100,7 @@ let autoBidUrlIndex = 0;
   });
 
   urlLoadButton.addEventListener("click", () => {
-    autoBidUrls = [
-      'https://www.indeed.com/viewjob?cmp=LDIntelligence%2C-LLC&t=Full+Stack+Developer&jk=ee982b480e17489b&xpse=SoDy67I3-jrvygX3aZ0LbzkdCdPP&xfps=f8c3c1d5-6ca9-4e19-8345-a6cdc5cac3d5&xkcb=SoCz67M3-jrWnl3Rih0KbzkdCdPP&vjs=3',
-      'https://www.indeed.com/viewjob?jk=19b0a7ec42691b14&q=full+stack+developer&l=United+States&tk=1i31jb3bagspc86s&from=web&advn=6475025982533837&adid=429855787&ad=-6NYlbfkN0CXgJ4cmw-9k5cRnN775kDXYUer3cJYbqIJLFHy9v_PRxWUa6hE-3wmcZwfhY79Ye1PqwVCzGC8T4De9hoLze0FXq73dqPnSuowy9id8-DGNIXllsaqMragUy_ApV4LjOIX8yALXaDhAJd6lh6MJwNm1BcZPj8AThP2fWXqtamISppxiQkrYWJHrogODvFLSkIpkNdXKEIt4doI4M26OW6BdZ1-Ljaf64xmF4zGgA5l83Ch3RVKCyichjLQE-AWShUe7vxALzboBQiNph6PnTTwl5pkLFl1ZhiqVzC9K9q8tTV7NCOckC9HAGl_7iX_OWEbE6fDIV0MVJnYlghdohkPfS__MxQrEp0vmpPIsaUJBvENQawa5dYKnJQ-sqpM-msWYYyVP5lnBqLvCI91ypKdr6JIm5eMb2ulPyryzJatzYg2_Qk7mO2uhnqZlbsbvUmU7axGwSyfCTlJtxDehDKVMKNQvTCu1dA0DMcrfi9FQG6ObDhsFJtDMdz4LI3LyPGT9AVv4L8-wwBiNtsMbD4c&pub=4a1b367933fd867b19b072952f68dceb&camk=4HOcmqOLYrCqXfA7eJNarQ%3D%3D&xkcb=SoDR6_M3-hujqU2Rwx0ObzkdCdPP&xpse=SoA36_I3-jNv_Gx8W50IbzkdCdPP&xfps=4860f0a6-d443-4c22-a3c9-6e5f0984531f&vjs=3'
-    ];
+    autoBidUrls = [];
 
     if (autoBidUrls.length > 0) {
       autoBidStartButton.disabled = false;
@@ -127,12 +122,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break;
 
     case "openNewTabReceived":
-      autoBidUrlIndex++;
-
-      if (autoBidUrls[autoBidUrlIndex]) {
-        chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[autoBidUrlIndex] });
-      } else {
-        autoBidUrlIndex = -1;
+      console.log('received new tab creation ++++');
+      console.log(autoBidUrls[0]);
+      if (autoBidUrls[0]) {
+        chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[0] });
+        autoBidUrls.shift();
       }
       break;
 

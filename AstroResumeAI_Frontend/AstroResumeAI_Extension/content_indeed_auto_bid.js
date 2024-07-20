@@ -39,6 +39,9 @@ async function waitForElement(selector) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     element = document.querySelector(selector);
   }
+  console.log(document.querySelector(".ia-IndeedApplyButton"));
+  console.log(document.querySelector(".jobsearch-IndeedApplyButton-buttonWrapper"));
+  console.log(element);
   return element;
 }
 
@@ -214,22 +217,19 @@ const fetchAnswerForQuestion = async (
         body: JSON.stringify(payload),
       });
 
-
       const response_data = await response.json();
-      $(input).attr("data-standard-id", response_data.answer.standard_question);
-      const answer = response_data.answer.answer;
+      $(input).attr("data-standard-id", response_data?.answer?.standard_question);
+      const answer = response_data?.answer?.answer;
 
-      console.log('answer ++++++');
-      console.log(answer);
-      if (answer) {
+      if (Boolean(answer)) {
         autoFillAnswer(input, inputType, label, answer);
-        autoBidContinue = true;
       } else {
         autoBidContinue = false;
-        chrome.runtime.sendMessage({ action: 'skipCurrentTab' });
+        
       }
     }
   } catch (error) {
+    autoBidContinue = false;
     console.log(error);
   }
 };
@@ -286,28 +286,25 @@ const handleClickContinueBtn = (btnQuery) => {
     });
 
     if (activeBtnIndex !== -1) {
-      console.log('click continue button +++++++');
       buttons[activeBtnIndex].click();
 
-      setTimeout(async () => { await operateAllInputFields("fill_answer")(); }, 3000);
+      if (autoBidContinue) {
+        setTimeout(async () => { await operateAllInputFields("fill_answer")(); }, 2000);
+      }
     }
   }
 };
 
-const handleClickApplyBtn = () => {
+const handleClickApplyBtn = async () => {
   const maxWaitTime = 10000;
   const intervalTime = 1000;
   let elapsedTime = 0;
 
-  const checkInterval = setInterval(() => {
-    const button = document.querySelector('#indeedApplyButton');
-    console.log(button);
+  const checkInterval = setInterval(async () => {
+    const button = document.querySelector('.jobsearch-IndeedApplyButton-newDesign');
     if (button) {
-      button.click();
+      setTimeout(() => button.click(), 3000);
       clearInterval(checkInterval);
-      setTimeout(async () => {
-        await operateAllInputFields("fill_answer")();
-      }, 3000);
     } else {
       elapsedTime += intervalTime;
       if (elapsedTime > maxWaitTime) {
@@ -332,7 +329,7 @@ const operateAllInputFields = (command) => async () => {
 
     const currentUrl = window.location.href || '';
 
-    if (location.href.includes('www.indeed.com/viewjob' )) {
+    if (location.href.includes('www.indeed.com/viewjob')) {
       handleClickApplyBtn();
     }
 
@@ -419,15 +416,17 @@ const operateAllInputFields = (command) => async () => {
         await saveAnswersForQuestions(userAnswers);
       }
 
+      console.log("autoBidStatus ====>", autoBidContinue);
       if (autoBidContinue) {
         handleClickContinueBtn('div.ia-BasePage-footer button');
       } else {
         console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
+        await chrome.runtime.sendMessage({ action: 'skipCurrentTab' });
       }
     }
 
     if (currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/review')) {
-      const submitBtn = document.querySelector('div.ia-BasePage-footer button');
+      const submitBtn = await waitForElement('div.ia-BasePage-footer button');
       submitBtn.click();
     }
   } catch (error) {
@@ -486,20 +485,16 @@ const operateAllInputFields = (command) => async () => {
   let intervalId;
 
   async function urlChangeHandler() {
-    console.log('URL changed to:', location.href);
-    // Add your code to handle the URL change here
-
-    // If the condition is met, clear the interval
-    if (location.href.includes('www.indeed.com/viewjob' || isAutoBidOne)) {
+    if (isAutoBidOne) {
       isAutoBidOne = false;
       handleClickApplyBtn();
     }
 
-    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/resume')) {
-      await operateAllInputFields("fill_answer")();
-    }
-
-    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/review')) {
+    if (
+      location.href.includes('www.indeed.com/viewjob') ||
+      location.href.includes('smartapply.indeed.com/beta/indeedapply/form/resume') ||
+      location.href.includes('smartapply.indeed.com/beta/indeedapply/form/review')
+    ) {
       await operateAllInputFields("fill_answer")();
     }
 
