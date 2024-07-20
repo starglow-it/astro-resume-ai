@@ -7,7 +7,6 @@ let autoBidUrls = [];
   // link.href = chrome.runtime.getURL('styles/content.css');
   // document.head.appendChild(link);
 
-
   // Create the button
   const button = document.createElement('button');
   button.textContent = 'Astro';
