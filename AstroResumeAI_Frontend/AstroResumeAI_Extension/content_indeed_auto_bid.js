@@ -143,7 +143,7 @@ async function fetchAnswerForQuestion(questionText, label, isOptional, inputType
   };
 
   try {
-    if (payload.question) {
+    if (payload.data.question) {
       const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
         method: "POST",
         headers: {
@@ -167,7 +167,6 @@ async function fetchAnswerForQuestion(questionText, label, isOptional, inputType
     }
   } catch (error) {
     autoBidContinue = false;
-    chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
     console.error('Error fetching answer for question:', error);
     return false;
   }
@@ -269,6 +268,7 @@ const operateAllInputFields = (command) => async () => {
       ) && isPageLoaded
     ) {
       const userAnswers = [];
+      const fetchPromises = [];
       for (const input of $(selectors.question)) {
         const fieldset = input.closest("fieldset");
         const legend = fieldset ? fieldset.querySelector("legend") : null;
@@ -278,7 +278,7 @@ const operateAllInputFields = (command) => async () => {
         const isOptional = groupLabel.includes("(optional)");
 
         if (command === "fill_answer") {
-          await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
+          fetchPromises.push(fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input));
         } else if (command === "save_answers") {
           const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
           if (!existingAnswer) {
@@ -298,8 +298,9 @@ const operateAllInputFields = (command) => async () => {
       }
 
       if (command === "fill_answer" && isPageLoaded) {
+        await Promise.all(fetchPromises);
         if (autoBidContinue) {
-          setTimeout(() => handleClickContinueBtn(selectors.continueButton2), 3000)
+          handleClickContinueBtn(selectors.continueButton2);
         } else {
           console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
         }
