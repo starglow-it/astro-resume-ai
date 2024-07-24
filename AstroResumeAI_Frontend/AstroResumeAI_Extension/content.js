@@ -1,5 +1,14 @@
 let isSidePanelOpen = false;
-let autoBidUrls = [];
+let applyButtonQuery = '.jobsearch-IndeedApplyButton-newDesign';
+
+async function waitForElement(selector) {
+  let element = document.querySelector(selector);
+  while (!element) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    element = document.querySelector(selector);
+  }
+  return element;
+}
 
 // IIFE to encapsulate the code
 (function () {
@@ -70,23 +79,27 @@ let autoBidUrls = [];
       console.error('Error sending autoBidStart message:', error);
     }
   });
-  
+
   autoBidButtonForOne.addEventListener("click", async () => {
     try {
-      await chrome.runtime.sendMessage({ action: 'autoBidOne' });
+      const applyButton = await waitForElement(applyButtonQuery);
+      if (applyButton) {
+        applyButton.click();
+      }
     } catch (error) {
       console.error('Error sending autoBidOne message:', error);
     }
   });
-  
+
   urlLoadButton.addEventListener("click", async () => {
     try {
-      await chrome.runtime.sendMessage({ action: "autoBidUrlLoad" });
+      chrome.runtime.sendMessage({ action: 'autoBidUrlLoad' });
+
     } catch (error) {
       console.error('Error sending autoBidUrlLoad message:', error);
     }
   });
-  
+
 })();
 
 // Message listener
