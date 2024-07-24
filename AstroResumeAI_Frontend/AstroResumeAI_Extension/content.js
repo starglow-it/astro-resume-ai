@@ -1,13 +1,14 @@
 let isSidePanelOpen = false;
 let autoBidUrls = [];
 
+// IIFE to encapsulate the code
 (function () {
-    // Create the button
+  // Create the Astro button
   const button = document.createElement('button');
   button.textContent = 'Astro';
   button.className = 'astro-button';
 
-  // Function to toggle the side panel
+  // Functions to toggle the side panel
   async function closeSidePanel() {
     isSidePanelOpen = false;
     await chrome.runtime.sendMessage({ action: 'closeSidePanel' });
@@ -18,91 +19,64 @@ let autoBidUrls = [];
     isSidePanelOpen = true;
   }
 
-  // Add an event listener to toggle the side panel on click
-  button.addEventListener('click', async function () {
-    if (isSidePanelOpen) {
-      await closeSidePanel();
-    } else {
-      await openSidePanel();
-    }
+  // Toggle the side panel on button click
+  button.addEventListener('click', async () => {
+    isSidePanelOpen ? await closeSidePanel() : await openSidePanel();
   });
 
-  // Append the button to the body of the webpage
+  // Append the Astro button to the body of the webpage
   document.body.appendChild(button);
 
+  // Create the control panel div
   const div = document.createElement('div');
   div.className = "astro-bid-auto-bid-ctrl-panel";
 
   const buttonWrapperDiv = document.createElement('div');
   buttonWrapperDiv.className = "astro-bid-auto-bid-ctrl-panel-buttonWrapper";
 
-  // Create two buttons
+  // Create control buttons
   const autoBidStartButton = document.createElement('button');
-  const autoBidButtonForOne = document.createElement('button');
-  const urlLoadButton = document.createElement('button');
-
-  // Set button text content
   autoBidStartButton.textContent = 'Start';
   autoBidStartButton.className = "astro-bid-auto-bid-btn";
+
+  const autoBidButtonForOne = document.createElement('button');
   autoBidButtonForOne.textContent = 'Start One';
   autoBidButtonForOne.className = "astro-bid-auto-bid-btn";
+
+  const urlLoadButton = document.createElement('button');
   urlLoadButton.textContent = 'Load URLs';
   urlLoadButton.className = "astro-bid-auto-bid-btn";
 
-  // Disable the second button initially
-  autoBidStartButton.disabled = true;
-
-  // Create a <p> element
+  // Create notification text element
   const pElement = document.createElement('p');
   pElement.className = "astro-bid-auto-bid-notification-text";
+  pElement.textContent = 'Need to load URLs.';
 
-  // Set initial text content for <p> element
-  pElement.textContent = 'Need to load urls.';
-
-  // Append buttons and <p> element to the <div>
+  // Append buttons and text to the control panel
   buttonWrapperDiv.appendChild(autoBidButtonForOne);
   buttonWrapperDiv.appendChild(autoBidStartButton);
-    buttonWrapperDiv.appendChild(urlLoadButton);
+  buttonWrapperDiv.appendChild(urlLoadButton);
   div.appendChild(buttonWrapperDiv);
   div.appendChild(pElement);
 
-  // Append the <div> to body
+  // Append the control panel to the body
   document.body.appendChild(div);
 
-  // Function to check the condition and update elements
-  function checkConditionAndUpdate() {
-    if (autoBidUrls.length > 0) {
-      // Enable the second button
-      autoBidStartButton.disabled = false;
-
-      // Update the <p> element text content
-      pElement.textContent = 'Urls were loaded.';
-    }
-  }
-
-  checkConditionAndUpdate();
-
+  // Event listeners for control buttons
   autoBidStartButton.addEventListener("click", () => {
-    if (autoBidUrls[0]) {
-      chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[0] });
-      autoBidUrls.shift();
-    }
+    chrome.runtime.sendMessage({ action: 'autoBidStart' });
   });
 
-  autoBidButtonForOne.addEventListener("click", () => {
-    chrome.runtime.sendMessage({ action: 'autoBidOne' });
+  autoBidButtonForOne.addEventListener("click", async () => {
+    await chrome.runtime.sendMessage({ action: 'autoBidOne' });
   });
 
-  urlLoadButton.addEventListener("click", () => {
-    autoBidUrls = [];
-
-    if (autoBidUrls.length > 0) {
-      autoBidStartButton.disabled = false;
-      pElement.textContent = 'Urls were loaded.';
-    }
+  urlLoadButton.addEventListener("click", async () => {
+    await chrome.runtime.sendMessage({ action: "autoBidUrlLoad" });
   });
 })();
 
+// Message listener
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.action) {
     case 'select_by_classname':
@@ -115,15 +89,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse(window.location.href);
       break;
 
-    case "openNewTabReceived":
-      console.log('received new tab creation ++++');
-      console.log(autoBidUrls[0]);
-      if (autoBidUrls[0]) {
-        chrome.runtime.sendMessage({ action: 'openTab', url: autoBidUrls[0] });
-        autoBidUrls.shift();
-      }
-      break;
-
     default:
       break;
   }
@@ -131,23 +96,34 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 let currentUrl = window.location.href;
 
+// Mutation observer to detect URL changes
 const observer = new MutationObserver(async (mutationsList, observer) => {
   if (currentUrl !== window.location.href) {
+    currentUrl = window.location.href;
     try {
-      currentUrl = window.location.href;
-      const { jobQueries } = await chrome.storage.local.get(['jobQueries']);
-      const jobTitle = document.querySelector(jobQueries.title)?.textContent;
-      const jobDescription = document.querySelector(jobQueries.description)?.textContent;
+      // Ensure the extension context is still valid
+      if (chrome.storage && chrome.storage.local) {
+        const { jobQueries } = await chrome.storage.local.get(['jobQueries']);
+        const jobTitle = document.querySelector(jobQueries.title)?.textContent;
+        const jobDescription = document.querySelector(jobQueries.description)?.textContent;
 
-      await chrome.runtime.sendMessage({ action: "jobContentChanged", title: jobTitle, description: jobDescription });
+        if (chrome.runtime && chrome.runtime.sendMessage) {
+          await chrome.runtime.sendMessage({ action: "jobContentChanged", title: jobTitle, description: jobDescription });
+        } else {
+          console.error('Chrome runtime context is invalid.');
+        }
+      } else {
+        console.error('Chrome storage context is invalid.');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching job content:', error);
     }
   }
 });
 
+// Add event listeners for storage changes and page load
 window.addEventListener("load", async () => {
-  chrome.storage.onChanged.addListener(function (changes, namespace) {
+  chrome.storage.onChanged.addListener((changes, namespace) => {
     if (namespace === 'local' && 'jobQueries' in changes) {
       observer.observe(document.body, { attributes: true, childList: true, subtree: true });
     }
@@ -158,7 +134,3 @@ window.addEventListener("load", async () => {
     observer.observe(document.body, { attributes: true, childList: true, subtree: true });
   }
 });
-
-window.addEventListener('beforeunload', async function (event) {
-});
-

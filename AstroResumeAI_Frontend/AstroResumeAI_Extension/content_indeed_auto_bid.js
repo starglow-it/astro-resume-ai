@@ -3,201 +3,136 @@
  *
  * TODO:
  * 1. Retrieving saved answers for given questions in the form from database.
- * 2. Saving  user answers for given questions
+ * 2. Saving user answers for given questions
  * 3. Auto-flow page with auto filling form with the answers
  */
 
-// Selectors for form, questions and continueButton
-var formSelector = "main";
-const questionSelector =
-  "main:first input, main:first textarea, main:first select, main:first button";
-const continueButtonSelector =
-  'main:first button:has(span:contains("Continue"))';
-var profileId = null;
-
-// Backend API Base Url
 const BACKEND_BASE_URL = "http://localhost:8000";
+
 let autoBidContinue = true;
 let isAutoBidOne = false;
+let profileId = null;
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  switch (message.action) {
-    case 'autoBidOneReceived':
-      isAutoBidOne = true;
-      await operateAllInputFields();
-      break;
+const selectors = {
+  form: "main",
+  question: "main:first input, main:first textarea, main:first select, main:first button",
+  continueButton: 'main:first button:has(span:contains("Continue"))',
+  continueButton2: 'div.ia-BasePage-footer button',
+  checkBox: 'input[type=checkbox]:checked + span',
+  radio: 'input[type=radio]:checked + span',
+  applyButton: '.jobsearch-IndeedApplyButton-newDesign',
+  resume: '[data-testid="FileResumeCard-label"]'
+};
 
-    default:
-      break;
-  }
-});
+const urlSelectors = {
+  viewJob: 'www.indeed.com/viewjob',
+  resume: 'smartapply.indeed.com/beta/indeedapply/form/resume',
+  workExp: 'smartapply.indeed.com/beta/indeedapply/form/work-experience',
+  questions: 'smartapply.indeed.com/beta/indeedapply/form/questions',
+  qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
+  review: 'smartapply.indeed.com/beta/indeedapply/form/review',
+  postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply'
+};
 
-// Function that retrieve element after the element is fully loaded
+// Function to retrieve element after it's fully loaded
 async function waitForElement(selector) {
   let element = document.querySelector(selector);
   while (!element) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     element = document.querySelector(selector);
   }
-  console.log(document.querySelector(".ia-IndeedApplyButton"));
-  console.log(document.querySelector(".jobsearch-IndeedApplyButton-buttonWrapper"));
-  console.log(element);
   return element;
 }
 
-// Function that dispatch click event on given element
-async function simulateClick(element) {
-  element.dispatchEvent(
-    new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-    })
-  );
+// Function to dispatch click event on an element
+function simulateClick(element) {
+  element.dispatchEvent(new MouseEvent("click", {
+    bubbles: true,
+    cancelable: true,
+    view: window
+  }));
 }
 
-// Function that dispatch keyboard event on given element to fill the input element
-async function simulateKeyboardInput(element, value) {
+// Function to dispatch keyboard event on an element to fill the input
+function simulateKeyboardInput(element, value) {
   element.value = value;
-
-  await element.dispatchEvent(
-    new Event("input", {
-      bubbles: true,
-    })
-  );
-  await element.dispatchEvent(
-    new Event("change", {
-      bubbles: true,
-    })
-  );
+  element.dispatchEvent(new Event("input", { bubbles: true }));
+  element.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-// Function that finds label element for given input element
-const findLabelForInput = (input) => {
-  // Case 1: Explicit association via 'for' attribute
-  var id = $(input).attr("id");
+// Function to find the label for an input element
+function findLabelForInput(input) {
+  const id = $(input).attr("id");
   if (id) {
-    var explicitLabel = $('label[for="' + id + '"]');
+    const explicitLabel = $(`label[for="${id}"]`);
     if (explicitLabel.length) {
       return explicitLabel.text().trim();
     }
   }
 
-  // Case 2: Implicit association by nesting
-  var parentLabel = $(input).closest("label");
+  const parentLabel = $(input).closest("label");
   if (parentLabel.length) {
     return parentLabel.text().trim();
   }
 
-  // Case 3: Adjacent elements
-  // Previous element
-  var prevLabel = $(input).prev("label");
+  const prevLabel = $(input).prev("label");
   if (prevLabel.length) {
     return prevLabel.text();
   }
-  // Next element
-  var nextLabel = $(input).next("label");
+
+  const nextLabel = $(input).next("label");
   if (nextLabel.length) {
     return nextLabel.text();
   }
 
   return null;
-};
+}
 
-// Function that autofill input element of various input type with given answer
+// Function to autofill input elements with given answer
 function autoFillAnswer(input, inputType, label, answer) {
   switch (inputType) {
     case "radio":
-      if (label.toLowerCase() == answer.toLowerCase()) {
+      if (label.toLowerCase() === answer.toLowerCase()) {
         simulateClick(input);
       }
       break;
-
     case "checkbox":
       if (label.toLowerCase().includes(answer.toLowerCase())) {
         simulateClick(input);
       }
       break;
-
     case "select":
-      simulateKeyboardInput(
-        input,
-        $(input).find(`option:contains("${answer}")`).val()
-      );
+      simulateKeyboardInput(input, $(input).find(`option:contains("${answer}")`).val());
       break;
-
     case "number":
-      simulateKeyboardInput(input, answer);
-      break;
-
     case "text":
-      simulateKeyboardInput(input, answer);
-      break;
-
     case "textarea":
       simulateKeyboardInput(input, answer);
       break;
-
-    default:
-      break;
   }
 }
 
-// Function that retrieves the user-input value of the given input element of various input type
+// Function to retrieve user-input value from input elements
 function retrieveUserInputAnswer(input, inputType) {
-  // Handle different types of inputs to extract the answer(if any)
-  if (
-    inputType === "number" ||
-    inputType === "text" ||
-    inputType === "textarea"
-  ) {
-    var numberInputValue = $(input).val();
-    answer = numberInputValue ? numberInputValue : null;
-  }
-
-  if (inputType === "radio") {
-    var selectedRadio = $(input)
-      .parent()
-      .parent()
-      .find("input[type=radio]:checked + span")
-      .text()
-      .trim();
-    answer = selectedRadio ? selectedRadio : null;
-  }
-
-  if (inputType === "checkbox") {
-    var selectedCheckboxes = $(input)
-      .parent()
-      .parent()
-      .find("input[type=checkbox]:checked + span")
+  let answer = null;
+  if (["number", "text", "textarea"].includes(inputType)) {
+    answer = $(input).val() || null;
+  } else if (inputType === "radio") {
+    answer = $(input).parent().parent().find(selectors.radio).text().trim() || null;
+  } else if (inputType === "checkbox") {
+    const selectedCheckboxes = $(input).parent().parent().find(selectors.checkBox)
       .map(function () {
         return $(this).text().trim();
-      })
-      .toArray();
-    answer =
-      selectedCheckboxes.length > 0 ? selectedCheckboxes.join(",") : null;
+      }).toArray();
+    answer = selectedCheckboxes.length > 0 ? selectedCheckboxes.join(",") : null;
+  } else if (inputType === "select") {
+    answer = $(input).find("option:selected").text().trim() || null;
   }
-
-  if (inputType === "select") {
-    var selectedSelect = $(input)
-      .find("option")
-      .each((index, option) => option.value == $(input).val())
-      .text()
-      .trim();
-    answer = selectedSelect ? selectedSelect : null;
-  }
-
   return answer;
 }
 
-// Function that fetch answer for given question from backend API and return answer
-const fetchAnswerForQuestion = async (
-  questionText,
-  label,
-  isOptional,
-  inputType,
-  input
-) => {
+// Function to fetch answer for a question from backend API
+async function fetchAnswerForQuestion(questionText, label, isOptional, inputType, input) {
   const payload = {
     profile_id: profileId,
     data: {
@@ -208,7 +143,7 @@ const fetchAnswerForQuestion = async (
   };
 
   try {
-    if (payload.question !== null) {
+    if (payload.question) {
       const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
         method: "POST",
         headers: {
@@ -217,91 +152,78 @@ const fetchAnswerForQuestion = async (
         body: JSON.stringify(payload),
       });
 
-      const response_data = await response.json();
-      $(input).attr("data-standard-id", response_data?.answer?.standard_question);
-      const answer = response_data?.answer?.answer;
+      const responseData = await response.json();
+      $(input).attr("data-standard-id", responseData?.answer?.standard_question);
+      const answer = responseData?.answer?.answer;
 
-      if (Boolean(answer)) {
+      if (answer) {
         autoFillAnswer(input, inputType, label, answer);
+        return true;
       } else {
         autoBidContinue = false;
-        
+        chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
+        return false;
       }
     }
   } catch (error) {
     autoBidContinue = false;
-    console.log(error);
+    chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
+    console.error('Error fetching answer for question:', error);
+    return false;
   }
-};
+}
 
-// Function that save user's answers to the database
-const saveAnswersForQuestions = async (userAnswers) => {
+// Function to save user answers to the database
+async function saveAnswersForQuestions(userAnswers) {
   const payload = {
     profile_id: profileId,
     data: userAnswers,
   };
 
   try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/save-answers/`, {
+    await fetch(`${BACKEND_BASE_URL}/auto-bid/save-answers/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
-
-    const response_data = await response.json();
-
   } catch (error) {
-    console.log(error);
+    console.error('Error saving user answers:', error);
   }
-};
+}
 
-// Function that is called when the form is detected.
-// This is used to give click event listener to continue button
-const onFormLoaded = async () => {
+// Function to handle form loading and set up event listeners
+async function onFormLoaded() {
   setTimeout(() => {
-    $(continueButtonSelector).click(async () => {
-      // Code to execute when button is clicked
+    $(selectors.continueButton).click(async () => {
       await operateAllInputFields("save_answers")();
     });
   }, 300);
-};
+}
 
-const handleClickContinueBtn = (btnQuery) => {
+function handleClickContinueBtn(btnQuery) {
   const buttons = document.querySelectorAll(btnQuery);
 
   if (buttons.length > 0) {
-    const buttonsArray = Array.from(buttons);  // Convert NodeList to Array
-    const activeBtnIndex = buttonsArray.findIndex(button => {
-      // Do something with each button, such as logging its text content
+    const activeBtn = Array.from(buttons).find(button => {
       const computedStyle = window.getComputedStyle(button);
-
-      // Check if the display property is 'flex' and the text content is 'Continue'
-      if (computedStyle.display === 'flex' && button.textContent === 'Continue') {
-        return true;
-      } else {
-        return false;
-      }
+      return computedStyle.display === 'flex' && button.textContent === 'Continue';
     });
 
-    if (activeBtnIndex !== -1) {
-      buttons[activeBtnIndex].click();
-
-      if (autoBidContinue) {
-        setTimeout(async () => { await operateAllInputFields("fill_answer")(); }, 2000);
-      }
+    if (activeBtn && autoBidContinue) {
+      activeBtn.click();
     }
   }
-};
+}
 
-const handleClickApplyBtn = async () => {
+async function handleClickApplyBtn() {
   const maxWaitTime = 10000;
   const intervalTime = 1000;
   let elapsedTime = 0;
 
   const checkInterval = setInterval(async () => {
-    const button = document.querySelector('.jobsearch-IndeedApplyButton-newDesign');
+    const button = document.querySelector(selectors.applyButton);
     if (button) {
       setTimeout(() => button.click(), 3000);
       clearInterval(checkInterval);
@@ -312,13 +234,12 @@ const handleClickApplyBtn = async () => {
       }
     }
   }, intervalTime);
-};
+}
 
 /**
- * Main operation function for input fields. This fills answers or save answers based on 'command' parameter
+ * Main operation function for input fields. This fills answers or saves answers based on 'command' parameter
  * @param {string} command -  'fill_answer' or 'save_answers'
- * @return {void}
- *  */
+ */
 const operateAllInputFields = (command) => async () => {
   try {
     const clickEvent = new MouseEvent('click', {
@@ -328,79 +249,39 @@ const operateAllInputFields = (command) => async () => {
     });
 
     const currentUrl = window.location.href || '';
+    const isPageLoaded = await waitForElement('footer');
 
-    if (location.href.includes('www.indeed.com/viewjob')) {
+    if (currentUrl.includes(urlSelectors.viewJob)) {
       handleClickApplyBtn();
     }
 
-    if (currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/resume')) {
-      const element = document.querySelector('[data-testid="FileResumeCard-label"]');
-
+    if (currentUrl.includes(urlSelectors.resume)) {
+      const element = document.querySelector(selectors.resume);
       element.dispatchEvent(clickEvent);
-      handleClickContinueBtn('div.ia-BasePage-footer button');
+      handleClickContinueBtn(selectors.continueButton2);
     }
 
     if (
-      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/work-experience') ||
-      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/questions') ||
-      currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/qualification-questions')
+      (
+        currentUrl.includes(urlSelectors.workExp) ||
+        currentUrl.includes(urlSelectors.questions) ||
+        currentUrl.includes(urlSelectors.qualificationQuestions)
+      ) && isPageLoaded
     ) {
-      let userAnswers = [];
-      // Iterate over each input and print its label
-      for (const input of $(
-        "main:first input, main:first textarea, main:first select"
-      )) {
-        let groupLabel = "";
-        let label = "";
-
-        // For radio buttons and checkboxes within a fieldset
-        if (input.type === "radio" || input.type === "checkbox") {
-          const fieldset = input.closest("fieldset");
-
-          // Retrieve group label
-          if (fieldset) {
-            const legend = fieldset.querySelector("legend");
-            if (legend) {
-              groupLabel = legend.textContent.trim();
-            } else {
-              const label = $(fieldset).siblings("label");
-              if (label.length) {
-                groupLabel = label.text().trim();
-              }
-            }
-          }
-
-          // Adjacent label element for radio/checkbox
-          label = findLabelForInput(input);
-        } else {
-          // For other inputs like text, select, etc.
-          groupLabel = findLabelForInput(input);
-        }
-
-        var inputType;
-
-        // Retrieve input type
-        if (input.tagName.toLowerCase() === "input") {
-          inputType = input.type; // This will be 'text', 'radio', 'checkbox', etc.
-        } else {
-          inputType = input.tagName.toLowerCase(); // This will be 'textarea', 'select', 'button'
-        }
-
-        // Retrieve isOption value
-        var isOptional = groupLabel.includes("(optional)");
+      const userAnswers = [];
+      for (const input of $(selectors.question)) {
+        const fieldset = input.closest("fieldset");
+        const legend = fieldset ? fieldset.querySelector("legend") : null;
+        const groupLabel = legend ? legend.textContent.trim() : findLabelForInput(input) ?? '';
+        const label = input.type === "radio" || input.type === "checkbox" ? findLabelForInput(input) : groupLabel;
+        const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
+        const isOptional = groupLabel.includes("(optional)");
 
         if (command === "fill_answer") {
-          await fetchAnswerForQuestion(
-            groupLabel,
-            label,
-            isOptional,
-            inputType,
-            input
-          );
+          await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
         } else if (command === "save_answers") {
-          if (
-            !userAnswers.find((userAnswer) => userAnswer.question === groupLabel)
-          ) {
+          const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
+          if (!existingAnswer) {
             userAnswers.push({
               question: groupLabel,
               isOptional: isOptional,
@@ -416,60 +297,53 @@ const operateAllInputFields = (command) => async () => {
         await saveAnswersForQuestions(userAnswers);
       }
 
-      console.log("autoBidStatus ====>", autoBidContinue);
-      if (autoBidContinue) {
-        handleClickContinueBtn('div.ia-BasePage-footer button');
-      } else {
-        console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
-        await chrome.runtime.sendMessage({ action: 'skipCurrentTab' });
+      if (command === "fill_answer" && isPageLoaded) {
+        if (autoBidContinue) {
+          setTimeout(() => handleClickContinueBtn(selectors.continueButton2), 3000)
+        } else {
+          console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
+        }
       }
     }
 
-    if (currentUrl.includes('smartapply.indeed.com/beta/indeedapply/form/review')) {
-      const submitBtn = await waitForElement('div.ia-BasePage-footer button');
+    if (currentUrl.includes(urlSelectors.review)) {
+      const submitBtn = await waitForElement(selectors.continueButton2);
       submitBtn.click();
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error operating input fields:', error);
   }
 };
 
 /**
  * Main function to start the observer
- * @return {void}
- *  */
+ */
 (function () {
-  // Options for the observer (which mutations to observe)
-  var config = { attributes: false, childList: true, subtree: true };
-  var debounceTimer;
+  const config = { attributes: false, childList: true, subtree: true };
+  let debounceTimer;
 
-  // Callback function to execute when mutations are observed
-  var callback = function (mutationsList, observer) {
-    for (var mutation of mutationsList) {
+  const callback = function (mutationsList, observer) {
+    for (const mutation of mutationsList) {
       if (mutation.type === "childList") {
-        var form = $(formSelector);
-        var questions = $(questionSelector);
+        const form = $(selectors.form);
+        const questions = $(selectors.question);
         if (form.length > 0 && questions.length > 0) {
           clearTimeout(debounceTimer);
-          // observer.disconnect(); // Stop observing
           debounceTimer = setTimeout(async () => {
-            await onFormLoaded(); // Call the function only if no more mutations within 300ms
-          }, 500); // Debounce time is set to 300ms
-          break; // Exit the loop
+            await onFormLoaded();
+          }, 500);
+          break;
         }
       }
     }
   };
 
-  // Create an observer instance linked to the callback function
-  var observer = new MutationObserver(callback);
+  const observer = new MutationObserver(callback);
 
-  // Function to start observing
   const startObserving = () => {
     observer.observe(document.body, config);
     console.log("Observation started/restarted...");
 
-    // Retrieve profile ID from local storage
     chrome.storage.local.get(["currentId"], function (result) {
       profileId = result.currentId;
       console.log("Profile ID retrieved: ", profileId);
@@ -478,7 +352,6 @@ const operateAllInputFields = (command) => async () => {
   startObserving();
   urlChangeHandler();
 
-  //For url change
   const originalPushState = history.pushState;
   const originalReplaceState = history.replaceState;
 
@@ -491,35 +364,34 @@ const operateAllInputFields = (command) => async () => {
     }
 
     if (
-      location.href.includes('www.indeed.com/viewjob') ||
-      location.href.includes('smartapply.indeed.com/beta/indeedapply/form/resume') ||
-      location.href.includes('smartapply.indeed.com/beta/indeedapply/form/review')
+      location.href.includes(urlSelectors.viewJob) ||
+      location.href.includes(urlSelectors.resume) ||
+      location.href.includes(urlSelectors.workExp) ||
+      location.href.includes(urlSelectors.questions) ||
+      location.href.includes(urlSelectors.qualificationQuestions) ||
+      location.href.includes(urlSelectors.review)
     ) {
-      await operateAllInputFields("fill_answer")();
+      setTimeout(async () => { await operateAllInputFields("fill_answer")(); }, 1000);
     }
 
-    if (location.href.includes('smartapply.indeed.com/beta/indeedapply/form/post-apply')) {
+    if (location.href.includes(urlSelectors.postApply)) {
       clearInterval(intervalId);
-      chrome.runtime.sendMessage({ action: 'closeTab' });
+      chrome.runtime.sendMessage({ action: 'autoBidCompleted' });
     }
   }
 
-  // Override pushState
   history.pushState = function (...args) {
     originalPushState.apply(this, args);
     urlChangeHandler();
   };
 
-  // Override replaceState
   history.replaceState = function (...args) {
     originalReplaceState.apply(this, args);
     urlChangeHandler();
   };
 
-  // Listen for popstate event
   window.addEventListener('popstate', urlChangeHandler);
 
-  // Check URL periodically to catch changes that might not be detected
   let lastUrl = location.href;
   intervalId = setInterval(() => {
     if (location.href !== lastUrl) {
