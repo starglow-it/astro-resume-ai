@@ -54,7 +54,7 @@ def save_answers(request):
             print({'error': f'Standard question with ID {standard_question_id} does not exist'})
         
         if standard_question:  # Check if there's actually a question provided
-            if Answer.objects.filter(standard_question=standard_question, profile=profile, inputType=inputType).exists():
+            if Answer.objects.filter(standard_question=standard_question, profile=profile, inputType=inputType).first():
                 continue
             
             Answer.objects.update_or_create(

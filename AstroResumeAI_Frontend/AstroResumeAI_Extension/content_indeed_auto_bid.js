@@ -271,7 +271,7 @@ const operateAllInputFields = (command) => async () => {
       for (const input of $(selectors.question)) {
         const fieldset = input.closest("fieldset");
         const legend = fieldset ? fieldset.querySelector("legend") : null;
-        const groupLabel = legend ? legend.textContent.trim() : findLabelForInput(input) ?? '';
+        const groupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : findLabelForInput(input) ?? '';
         const label = input.type === "radio" || input.type === "checkbox" ? findLabelForInput(input) : groupLabel;
         const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
         const isOptional = groupLabel.includes("(optional)");

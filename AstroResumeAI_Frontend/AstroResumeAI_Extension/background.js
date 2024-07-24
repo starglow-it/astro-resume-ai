@@ -14,10 +14,15 @@ async function fetchUrls() {
     const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-urls/`);
     const { urls } = await response.json();
     if (urls && urls.length > 0) {
-      autoBidUrls = urls
+      autoBidUrls = urls;
+
+      return true;
     }
+
+    return false;
   } catch (error) {
     console.log('Error fetching URLs:', error);
+    return false;
   }
 }
 
@@ -67,19 +72,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         path: 'sidepanel.html',
         enabled: true
       });
-      break;
-
-    case "autoBidOne":
-      if (autoBidUrls.length > 0) {
-        chrome.tabs.create({ url: autoBidUrls[0] }, (tab) => {
-          if (chrome.runtime.lastError) {
-            sendResponse({ success: false, error: chrome.runtime.lastError.message });
-          } else {
-            autoBidUrls.shift();
-            sendResponse({ success: true, tabId: tab.id, tabUrl: tab.url });
-          }
-        });
-      }
       break;
 
     default:
