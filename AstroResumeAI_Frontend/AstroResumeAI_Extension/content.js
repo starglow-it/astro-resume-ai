@@ -64,16 +64,29 @@ let autoBidUrls = [];
 
   // Event listeners for control buttons
   autoBidStartButton.addEventListener("click", () => {
-    chrome.runtime.sendMessage({ action: 'autoBidStart' });
+    try {
+      chrome.runtime.sendMessage({ action: 'autoBidStart' });
+    } catch (error) {
+      console.error('Error sending autoBidStart message:', error);
+    }
   });
-
+  
   autoBidButtonForOne.addEventListener("click", async () => {
-    await chrome.runtime.sendMessage({ action: 'autoBidOne' });
+    try {
+      await chrome.runtime.sendMessage({ action: 'autoBidOne' });
+    } catch (error) {
+      console.error('Error sending autoBidOne message:', error);
+    }
   });
-
+  
   urlLoadButton.addEventListener("click", async () => {
-    await chrome.runtime.sendMessage({ action: "autoBidUrlLoad" });
+    try {
+      await chrome.runtime.sendMessage({ action: "autoBidUrlLoad" });
+    } catch (error) {
+      console.error('Error sending autoBidUrlLoad message:', error);
+    }
   });
+  
 })();
 
 // Message listener
