@@ -161,7 +161,6 @@ async function fetchAnswerForQuestion(questionText, label, isOptional, inputType
         return true;
       } else {
         autoBidContinue = false;
-        chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
         return false;
       }
     }
@@ -303,6 +302,7 @@ const operateAllInputFields = (command) => async () => {
           handleClickContinueBtn(selectors.continueButton2);
         } else {
           console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
+          chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
         }
       }
     }
