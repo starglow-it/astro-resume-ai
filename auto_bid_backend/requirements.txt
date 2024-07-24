@@ -80,7 +80,6 @@ soupsieve==2.5
 SpeechRecognition==3.8.1
 sqlparse==0.4.4
 sympy==1.12
-textract==1.6.5
 threadpoolctl==3.4.0
 tokenizers==0.15.2
 torch==2.2.1

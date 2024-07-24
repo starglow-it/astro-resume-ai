@@ -3,7 +3,6 @@ from pdfminer.high_level import extract_text
 from openai import OpenAI
 import json
 import docx2txt
-import textract
 from pypdf import PdfReader
 
 class ResumeParser():
@@ -35,7 +34,7 @@ class ResumeParser():
         text = ""
 
         if file_ext == '.doc':
-            text = textract.process(file_path)
+            text = docx2txt.process(file_path)
 
             return text.decode('utf-8')
         elif file_ext == '.docx':
