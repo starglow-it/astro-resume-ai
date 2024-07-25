@@ -185,6 +185,6 @@
     window.findLabelForInput = findLabelForInput;
     window.autoFillAnswer = autoFillAnswer;
     window.retrieveUserInputAnswer = retrieveUserInputAnswer;
-    window.checkIfAllElementsRendered = waitIfAllElementsRendered;
+    window.waitIfAllElementsRendered = waitIfAllElementsRendered;
     window.onUrlChange = onUrlChange;
 })();

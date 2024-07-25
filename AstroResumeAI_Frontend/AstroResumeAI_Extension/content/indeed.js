@@ -26,6 +26,7 @@ const selectors = {
 
 const urlSelectors = {
     viewJob: 'www.indeed.com/viewjob',
+    contactInfo: 'smartapply.indeed.com/beta/indeedapply/form/contact-info',
     resume: 'smartapply.indeed.com/beta/indeedapply/form/resume',
     workExp: 'smartapply.indeed.com/beta/indeedapply/form/work-experience',
     questions: 'smartapply.indeed.com/beta/indeedapply/form/questions',
@@ -110,7 +111,8 @@ function handleClickContinueBtn(btnQuery) {
             return computedStyle.display === 'flex' && button.textContent === 'Continue';
         });
 
-        if (activeBtn && autoBidContinue) {
+        if (activeBtn) {
+        // if (activeBtn && autoBidContinue) {
             activeBtn.click();
         }
     }
@@ -173,8 +175,9 @@ const operateAllInputFields = async (command) => {
 
         if (command === "fill_answer") {
             await Promise.all(fetchPromises);
+            handleClickContinueBtn(selectors.continueButton2);
             if (autoBidContinue) {
-                handleClickContinueBtn(selectors.continueButton2);
+                // handleClickContinueBtn(selectors.continueButton2);
             } else {
                 console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
                 chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
@@ -237,6 +240,7 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.workExp) ||
+                url.includes(urlSelectors.contactInfo) ||
                 url.includes(urlSelectors.questions) ||
                 url.includes(urlSelectors.qualificationQuestions):
                 await handleInputFieldsPage();
