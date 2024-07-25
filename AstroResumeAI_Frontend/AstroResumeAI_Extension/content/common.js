@@ -145,7 +145,10 @@
             answer = selectedCheckboxes.length > 0 ? selectedCheckboxes.join(",") : null;
         } else if (inputType === "select") {
             answer = $(input).find("option:selected").text().trim() || null;
+        } else if (inputType === 'tel') {
+            answer = $(`input[type="tel"]`).val() || null
         }
+
         return answer;
     }
 

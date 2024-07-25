@@ -110,15 +110,16 @@ def get_answer(request):
         ).first()
 
         answer = {}
-
+        print('standard_question==')
+        print(standard_question)
         if answer_query:
             answer['answer'] = answer_query.answer
         else:
             standard_question = get_similar_question(question)
-            answer_query = Answer.objects.filter(profile=profile, standard_question=standard_question, inputType=inputType).first()
-            if answer_query:
+            try:
+                answer_query = Answer.objects.get(profile=profile, standard_question=standard_question, inputType=inputType)
                 answer['answer'] = answer_query.answer
-            else:
+            except Answer.DoesNotExist:
                 profile_text = profile.to_text()
                 answer['answer'] = auto_answer_generation_model(question, profile_text)
                 if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
@@ -143,7 +144,8 @@ def get_answer(request):
                     print(message)
                 else:
                     answer['answer'] = None
-
+            print('answer==')
+            print(answer['answer'])
         # Add the standard_question to answers_dict
         answer['standard_question'] = standard_question.id if standard_question else None
 

@@ -62,9 +62,11 @@ async function fetchAnswerForQuestion(questionText, label, isOptional, inputType
 
             if (answer) {
                 window.autoFillAnswer(input, inputType, label, answer);
+
                 return true;
-            } else {
+            } else if (!isOptional) {
                 autoBidContinue = false;
+
                 return false;
             }
         }
@@ -143,7 +145,6 @@ async function handleClickApplyBtn() {
 const operateAllInputFields = async (command) => {
     try {
         const userAnswers = [];
-        const fetchPromises = [];
         for (const input of $(selectors.question)) {
             const fieldset = input.closest("fieldset");
             const legend = fieldset ? fieldset.querySelector("legend") : null;
@@ -153,7 +154,7 @@ const operateAllInputFields = async (command) => {
             const isOptional = groupLabel.includes("(optional)");
 
             if (command === "fill_answer") {
-                fetchPromises.push(fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input));
+                await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
             } else if (command === "save_answers") {
                 const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
                 if (!existingAnswer) {
@@ -173,7 +174,6 @@ const operateAllInputFields = async (command) => {
         }
 
         if (command === "fill_answer") {
-            await Promise.all(fetchPromises);
             if (autoBidContinue) {
                 handleClickContinueBtn(selectors.continueButton2);
             } else {
@@ -191,8 +191,6 @@ const operateAllInputFields = async (command) => {
  * Main function to start the observer
  */
 (function () {
-    console.log("[[[[[[[indeed.js loaded]]]]]]]")
-
     chrome.storage.local.get(["currentId"], function (result) {
         profileId = result.currentId;
         console.log("Profile ID retrieved: ", profileId);

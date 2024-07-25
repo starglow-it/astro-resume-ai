@@ -17,10 +17,6 @@ def get_standard_question(question_text):
     # Try to get the question from the StandardQuestion
     try:
         standard_question = StandardQuestion.objects.get(standard_question=question_text)
-        
-        return standard_question
-    except StandardQuestion.MultipleObjectsReturned:
-        standard_question = StandardQuestion.objects.filter(standard_question=question_text).first()
         return standard_question
     
     except StandardQuestion.DoesNotExist:
