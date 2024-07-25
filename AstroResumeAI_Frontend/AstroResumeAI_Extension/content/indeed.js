@@ -111,8 +111,7 @@ function handleClickContinueBtn(btnQuery) {
             return computedStyle.display === 'flex' && button.textContent === 'Continue';
         });
 
-        if (activeBtn) {
-        // if (activeBtn && autoBidContinue) {
+        if (activeBtn && autoBidContinue) {
             activeBtn.click();
         }
     }
@@ -175,9 +174,8 @@ const operateAllInputFields = async (command) => {
 
         if (command === "fill_answer") {
             await Promise.all(fetchPromises);
-            handleClickContinueBtn(selectors.continueButton2);
             if (autoBidContinue) {
-                // handleClickContinueBtn(selectors.continueButton2);
+                handleClickContinueBtn(selectors.continueButton2);
             } else {
                 console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
                 chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
