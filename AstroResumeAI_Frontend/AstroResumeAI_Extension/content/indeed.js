@@ -145,14 +145,25 @@ async function handleClickApplyBtn() {
 const operateAllInputFields = async (command) => {
     try {
         const userAnswers = [];
+        let previousGroupLabel = '';
+
         for (const input of $(selectors.question)) {
             const fieldset = input.closest("fieldset");
             const legend = fieldset ? fieldset.querySelector("legend") : null;
             const groupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : findLabelForInput(input) ?? '';
+            
+            // Skip the current loop iteration if the groupLabel is the same as the previous one
+            if (groupLabel === previousGroupLabel) {
+                continue;
+            }
+            
+            // Update previousGroupLabel to the current groupLabel
+            previousGroupLabel = groupLabel;
+        
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : groupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
             const isOptional = groupLabel.includes("(optional)");
-
+        
             if (command === "fill_answer") {
                 await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
             } else if (command === "save_answers") {
