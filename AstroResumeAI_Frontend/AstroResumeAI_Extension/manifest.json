@@ -27,7 +27,7 @@
         "https://smartapply.indeed.com/*"
       ],
       "js": [
-        "./libs/jquery/jquery-3.7.1.min.js","content.js","content_indeed_auto_bid.js"
+        "./libs/jquery/jquery-3.7.1.min.js","content.js","./content/common.js", "./content/indeed.js"
       ],
       "css": [
         "styles/content.css"
