@@ -1,5 +1,4 @@
 import os
-from pdfminer.high_level import extract_text
 from openai import OpenAI
 import json
 import docx2txt
