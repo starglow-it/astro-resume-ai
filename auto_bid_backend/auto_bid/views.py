@@ -7,38 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
 from openai import OpenAI
-import json
 
 from profile_management.models import Profile
-from .models import Answer, Question, StandardQuestion
-from .utils import find_similar_sentence
-
-def get_similar_question(question):
-    standard_questions = StandardQuestion.objects.all().values_list('standard_question', flat=True)
-    similar_question = find_similar_sentence(question, list(standard_questions), score_threshold=0.7)
-    standard_question = None
-    
-    if similar_question:
-        standard_question = StandardQuestion.objects.get(standard_question=similar_question)
-    
-    return standard_question if standard_question else None
-
-def get_standard_question(question_text):
-    # Try to get the question from the StandardQuestion
-    try:
-        standard_question = StandardQuestion.objects.get(standard_question=question_text)
-        
-        return standard_question
-    except StandardQuestion.MultipleObjectsReturned:
-        standard_question = StandardQuestion.objects.filter(standard_question=question_text).first()
-        return standard_question
-    
-    except StandardQuestion.DoesNotExist:
-        # If the question does not exist, standardize and add to DB
-        standard_question = StandardQuestion.objects.create(standard_question=question_text)
-        Question.objects.create(question=question_text, standard_question=standard_question)
-        
-        return standard_question
+from .models import Answer, StandardQuestion
+from .utils import auto_answer_generation_model, get_similar_question, get_standard_question
 
 @api_view(["POST"])
 def save_answers(request):
@@ -114,7 +86,6 @@ def save_answers(request):
 
     return Response(response_data, status=status.HTTP_207_MULTI_STATUS if failure_count else status.HTTP_201_CREATED)
 
-
 @api_view(["POST"])
 def get_answer(request):
     try:
@@ -148,10 +119,9 @@ def get_answer(request):
             if answer_query:
                 answer['answer'] = answer_query.answer
             else:
-                print(inputType)
-                print(question)
-                if (inputType == 'text' or inputType == 'textarea') and question:
-                    profile_text = profile.to_text()
+                profile_text = profile.to_text()
+                answer['answer'] = auto_answer_generation_model(question, profile_text)
+                if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
                     gptPrompt = f"""
                         Here is my resume profile.
                         {profile_text}
