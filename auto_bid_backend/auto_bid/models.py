@@ -3,10 +3,10 @@ from profile_management.models import Profile
 
 # Create your models here.
 class StandardQuestion(models.Model):
-    standard_question = models.CharField(max_length=255)
+    standard_question = models.TextField()
 
     def __str__(self):
-        return self.standard_question
+        return self.standard_question[:50]
     
 class Question(models.Model):
     question = models.CharField(max_length=255)
