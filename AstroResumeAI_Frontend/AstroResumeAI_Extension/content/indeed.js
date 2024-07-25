@@ -32,7 +32,8 @@ const urlSelectors = {
     questions: 'smartapply.indeed.com/beta/indeedapply/form/questions',
     qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
     review: 'smartapply.indeed.com/beta/indeedapply/form/review',
-    postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply'
+    postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
+    commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check'
 };
 
 // Function to fetch answer for a question from backend API
@@ -47,6 +48,7 @@ async function fetchAnswerForQuestion(questionText, label, isOptional, inputType
     };
 
     try {
+        console.log(payload);
         if (payload.data.question) {
             const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-answer/`, {
                 method: "POST",
@@ -247,6 +249,10 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.postApply):
+                await handlePostApplyPage();
+                break;
+
+            case url.includes(urlSelectors.commuteCheck):
                 await handlePostApplyPage();
                 break;
 
