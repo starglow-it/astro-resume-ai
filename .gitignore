@@ -7,3 +7,4 @@ output
 .vscode/PythonImportHelper-v2-Completion.json
 /auto_bid_backend/media/uploaded-resumes
 node_modules
+/.venv
