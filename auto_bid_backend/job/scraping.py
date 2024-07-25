@@ -80,28 +80,30 @@ def get_direct_url_from_glassdoor(soup, url):
         'job_description': job_description,
         'job_url': job_url
     }
-    
-def fetch_with_retry(url, retries=3, retry_delay=3):
-    try:
-        headers = {'User-Agent': generate_random_user_agent()}
-        with aiohttp.ClientSession() as session:
-            with session.get(url, headers=headers) as response:
-                if response.status in [429, 403] and retries > 0:
-                    print(f"Request rate limited or forbidden. Retrying in {retry_delay} seconds...")
-                    asyncio.sleep(retry_delay)
-                    return fetch_with_retry(url, retries - 1, retry_delay)
-                else:
-                    response.raise_for_status()
-                    return response.text()
-    except Exception as e:
-        print(f"Error fetching {url}: {e}")
-        return None
 
-def get_job_url_direct(jobs):
+async def fetch_with_retry(url, retries=3, retry_delay=3):
+    async with aiohttp.ClientSession() as session:
+        for _ in range(retries):
+            try:
+                headers = {'User-Agent': generate_random_user_agent()}
+                async with session.get(url, headers=headers) as response:
+                    if response.status in [429, 403]:
+                        print(f"Request rate limited or forbidden. Retrying in {retry_delay} seconds...")
+                        await asyncio.sleep(retry_delay)
+                    else:
+                        response.raise_for_status()
+                        return await response.text()
+            except Exception as e:
+                print(f"Error fetching {url}: {e}")
+                await asyncio.sleep(retry_delay)
+    return None
+
+
+async def get_job_url_direct(jobs):
     for index, job in jobs.iterrows():
         job_dict = job.to_dict()
         if job_dict['site'] == 'linkedin':
-            html_content = fetch_with_retry(job_dict['job_url'])
+            html_content = await fetch_with_retry(job_dict['job_url'])
             if html_content:
                 soup = BeautifulSoup(html_content, 'html.parser')
                 data = get_data_from_linkedin(soup, job_dict['job_url'])
@@ -109,8 +111,6 @@ def get_job_url_direct(jobs):
                 jobs.at[index, 'description'] = data['job_description']
     return jobs
 
-
-# print(f"Found {len(jobs)} jobs")
 
 
 def scrape_jobs_modified(site_name, search_term, location, is_remote, hours_old, country_indeed, results_wanted):
@@ -124,10 +124,7 @@ def scrape_jobs_modified(site_name, search_term, location, is_remote, hours_old,
         country_indeed=country_indeed,  # only needed for indeed / glassdoor
         results_wanted=results_wanted
     )
-
-    print(jobs)
-
-    if site_name == 'linkedin':
-        jobs = get_job_url_direct(jobs)
+    if 'linkedin' in site_name:
+        jobs = asyncio.run(get_job_url_direct(jobs))
     return jobs
 
