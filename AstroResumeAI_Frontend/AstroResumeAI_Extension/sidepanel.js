@@ -246,7 +246,6 @@ async function fetchResumes(token) {
 
       if (response.ok) {
         const resumes = await response.json();
-        console.log(resumes);
         attachProfile(resumes[0]);
         displayResumes(resumes);
       }
