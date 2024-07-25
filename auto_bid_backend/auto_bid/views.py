@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.db import transaction
 
@@ -5,6 +6,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
+from openai import OpenAI
+import json
 
 from profile_management.models import Profile
 from .models import Answer, Question, StandardQuestion
@@ -39,7 +42,7 @@ def get_standard_question(question_text):
 
 @api_view(["POST"])
 def save_answers(request):
-    profile_id = request.data.get('profile_id', 3)
+    profile_id = request.data.get('profile_id', None)
     filled_form = request.data.get('data', [])
     profile = get_object_or_404(Profile, id=profile_id)
 
@@ -115,8 +118,9 @@ def save_answers(request):
 @api_view(["POST"])
 def get_answer(request):
     try:
-        profile_id = request.data.get('profile_id', 3)
+        profile_id = request.data.get('profile_id', None)
         question_data = request.data.get('data', {})
+        job_description = request.data.get('job_description', '')
 
         profile = get_object_or_404(Profile, id=profile_id)
         
@@ -144,7 +148,31 @@ def get_answer(request):
             if answer_query:
                 answer['answer'] = answer_query.answer
             else:
-                answer['answer'] = None
+                print(inputType)
+                print(question)
+                if (inputType == 'text' or inputType == 'textarea') and question:
+                    profile_text = profile.to_text()
+                    gptPrompt = f"""
+                        Here is my resume profile.
+                        {profile_text}
+                        And here is a job description.
+                        {job_description}
+                        Provide me only answer(must be short and clear) for "{question}"
+                        """
+                    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+                    chat_completion = client.chat.completions.create(
+                        messages=[
+                            {"role": "user", "content": gptPrompt}
+                        ],
+                        model="gpt-3.5-turbo-0125",
+                    )
+
+                    # Extract and print the assistant's response
+                    message = chat_completion.choices[0].message.content
+                    answer['answer'] = message
+                    print(message)
+                else:
+                    answer['answer'] = None
 
         # Add the standard_question to answers_dict
         answer['standard_question'] = standard_question.id if standard_question else None
