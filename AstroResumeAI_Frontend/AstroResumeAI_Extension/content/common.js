@@ -152,6 +152,22 @@
         return answer;
     }
 
+    const getSelectedRowHrefs = (rowSelector, cellSelector, linkSelector) => {
+        const hrefs = [];
+
+        $(rowSelector).each(function () {
+            const cellDiv = $(this).find(cellSelector);
+            const aElement = cellDiv.find(linkSelector);
+            const href = aElement.attr('href');
+
+            if (href) {
+                hrefs.push(href);
+            }
+        });
+
+        return hrefs;
+    }
+
     // Function to check if all elements are rendered
     const waitIfAllElementsRendered = () => {
         return new Promise((resolve) => {
@@ -190,4 +206,5 @@
     window.retrieveUserInputAnswer = retrieveUserInputAnswer;
     window.waitIfAllElementsRendered = waitIfAllElementsRendered;
     window.onUrlChange = onUrlChange;
+    window.getSelectedRowHrefs = getSelectedRowHrefs;
 })();

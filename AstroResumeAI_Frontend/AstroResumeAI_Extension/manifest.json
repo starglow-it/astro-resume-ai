@@ -24,7 +24,8 @@
     {
       "matches": [
         "https://www.indeed.com/*",
-        "https://smartapply.indeed.com/*"
+        "https://smartapply.indeed.com/*",
+        "http://localhost:3001/jobs/"
       ],
       "js": [
         "./libs/jquery/jquery-3.7.1.min.js","content.js","./content/common.js", "./content/indeed.js"

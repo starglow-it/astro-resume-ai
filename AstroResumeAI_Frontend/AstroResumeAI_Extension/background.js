@@ -8,24 +8,6 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) => console.log('Side Panel Error:', error));
 
-// Function to fetch URLs from the backend
-async function fetchUrls() {
-  try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auto-bid/get-urls/`);
-    const { urls } = await response.json();
-    if (urls && urls.length > 0) {
-      autoBidUrls = urls;
-
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.log('Error fetching URLs:', error);
-    return false;
-  }
-}
-
 // Function to open a URL and perform tasks
 function openNextUrl() {
   if (autoBidUrls.length === 0) return;
@@ -38,7 +20,7 @@ function openNextUrl() {
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.action) {
     case 'autoBidUrlLoad':
-      await fetchUrls();
+      autoBidUrls = message.autoBidUrls;
       break;
 
     case 'autoBidStart':
