@@ -99,7 +99,8 @@ async function waitForElement(selector) {
       const autoBidUrls = window.getSelectedRowHrefs(jobUrlRowSelector, jobUrlCellSelector, jobUrlLinkSelector);
       
       if (autoBidUrls && autoBidUrls.length > 0) {
-        chrome.runtime.sendMessage({ action: 'autoBidUrlLoad', autoBidUrls });
+        const filteredUrls = autoBidUrls.filter(url => url.includes('www.indeed.com'));
+        chrome.runtime.sendMessage({ action: 'autoBidUrlLoad', autoBidUrls: filteredUrls });
       }
     } catch (error) {
       console.error('Error sending autoBidUrlLoad message:', error);

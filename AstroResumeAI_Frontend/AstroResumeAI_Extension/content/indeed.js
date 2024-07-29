@@ -34,6 +34,7 @@ const urlSelectors = {
     qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
     review: 'smartapply.indeed.com/beta/indeedapply/form/review',
     postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
+    isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
     commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check',
     intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention'
 };
@@ -267,15 +268,13 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.postApply):
-                await handlePostApplyPage();
-                break;
-
+            case url.includes(urlSelectors.isAlreadyApplied):
             case url.includes(urlSelectors.commuteCheck):
-                await handleSkipPage();
+                await handlePostApplyPage();
                 break;
 
             case url.includes(urlSelectors.intervention):
-                await handlePostApplyPage();
+                await handleSkipPage();
                 break;
 
             default:
