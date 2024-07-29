@@ -38,6 +38,37 @@ const urlSelectors = {
     intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention'
 };
 
+const handleJobPage = async () => {
+    handleClickApplyBtn();
+};
+
+const handleResumePage = async () => {
+    const element = document.querySelector(selectors.resume);
+    window.simulateClick(element);
+    handleClickContinueBtn(selectors.continueButton2);
+};
+
+const handleInputFieldsPage = async () => {
+    await window.waitIfAllElementsRendered();
+    $(selectors.continueButton).click(async () => {
+        await operateAllInputFields("save_answers");
+    });
+    setTimeout(async () => { await operateAllInputFields("fill_answer"); }, 1000);
+};
+
+const handleReviewPage = async () => {
+    const submitBtn = await window.waitForElement(selectors.continueButton2);
+    window.simulateClick(submitBtn);
+};
+
+const handlePostApplyPage = async () => {
+    chrome.runtime.sendMessage({ action: 'autoBidCompleted' });
+};
+
+const handleSkipPage = async () => {
+    chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
+};
+
 // Function to fetch answer for a question from backend API
 async function fetchAnswerForQuestion(questionText, label, isOptional, inputType, input) {
     const payload = {
@@ -123,7 +154,7 @@ function handleClickContinueBtn(btnQuery) {
 }
 
 async function handleClickApplyBtn() {
-    const maxWaitTime = 10000;
+    const maxWaitTime = 8000;
     const intervalTime = 1000;
     let elapsedTime = 0;
 
@@ -135,6 +166,7 @@ async function handleClickApplyBtn() {
         } else {
             elapsedTime += intervalTime;
             if (elapsedTime > maxWaitTime) {
+                await handlePostApplyPage();
                 clearInterval(checkInterval);
             }
         }
@@ -209,37 +241,6 @@ const operateAllInputFields = async (command) => {
         profileId = result.currentId;
         console.log("Profile ID retrieved: ", profileId);
     });
-
-    const handleJobPage = async () => {
-        handleClickApplyBtn();
-    };
-
-    const handleResumePage = async () => {
-        const element = document.querySelector(selectors.resume);
-        window.simulateClick(element);
-        handleClickContinueBtn(selectors.continueButton2);
-    };
-
-    const handleInputFieldsPage = async () => {
-        await window.waitIfAllElementsRendered();
-        $(selectors.continueButton).click(async () => {
-            await operateAllInputFields("save_answers");
-        });
-        setTimeout(async () => { await operateAllInputFields("fill_answer"); }, 1000);
-    };
-
-    const handleReviewPage = async () => {
-        const submitBtn = await window.waitForElement(selectors.continueButton2);
-        window.simulateClick(submitBtn);
-    };
-
-    const handlePostApplyPage = async () => {
-        chrome.runtime.sendMessage({ action: 'autoBidCompleted' });
-    };
-
-    const handleSkipPage = async () => {
-        chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
-    };
 
     const pageChangeHandler = async () => {
         const url = location.href;
