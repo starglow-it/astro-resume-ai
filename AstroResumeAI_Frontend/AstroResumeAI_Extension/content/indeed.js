@@ -26,6 +26,7 @@ const selectors = {
 
 const urlSelectors = {
     viewJob: 'www.indeed.com/viewjob',
+    jobPage: 'www.indeed.com/job/',
     contactInfo: 'smartapply.indeed.com/beta/indeedapply/form/contact-info',
     resume: 'smartapply.indeed.com/beta/indeedapply/form/resume',
     workExp: 'smartapply.indeed.com/beta/indeedapply/form/work-experience',
@@ -236,11 +237,16 @@ const operateAllInputFields = async (command) => {
         chrome.runtime.sendMessage({ action: 'autoBidCompleted' });
     };
 
+    const handleSkipPage = async () => {
+        chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
+    };
+
     const pageChangeHandler = async () => {
         const url = location.href;
 
         switch (true) {
             case url.includes(urlSelectors.viewJob):
+            case url.includes(urlSelectors.jobPage):
                 await handleJobPage();
                 break;
 
@@ -264,6 +270,9 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.commuteCheck):
+                await handleSkipPage();
+                break;
+
             case url.includes(urlSelectors.intervention):
                 await handlePostApplyPage();
                 break;

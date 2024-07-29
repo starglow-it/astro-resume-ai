@@ -2,7 +2,7 @@
     // Function to handle URL changes
     const onUrlChange = (callback) => {
         // Store the initial URL
-        let lastUrl = location.href;
+        let lastUrl = '';
 
         // Function to check for URL changes
         const checkUrlChange = () => {
