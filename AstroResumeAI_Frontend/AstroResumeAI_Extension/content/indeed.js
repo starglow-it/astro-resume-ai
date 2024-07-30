@@ -152,21 +152,22 @@ const operateAllInputFields = async (command) => {
         for (const input of $(selectors.question)) {
             const fieldset = input.closest("fieldset");
             const legend = fieldset ? fieldset.querySelector("legend") : null;
-            const groupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : findLabelForInput(input) ?? '';
-            
+            const originGroupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : findLabelForInput(input) ?? '';
+            const isOptional = originGroupLabel.includes("(optional)");
+            const groupLabel = window.cleanString(originGroupLabel);
+
             // Skip the current loop iteration if the groupLabel is the same as the previous one
-            if (groupLabel === previousGroupLabel) {
+            if (groupLabel === previousGroupLabel || groupLabel == "" || !window.isElementVisible(input) || window.hasHiddenParent(input)) {
                 continue;
             }
-            
+
             // Update previousGroupLabel to the current groupLabel
             previousGroupLabel = groupLabel;
-        
-            const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : groupLabel;
+
+            const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
-            const isOptional = groupLabel.includes("(optional)");
-        
-            if (command === "fill_answer") {
+          
+            if (command === "fill_answer" && window.retrieveUserInputAnswer(input, inputType) == null) {
                 await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
             } else if (command === "save_answers") {
                 const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
@@ -238,7 +239,7 @@ const operateAllInputFields = async (command) => {
 
     const pageChangeHandler = async () => {
         const url = location.href;
-
+        await window.waitIfAllElementsRendered();
         switch (true) {
             case url.includes(urlSelectors.viewJob):
                 await handleJobPage();

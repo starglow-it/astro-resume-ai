@@ -181,6 +181,47 @@
         });
     }
 
+    const cleanString = (input) => {
+        // Convert input string to lowercase
+        let cleanedString = input.toLowerCase();
+
+        // Replace all non-alphanumeric characters (except spaces) with an empty string
+        cleanedString = cleanedString.replace('(optional)', '')
+        cleanedString = cleanedString.replace(/[^a-z0-9 ]/g, '');
+
+        return cleanedString;
+    }
+    const isElementVisible = (element) => {
+        if (!element) {
+            return false;
+        }
+    
+        // Check if the element is in the DOM and not hidden by CSS
+        const style = window.getComputedStyle(element);
+        const isVisible = style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+    
+        // Check if the element is within the viewport
+        const rect = element.getBoundingClientRect();
+        const isInViewport = rect.top >= 0 &&
+                             rect.left >= 0 &&
+                             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                             rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+    
+        return isVisible && isInViewport;
+    }
+    
+    const hasHiddenParent = (element) => {
+        let currentElement = element;
+    
+        while (currentElement) {
+            if (currentElement.hasAttribute('hidden')) {
+                return true;
+            }
+            currentElement = currentElement.parentElement;
+        }
+    
+        return false;
+    }
     // Attach functions to window object
     window.waitForElement = waitForElement;
     window.simulateClick = simulateClick;
@@ -190,4 +231,7 @@
     window.retrieveUserInputAnswer = retrieveUserInputAnswer;
     window.waitIfAllElementsRendered = waitIfAllElementsRendered;
     window.onUrlChange = onUrlChange;
+    window.cleanString = cleanString;
+    window.isElementVisible = isElementVisible;
+    window.hasHiddenParent = hasHiddenParent;
 })();
