@@ -3,7 +3,6 @@ import React, { createContext, useState, useContext, useEffect } from 'react'
 import Cookies from 'js-cookie'
 
 interface AuthContextType {
-  // username: string | null;
   token: string | null
   isAuthenticated: boolean
   setToken: (token: string | null) => void
@@ -18,15 +17,17 @@ export const useAuth = () => {
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
   }
+
   return context
 }
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState<string | null>('')
+  const [token, setToken] = useState<string | null>(null)
 
   // Use effect to read the token from local storage or cookies when the app loads
   useEffect(() => {
-    const storedToken = localStorage.getItem('token') // Or your token storage logic
+    const storedToken = localStorage.getItem('token')
+    console.log(storedToken);
     if (storedToken) {
       setToken(storedToken)
     } else {

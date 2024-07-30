@@ -1,8 +1,10 @@
 // ** React Imports
-import React, { useState, ChangeEvent, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-// ** Axios Imports
-import Axios from 'axios'
+import Axios, { AxiosResponse } from 'axios'
+
+//Interface
+import { DeleteJobPostsResponse, JobData } from 'src/types/JobData';
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
@@ -10,17 +12,15 @@ import Grid from '@mui/material/Grid'
 import {
   DataGrid,
   GridSortModel,
-  GridFilterModel,
   GridPaginationModel,
   GridPagination,
   useGridApiContext,
   gridPageCountSelector,
   useGridSelector,
   GridColDef,
-  GridRenderCellParams,
   GridRowSelectionModel
 } from '@mui/x-data-grid'
-import { ConsoleLine, KeyPlus, Magnify } from 'mdi-material-ui'
+import { Magnify } from 'mdi-material-ui'
 import MuiPagination from '@mui/material/Pagination'
 import { TablePaginationProps } from '@mui/material/TablePagination'
 
@@ -39,7 +39,6 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { useAuth } from 'src/@core/context/authContext'
-import { responsiveProperty } from '@mui/material/styles/cssUtils'
 
 interface FilterValue {
   [key: string]: string
@@ -47,15 +46,15 @@ interface FilterValue {
 
 interface Column {
   field:
-    | 'site'
-    | 'title'
-    | 'is_easy_apply'
-    | 'is_remote'
-    | 'company'
-    | 'location'
-    | 'job_type'
-    | 'salary'
-    | 'date_posted'
+  | 'site'
+  | 'title'
+  | 'is_easy_apply'
+  | 'is_remote'
+  | 'company'
+  | 'location'
+  | 'job_type'
+  | 'salary'
+  | 'date_posted'
   headerName: string
   minWidth?: number
 }
@@ -161,12 +160,13 @@ function CustomPagination(props: any) {
 
 const Jobs = () => {
   // ** States
-  const { jobsData, setJobsData, count, setCount, pageNumber, setPageNumber } = useJobsData()
+  const { jobsData, setJobsData, count, setCount } = useJobsData()
   const [analyzeResultRows, setAnalyzeResultRows] = useState<AnalyzeResultRow[]>([])
   const [filterValue, setFilterValue] = useState<FilterValue>(initialFilterValue)
   const [sortModel, setSortModel] = useState<GridSortModel>([])
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ page: 0, pageSize: 20 })
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([])
+  const [deleteAllConfirm, setDeleteAllConfirm] = useState<boolean>(false)
 
   const [loading, setLoading] = useState<boolean>(false)
   const [analyzeLoading, setAnalyzeLoading] = useState<boolean>(false)
@@ -189,7 +189,7 @@ const Jobs = () => {
       /**
        * Add filer parameters to the query string
        *  */
-      let filterParams: string[] = []
+      const filterParams: string[] = []
 
       Object.keys(filterValue).forEach((field: string) => {
         if (filterValue[field].trim() !== '') {
@@ -214,9 +214,9 @@ const Jobs = () => {
 
       setLoading(true)
 
+      console.log(token);
       const response = await Axios.get(
-        `${API_BASE_URL}/job/scrape/?page=${paginationModel.page + 1}&${params.toString()}`
-      )
+        `${API_BASE_URL}/job/scrape/?page=${paginationModel.page + 1}&${params.toString()}`)
 
       setLoading(false)
       setJobsData(response.data.results)
@@ -225,6 +225,42 @@ const Jobs = () => {
       setLoading(false)
       console.log(error)
     }
+  }
+
+  async function handleDeleteSelectedJobPosts(): Promise<void> {
+    try {
+      const response = await Axios.delete<DeleteJobPostsResponse>(`${API_BASE_URL}/job/delete-selected/`, {
+        data: {
+          ids: rowSelectionModel
+        }
+      });
+
+      console.log(response.data.message);
+    } catch (error) {
+      if (Axios.isAxiosError(error) && error.response) {
+        console.error('Failed to delete job posts', error.response.statusText);
+      } else {
+        console.error('Failed to delete job posts', error);
+      }
+    }
+  }
+
+  async function handleDeleteAllJobPosts(): Promise<void> {
+    try {
+      const response: AxiosResponse<DeleteJobPostsResponse> = await Axios.delete(`${API_BASE_URL}/job/scrape/`);
+
+      console.log(response.data.message);
+    } catch (error) {
+      // Handle error
+      if (Axios.isAxiosError(error)) {
+        console.error('Failed to delete job posts', error.response ? error.response.statusText : error.message);
+      } else {
+        console.error('An unexpected error occurred', error);
+      }
+    }
+
+    fetchJobs(filterValue, sortModel, paginationModel);
+    setDeleteAllConfirm(false);
   }
 
   const handleSortModelChange = (newSortModel: GridSortModel) => {
@@ -317,7 +353,7 @@ const Jobs = () => {
   return (
     <>
       <Grid container spacing={6}>
-        <Grid item container xs={12}>
+        <Grid item container xs={8}>
           <Grid item xs={12} sm={3}>
             <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
               <TextField
@@ -395,7 +431,14 @@ const Jobs = () => {
             </Box>
           </Grid>
         </Grid>
-
+        <Grid item container xs={4} justifyContent='flex-end' gap={1}>
+          <Button variant='contained' size='small' onClick={handleDeleteSelectedJobPosts}>
+            Delete Selected
+          </Button>
+          <Button variant='contained' size='small' onClick={() => setDeleteAllConfirm(true)}>
+            Delete All
+          </Button>
+        </Grid>
         <Grid item xs={12}>
           <DataGrid
             rows={rows}
@@ -436,6 +479,13 @@ const Jobs = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setModalOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={deleteAllConfirm} onClose={() => setDeleteAllConfirm(false)} scroll='paper' maxWidth='md'>
+        <DialogTitle id='scroll-dialog-title'>Please confirm the deletion of all jobs.</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDeleteAllJobPosts}>Confirm</Button>
+          <Button color='error' onClick={() => setDeleteAllConfirm(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </>

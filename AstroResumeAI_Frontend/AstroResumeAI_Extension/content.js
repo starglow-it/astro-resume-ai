@@ -1,5 +1,8 @@
 let isSidePanelOpen = false;
 let applyButtonQuery = '.jobsearch-IndeedApplyButton-newDesign';
+const jobUrlRowSelector = 'div.MuiDataGrid-row[aria-selected="true"]';
+const jobUrlCellSelector = 'div.MuiDataGrid-cell';
+const jobUrlLinkSelector = 'a';
 
 async function waitForElement(selector) {
   let element = document.querySelector(selector);
@@ -93,8 +96,12 @@ async function waitForElement(selector) {
 
   urlLoadButton.addEventListener("click", async () => {
     try {
-      chrome.runtime.sendMessage({ action: 'autoBidUrlLoad' });
-
+      const autoBidUrls = window.getSelectedRowHrefs(jobUrlRowSelector, jobUrlCellSelector, jobUrlLinkSelector);
+      
+      if (autoBidUrls && autoBidUrls.length > 0) {
+        const filteredUrls = autoBidUrls.filter(url => url.includes('www.indeed.com'));
+        chrome.runtime.sendMessage({ action: 'autoBidUrlLoad', autoBidUrls: filteredUrls });
+      }
     } catch (error) {
       console.error('Error sending autoBidUrlLoad message:', error);
     }

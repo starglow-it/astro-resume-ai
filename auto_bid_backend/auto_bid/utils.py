@@ -5,7 +5,9 @@ from .models import Question, StandardQuestion
 
 def get_similar_question(question):
     standard_questions = StandardQuestion.objects.all().values_list('standard_question', flat=True)
-    similar_question = find_similar_sentence(question, list(standard_questions), score_threshold=0.7)
+    similar_question = find_similar_sentence(question, list(standard_questions), score_threshold=0.9)
+    print('similar_question===')
+    print(similar_question)
     standard_question = None
     
     if similar_question:

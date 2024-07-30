@@ -2,7 +2,7 @@
     // Function to handle URL changes
     const onUrlChange = (callback) => {
         // Store the initial URL
-        let lastUrl = location.href;
+        let lastUrl = '';
 
         // Function to check for URL changes
         const checkUrlChange = () => {
@@ -152,6 +152,22 @@
         return answer;
     }
 
+    const getSelectedRowHrefs = (rowSelector, cellSelector, linkSelector) => {
+        const hrefs = [];
+
+        $(rowSelector).each(function () {
+            const cellDiv = $(this).find(cellSelector);
+            const aElement = cellDiv.find(linkSelector);
+            const href = aElement.attr('href');
+
+            if (href) {
+                hrefs.push(href);
+            }
+        });
+
+        return hrefs;
+    }
+
     // Function to check if all elements are rendered
     const waitIfAllElementsRendered = () => {
         return new Promise((resolve) => {
@@ -234,4 +250,5 @@
     window.cleanString = cleanString;
     window.isElementVisible = isElementVisible;
     window.hasHiddenParent = hasHiddenParent;
+    window.getSelectedRowHrefs = getSelectedRowHrefs;
 })();
