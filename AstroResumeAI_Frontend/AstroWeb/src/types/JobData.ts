@@ -1,3 +1,7 @@
+export interface DeleteJobPostsResponse {
+  message: string;
+}
+
 export type JobData = {
   id: number
   site: string

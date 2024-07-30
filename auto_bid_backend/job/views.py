@@ -1,14 +1,15 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.core.serializers import serialize
 from functools import reduce
 
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import ListAPIView
+from django.db import transaction
 
 from urllib.parse import urlparse
 
@@ -21,9 +22,7 @@ from profile_management.serializers import ProfileSerializer
 
 import pandas as pd
 import numpy as np
-from datetime import datetime
 import json
-
 
 def domain_from_url(url):
     """
@@ -46,7 +45,6 @@ class ScrapeJobsView(APIView):
     """
     filter_backends = (SearchFilter, OrderingFilter)
     ordering_fields = 'all'
-
 
     def post(self, request, *args, **kwargs):
         # Extract parameters from the request
@@ -144,6 +142,31 @@ class ScrapeJobsView(APIView):
 
         return Response(serializer.data)
     
+    def delete(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                JobPost.objects.all().delete()
+            return Response({"message": "All job posts have been deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+              
+class DeleteSelectedJobsView(APIView):
+
+    def delete(self, request, *args, **kwargs):
+        ids = request.data.get('ids', [])
+        print(ids)
+        if not isinstance(ids, list):
+            return Response({"error": "Invalid data format. 'ids' should be a list."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not ids:
+            return Response({"message": "No IDs provided to delete."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            with transaction.atomic():
+                deleted_count, _ = JobPost.objects.filter(id__in=ids).delete()
+            return Response({"message": f"{deleted_count} job posts have been deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class AnalyzeJobsView(APIView):
     """
