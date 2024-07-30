@@ -3,6 +3,7 @@ import { ChangeEvent, forwardRef, MouseEvent, useState } from 'react'
 
 // ** Axios Import
 import Axios from 'axios'
+import { useAuth } from 'src/@core/context/authContext'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -60,6 +61,7 @@ const JobScrapingInput = () => {
 
   const [error, setError] = useState<Error>({})
   const [alertIsOpen, setAlertOpen] = useState<boolean>(false)
+  const { token } = useAuth()
 
   // Handle Input
   const handleChange = (prop: keyof ScrapingParams) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -81,8 +83,6 @@ const JobScrapingInput = () => {
 
   const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-
-    console.log(values)
 
     try {
       const response = await Axios.post(`${API_BASE_URL}/job/scrape/`, values)
