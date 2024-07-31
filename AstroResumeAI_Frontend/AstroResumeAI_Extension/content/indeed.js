@@ -34,11 +34,21 @@ const urlSelectors = {
     qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
     review: 'smartapply.indeed.com/beta/indeedapply/form/review',
     postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
-    isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
+    // isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
     commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check',
     intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention'
 };
 
+const defaultQuestionList = [
+    "date available",
+    "today’s date"
+]
+
+const skipQuestionList = [
+    "day options",
+    "time options",
+    "cover letter"
+]
 const handleJobPage = async () => {
     handleClickApplyBtn();
 };
@@ -269,7 +279,7 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.postApply):
-            case url.includes(urlSelectors.isAlreadyApplied):
+            // case url.includes(urlSelectors.isAlreadyApplied):
             case url.includes(urlSelectors.commuteCheck):
                 await handlePostApplyPage();
                 break;

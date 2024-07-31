@@ -9,7 +9,7 @@ class StandardQuestion(models.Model):
         return self.standard_question[:50]
     
 class Question(models.Model):
-    question = models.CharField(max_length=255)
+    question = models.TextField()
     standard_question = models.ForeignKey(StandardQuestion, on_delete=models.CASCADE)
 
     def __str__(self):
