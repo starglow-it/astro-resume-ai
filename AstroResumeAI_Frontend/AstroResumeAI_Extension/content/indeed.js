@@ -36,7 +36,8 @@ const urlSelectors = {
     postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
     // isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
     commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check',
-    intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention'
+    intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention',
+    qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification',
 };
 
 const defaultQuestionList = [
@@ -285,6 +286,7 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.intervention):
+            case url.includes(urlSelectors.qualificationInvention):
                 await handleSkipPage();
                 break;
 

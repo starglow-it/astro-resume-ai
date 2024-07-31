@@ -51,10 +51,6 @@ async function waitForElement(selector) {
   autoBidStartButton.textContent = 'Start';
   autoBidStartButton.className = "astro-bid-auto-bid-btn";
 
-  const autoBidButtonForOne = document.createElement('button');
-  autoBidButtonForOne.textContent = 'Start One';
-  autoBidButtonForOne.className = "astro-bid-auto-bid-btn";
-
   const urlLoadButton = document.createElement('button');
   urlLoadButton.textContent = 'Load URLs';
   urlLoadButton.className = "astro-bid-auto-bid-btn";
@@ -65,7 +61,6 @@ async function waitForElement(selector) {
   pElement.textContent = 'Need to load URLs.';
 
   // Append buttons and text to the control panel
-  buttonWrapperDiv.appendChild(autoBidButtonForOne);
   buttonWrapperDiv.appendChild(autoBidStartButton);
   buttonWrapperDiv.appendChild(urlLoadButton);
   div.appendChild(buttonWrapperDiv);
@@ -80,17 +75,6 @@ async function waitForElement(selector) {
       chrome.runtime.sendMessage({ action: 'autoBidStart' });
     } catch (error) {
       console.error('Error sending autoBidStart message:', error);
-    }
-  });
-
-  autoBidButtonForOne.addEventListener("click", async () => {
-    try {
-      const applyButton = await waitForElement(applyButtonQuery);
-      if (applyButton) {
-        applyButton.click();
-      }
-    } catch (error) {
-      console.error('Error sending autoBidOne message:', error);
     }
   });
 
