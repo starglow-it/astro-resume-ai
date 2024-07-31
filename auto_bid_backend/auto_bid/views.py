@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.db import transaction
 
 from rest_framework import status
@@ -10,7 +10,7 @@ from openai import OpenAI
 
 from profile_management.models import Profile
 from .models import Answer, StandardQuestion
-from .utils import auto_answer_generation_model, get_similar_question, get_standard_question
+from .utils import auto_answer_generation_model, get_standard_question
 
 @api_view(["POST"])
 def save_answers(request):
