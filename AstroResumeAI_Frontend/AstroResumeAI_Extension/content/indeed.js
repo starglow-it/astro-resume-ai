@@ -268,7 +268,6 @@ const operateAllInputFields = async (command) => {
                 break;
 
             case url.includes(urlSelectors.postApply):
-            case url.includes(urlSelectors.isAlreadyApplied):
             case url.includes(urlSelectors.commuteCheck):
                 await handlePostApplyPage();
                 break;
