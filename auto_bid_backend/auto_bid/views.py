@@ -110,43 +110,37 @@ def get_answer(request):
         ).first()
 
         answer = {}
-        print('standard_question==')
-        print(standard_question)
         if answer_query:
             answer['answer'] = answer_query.answer
         else:
-            standard_question = get_similar_question(question)
-            try:
-                answer_query = Answer.objects.get(profile=profile, standard_question=standard_question, inputType=inputType)
-                answer['answer'] = answer_query.answer
-            except Answer.DoesNotExist:
-                profile_text = profile.to_text()
-                answer['answer'] = auto_answer_generation_model(question, profile_text)
-                if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
-                    gptPrompt = f"""
-                        Here is my resume profile.
-                        {profile_text}
-                        And here is a job description.
-                        {job_description}
-                        Provide me only answer(must be short and clear) for "{question}"
-                        """
-                    client = OpenAI(api_key=settings.OPENAI_API_KEY)
-                    chat_completion = client.chat.completions.create(
-                        messages=[
-                            {"role": "user", "content": gptPrompt}
-                        ],
-                        model="gpt-3.5-turbo-0125",
-                    )
+            standard_question = StandardQuestion.objects.create(standard_question=question)
+            profile_text = profile.to_text()
+            answer['answer'] = auto_answer_generation_model(question, profile_text)
+            if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
+                gptPrompt = f"""
+                    Here is my resume profile:
+                    {profile_text}
 
-                    # Extract and print the assistant's response
-                    message = chat_completion.choices[0].message.content
-                    answer['answer'] = message
-                    print(message)
-                else:
-                    answer['answer'] = None
-            print('answer==')
-            print(answer['answer'])
-        # Add the standard_question to answers_dict
+                    And here is a job description:
+                    {job_description}
+
+                    Please provide a concise and positive answer to the following question:
+                    "{question}"
+                    """
+
+                client = OpenAI(api_key=settings.OPENAI_API_KEY)
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {"role": "user", "content": gptPrompt}
+                    ],
+                    model="gpt-3.5-turbo-0125",
+                )
+
+                message = chat_completion.choices[0].message.content
+                answer['answer'] = message
+            else:
+                answer['answer'] = None
+        print('*answer =>', answer['answer'])
         answer['standard_question'] = standard_question.id if standard_question else None
 
         return Response({
