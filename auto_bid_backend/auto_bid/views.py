@@ -113,7 +113,8 @@ def get_answer(request):
         if answer_query:
             answer['answer'] = answer_query.answer
         else:
-            standard_question = StandardQuestion.objects.create(standard_question=question)
+            if standard_question:
+                standard_question = StandardQuestion.objects.create(standard_question=question)
             profile_text = profile.to_text()
             answer['answer'] = auto_answer_generation_model(question, profile_text)
             if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
