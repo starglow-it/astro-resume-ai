@@ -201,12 +201,10 @@ const operateAllInputFields = async (command) => {
             const isOptional = originGroupLabel.includes("(optional)");
             const groupLabel = window.cleanString(originGroupLabel);
 
-            // Skip the current loop iteration if the groupLabel is the same as the previous one
             if (groupLabel === previousGroupLabel || groupLabel == "" || !window.isElementVisible(input) || window.hasHiddenParent(input)) {
                 continue;
             }
 
-            // Update previousGroupLabel to the current groupLabel
             previousGroupLabel = groupLabel;
 
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
