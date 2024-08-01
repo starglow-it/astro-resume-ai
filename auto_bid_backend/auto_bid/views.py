@@ -69,6 +69,8 @@ def save_answers(request):
                     }
                 )
                 if created:
+                    print('*standard_question=>', standard_question.question)
+                    print('*answer created=>', answer.answer)
                     success_count += 1
                 else:
                     success_count += 1
@@ -113,11 +115,11 @@ def get_answer(request):
         if answer_query:
             answer['answer'] = answer_query.answer
         else:
-            if standard_question:
+            if not standard_question:
                 standard_question = StandardQuestion.objects.create(standard_question=question)
             profile_text = profile.to_text()
             answer['answer'] = auto_answer_generation_model(question, profile_text)
-            print('*answer from model', answer['answer'])
+            print('*answer from model => ', answer['answer'])
             if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
                 gptPrompt = f"""
                     Here is my resume profile:

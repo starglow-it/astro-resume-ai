@@ -39,7 +39,7 @@ const urlSelectors = {
     // isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
     commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check',
     intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention',
-    qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification',
+    qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification-intervention',
 };
 
 const dateQuestionList = [
@@ -210,11 +210,10 @@ const operateAllInputFields = async (command) => {
             }
 
             previousGroupLabel = groupLabel;
-
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
-
-            if (command === "fill_answer" && window.retrieveUserInputAnswer(input, inputType) == null) {
+            const noAnswerExisted = inputType === 'select' ? true : !Boolean(window.retrieveUserInputAnswer(input, inputType));
+            if (command === "fill_answer" && noAnswerExisted) {
                 if (dateQuestionList.indexOf(groupLabel) > -1) {
                     window.autoFillAnswer(input, inputType, label, input.placeholder);
                     continue;
