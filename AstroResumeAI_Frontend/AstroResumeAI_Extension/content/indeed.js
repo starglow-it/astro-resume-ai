@@ -40,9 +40,10 @@ const urlSelectors = {
     qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification',
 };
 
-const defaultQuestionList = [
+const dateQuestionList = [
     "date available",
-    "today’s date"
+    "todays date",
+    "wht is your earliest start date"
 ]
 
 const skipQuestionList = [
@@ -193,6 +194,7 @@ const operateAllInputFields = async (command) => {
     try {
         const userAnswers = [];
         let previousGroupLabel = '';
+        const fetchAnswerPromises = [];
 
         for (const input of $(selectors.question)) {
             const fieldset = input.closest("fieldset");
@@ -209,9 +211,14 @@ const operateAllInputFields = async (command) => {
 
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
-          
+
             if (command === "fill_answer" && window.retrieveUserInputAnswer(input, inputType) == null) {
-                await fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input);
+                if (dateQuestionList.indexOf(groupLabel) > -1) {
+                    window.autoFillAnswer(input, inputType, label, input.placeholder);
+                    continue;
+                }
+                if (skipQuestionList.indexOf(groupLabel) == -1)
+                    fetchAnswerPromises.push(fetchAnswerForQuestion(groupLabel, label, isOptional, inputType, input));
             } else if (command === "save_answers") {
                 const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
                 if (!existingAnswer) {
@@ -224,6 +231,15 @@ const operateAllInputFields = async (command) => {
                     });
                 }
             }
+        }
+        if (fetchAnswerPromises.length > 0) {
+            await Promise.all(fetchAnswerPromises).then(() => {
+                // All fetch requests have completed
+                console.log('All fetch requests have completed.');
+                // Trigger your event or perform your action here
+            }).catch(error => {
+                console.error('An error occurred while fetching answers:', error);
+            });
         }
 
         if (command === "save_answers") {
