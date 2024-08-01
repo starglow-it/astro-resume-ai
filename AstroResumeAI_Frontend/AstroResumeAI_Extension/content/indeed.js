@@ -31,7 +31,9 @@ const urlSelectors = {
     resume: 'smartapply.indeed.com/beta/indeedapply/form/resume',
     workExp: 'smartapply.indeed.com/beta/indeedapply/form/work-experience',
     questions: 'smartapply.indeed.com/beta/indeedapply/form/questions',
+    demographicQuestion: 'smartapply.indeed.com/beta/indeedapply/form/demographic-questions',
     qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
+    documents: 'smartapply.indeed.com/beta/indeedapply/form/documents',
     review: 'smartapply.indeed.com/beta/indeedapply/form/review',
     postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
     // isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
@@ -285,6 +287,8 @@ const operateAllInputFields = async (command) => {
             case url.includes(urlSelectors.workExp) ||
                 url.includes(urlSelectors.contactInfo) ||
                 url.includes(urlSelectors.questions) ||
+                url.includes(urlSelectors.demographicQuestion) ||
+                url.includes(urlSelectors.documents) ||
                 url.includes(urlSelectors.qualificationQuestions):
                 await handleInputFieldsPage();
                 break;
