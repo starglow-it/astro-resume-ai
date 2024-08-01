@@ -117,6 +117,7 @@ def get_answer(request):
                 standard_question = StandardQuestion.objects.create(standard_question=question)
             profile_text = profile.to_text()
             answer['answer'] = auto_answer_generation_model(question, profile_text)
+            print('*answer from model', answer['answer'])
             if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
                 gptPrompt = f"""
                     Here is my resume profile:
