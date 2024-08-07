@@ -80,11 +80,18 @@
 
     // Function to find the label for an input element
     const findLabelForInput = (input) => {
-        const id = $(input).attr("id");
+        let id = $(input).attr("id");
         if (id) {
-            const explicitLabel = $(`label[for="${id}"]`);
+            let explicitLabel = $(`label[for='${id}']`);
             if (explicitLabel.length) {
+                console.log(explicitLabel);
                 return explicitLabel.text().trim();
+            } else {
+                id = id.replace(/"/g, "'");
+                id = ""
+                if (explicitLabel) {
+                    return explicitLabel.text().trim();
+                }
             }
         }
 
@@ -115,7 +122,7 @@
                 }
                 break;
             case "checkbox":
-                if (label.toLowerCase().includes(answer.toLowerCase())) {
+                if (answer.toLowerCase().includes(label.toLowerCase())) {
                     simulateClick(input);
                 }
                 break;
@@ -207,32 +214,33 @@
 
         return cleanedString;
     }
+
     const isElementVisible = (element) => {
         if (!element) {
             return false;
         }
-    
+
         // Check if the element is in the DOM and not hidden by CSS
         const style = window.getComputedStyle(element);
         const isVisible = style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-    
+
         // Check if the element is within the viewport
         const rect = element.getBoundingClientRect();
         const isInViewport = rect.top >= 0 && rect.left >= 0;
-    
+
         return isVisible && isInViewport;
     }
-    
+
     const hasHiddenParent = (element) => {
         let currentElement = element;
-    
+
         while (currentElement) {
             if (currentElement.hasAttribute('hidden')) {
                 return true;
             }
             currentElement = currentElement.parentElement;
         }
-    
+
         return false;
     }
     // Attach functions to window object

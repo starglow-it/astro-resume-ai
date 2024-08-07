@@ -8,13 +8,6 @@ class StandardQuestion(models.Model):
     def __str__(self):
         return self.standard_question[:50]
     
-class Question(models.Model):
-    question = models.TextField()
-    standard_question = models.ForeignKey(StandardQuestion, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.question}. Standard question is {self.standard_question}"
-    
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     # question =  models.CharField(max_length=255)
