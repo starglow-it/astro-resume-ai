@@ -54,7 +54,7 @@ def save_answers(request):
         except StandardQuestion.DoesNotExist:
             errors.append({'error': f'Standard question with ID {standard_question_id} does not exist'})
             failure_count += 1
-            continue  # Skip to the next field
+            continue 
 
         try:
             with transaction.atomic():  # Ensure atomicity for each operation
@@ -69,6 +69,8 @@ def save_answers(request):
                     }
                 )
                 if created:
+                    print('*standard_question=>', standard_question)
+                    print('*answer created=>', answer.answer)
                     success_count += 1
                 else:
                     success_count += 1
@@ -113,11 +115,12 @@ def get_answer(request):
         if answer_query:
             answer['answer'] = answer_query.answer
         else:
-            if standard_question:
+            if not standard_question:
                 standard_question = StandardQuestion.objects.create(standard_question=question)
             profile_text = profile.to_text()
             answer['answer'] = auto_answer_generation_model(question, profile_text)
-            if not answer['answer'] and (inputType == 'text' or inputType == 'textarea') and question:
+            print('*answer from model => ', answer['answer'])
+            if not answer['answer'] and inputType == 'textarea' and question:
                 gptPrompt = f"""
                     Here is my resume profile:
                     {profile_text}
@@ -127,6 +130,10 @@ def get_answer(request):
 
                     Please provide a concise and positive answer to the following question:
                     "{question}"
+                    
+                    Causion:
+                    1. When a descriptive answer is needed, avoid using the CV owner's name; instead, use 'I.'
+                    2. Do not repeat the question in your answer.
                     """
 
                 client = OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -139,8 +146,7 @@ def get_answer(request):
 
                 message = chat_completion.choices[0].message.content
                 answer['answer'] = message
-            else:
-                answer['answer'] = None
+                
         print('*answer =>', answer['answer'])
         answer['standard_question'] = standard_question.id if standard_question else None
 
@@ -165,50 +171,3 @@ def get_answer(request):
             'message': 'An unexpected error occurred',
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@api_view(["POST"])        
-def get_answers(request):
-    profile_id = request.data.get('profile_id', None)    
-    questions = request.data.get('data', [])
-
-    profile = get_object_or_404(Profile, id=profile_id)
-
-    # Create a dictionary to store the answers.
-    answers_dict = {}
-    
-    for question_data in questions:
-        # Extract question and inputType from the question_data dictionary
-        question = question_data.get('question')
-        inputType = question_data.get('inputType', 'text')
-
-        # Get the standard question for the question
-        standard_question = get_standard_question(question)
-
-        # Retrieve the answer based on question and inputType.
-        answer_query = Answer.objects.filter(
-            profile=profile,
-            standard_question=standard_question,
-            inputType=inputType
-        ).first()  # We use first() to get the first matching item.
-
-        answer = {}
-
-        if answer_query:
-            answer['answer'] = answer_query.answer
-        else:
-            answer['answer'] = None  # or any default value you want to provide
-
-        # Add the standard_question to answers_dict
-        answer['standard_question'] = standard_question.id
-        answers_dict[question_data.get('id')] = answer
-
-    return Response({
-        'message': 'Answers successfully retrieved',
-        'answers': answers_dict
-    }, status=status.HTTP_200_OK)
-    
-@api_view(["GET"])
-def get_urls(request):
-    urls = []
-    
-    return JsonResponse({'urls': urls})

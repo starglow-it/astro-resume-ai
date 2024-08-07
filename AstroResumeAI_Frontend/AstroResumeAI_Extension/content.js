@@ -46,10 +46,13 @@ async function waitForElement(selector) {
   const buttonWrapperDiv = document.createElement('div');
   buttonWrapperDiv.className = "astro-bid-auto-bid-ctrl-panel-buttonWrapper";
 
-  // Create control buttons
   const autoBidStartButton = document.createElement('button');
   autoBidStartButton.textContent = 'Start';
   autoBidStartButton.className = "astro-bid-auto-bid-btn";
+
+  const autoBidStopButton = document.createElement('button');
+  autoBidStopButton.textContent = 'Just Stop';
+  autoBidStopButton.className = "astro-bid-auto-bid-btn";
 
   const urlLoadButton = document.createElement('button');
   urlLoadButton.textContent = 'Load URLs';
@@ -62,6 +65,7 @@ async function waitForElement(selector) {
 
   // Append buttons and text to the control panel
   buttonWrapperDiv.appendChild(autoBidStartButton);
+  buttonWrapperDiv.appendChild(autoBidStopButton);
   buttonWrapperDiv.appendChild(urlLoadButton);
   div.appendChild(buttonWrapperDiv);
   div.appendChild(pElement);
@@ -75,6 +79,14 @@ async function waitForElement(selector) {
       chrome.runtime.sendMessage({ action: 'autoBidStart' });
     } catch (error) {
       console.error('Error sending autoBidStart message:', error);
+    }
+  });
+
+  autoBidStopButton.addEventListener("click", () => {
+    try {
+      chrome.runtime.sendMessage({ action: 'autoBidStop' });
+    } catch (error) {
+      console.error('Error sending autoBidStop message:', error);
     }
   });
 

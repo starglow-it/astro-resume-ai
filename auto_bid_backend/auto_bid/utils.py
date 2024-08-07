@@ -10,21 +10,27 @@ def get_similar_question(question):
     standard_question = None
     
     if similar_question:
-        standard_question = StandardQuestion.objects.get(standard_question=similar_question)
+        standard_questions = StandardQuestion.objects.filter(standard_question=question)
+        
+        if standard_questions.exists():
+            standard_question = standard_questions.first()
     
     return standard_question
 
 def get_standard_question(question_text):
-    # Try to get the question from the StandardQuestion
     print('*origin_question =>', question_text)
     try:
-        standard_question = StandardQuestion.objects.get(standard_question=question_text)
-        print('*standard_question =>', standard_question)
-        return standard_question
-    
+        standard_questions = StandardQuestion.objects.filter(standard_question=question_text)
+        
+        if standard_questions.exists():
+            standard_question = standard_questions.first()
+            print('*standard_question =>', standard_question)
+            return standard_question
+        
+        else:
+            raise StandardQuestion.DoesNotExist
+        
     except StandardQuestion.DoesNotExist:
-        # If the question does not exist, standardize and add to DB
-        # standard_question = StandardQuestion.objects.create(standard_question=question_text)
         standard_question = get_similar_question(question_text)
         
         return standard_question

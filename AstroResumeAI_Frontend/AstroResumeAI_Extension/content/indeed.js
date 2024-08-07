@@ -31,13 +31,15 @@ const urlSelectors = {
     resume: 'smartapply.indeed.com/beta/indeedapply/form/resume',
     workExp: 'smartapply.indeed.com/beta/indeedapply/form/work-experience',
     questions: 'smartapply.indeed.com/beta/indeedapply/form/questions',
+    demographicQuestion: 'smartapply.indeed.com/beta/indeedapply/form/demographic-questions',
     qualificationQuestions: 'smartapply.indeed.com/beta/indeedapply/form/qualification-questions',
+    documents: 'smartapply.indeed.com/beta/indeedapply/form/documents',
     review: 'smartapply.indeed.com/beta/indeedapply/form/review',
     postApply: 'smartapply.indeed.com/beta/indeedapply/form/post-apply',
     // isAlreadyApplied: 'smartapply.indeed.com/beta/indeedapply/postresumeapply',
     commuteCheck: 'smartapply.indeed.com/beta/indeedapply/form/commute-check',
     intervention: 'smartapply.indeed.com/beta/indeedapply/form/intervention',
-    qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification',
+    qualificationInvention: 'smartapply.indeed.com/beta/indeedapply/form/qualification-intervention',
 };
 
 const dateQuestionList = [
@@ -51,6 +53,14 @@ const skipQuestionList = [
     "time options",
     "cover letter"
 ]
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'autoBidStopReceived') {
+        autoBidContinue = false;
+        console.log('-!- Auto bid stopped. -!-');
+    }
+});
+
 const handleJobPage = async () => {
     handleClickApplyBtn();
 };
@@ -61,12 +71,12 @@ const handleResumePage = async () => {
     handleClickContinueBtn(selectors.continueButton2);
 };
 
-const handleInputFieldsPage = async () => {
+const handleInputFieldsPage = async (exceptionCase = '') => {
     await window.waitIfAllElementsRendered();
     $(selectors.continueButton).click(async () => {
         await operateAllInputFields("save_answers");
     });
-    setTimeout(async () => { await operateAllInputFields("fill_answer"); }, 1000);
+    setTimeout(async () => { await operateAllInputFields("fill_answer", exceptionCase); }, 1000);
 };
 
 const handleReviewPage = async () => {
@@ -80,6 +90,61 @@ const handlePostApplyPage = async () => {
 
 const handleSkipPage = async () => {
     chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
+};
+
+const findAllTextNodes = (node) => {
+    let textNodes = [];
+    node.childNodes.forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+            textNodes.push(child);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+            textNodes = textNodes.concat(findAllTextNodes(child));
+        }
+    });
+    return textNodes;
+}
+
+const findClosestLegendEl = (input) => {
+    try {
+        const inputElement = $(input);
+
+        if (!inputElement.length) {
+            throw new Error("Input element not found");
+        }
+
+        if (inputElement.is('select')) {
+            const inputElementId = inputElement.attr('id');
+
+            if (!inputElementId) {
+                throw new Error("Without id, cannot catch the question for select");
+            }
+
+            return $(`label[for="${inputElementId}"]`).text();
+        } else {
+            const parentLabel = inputElement.closest('label');
+
+            if (parentLabel.length === 0) {
+                throw new Error("Parent label element not found");
+            }
+
+            const siblingLegend = parentLabel.siblings('legend');
+
+            if (siblingLegend.length === 0) {
+                throw new Error("Sibling legend element not found");
+            }
+
+            const textNodes = findAllTextNodes(siblingLegend[0]);
+
+            if (textNodes.length < 2) {
+                throw new Error("Not enough text nodes found in sibling legend");
+            }
+
+            return textNodes[textNodes.length - 2].textContent;
+        }
+    } catch (error) {
+        console.error(error.message);
+        return '';
+    }
 };
 
 // Function to fetch answer for a question from backend API
@@ -144,13 +209,6 @@ async function saveAnswersForQuestions(userAnswers) {
     }
 }
 
-// Function to handle form loading and set up event listeners
-async function onFormLoaded() {
-    setTimeout(() => {
-
-    }, 300);
-}
-
 function handleClickContinueBtn(btnQuery) {
     const buttons = document.querySelectorAll(btnQuery);
 
@@ -162,6 +220,10 @@ function handleClickContinueBtn(btnQuery) {
 
         if (activeBtn && autoBidContinue) {
             activeBtn.click();
+        } else {
+            if (!autoBidContinue) {
+                autoBidContinue = true;
+            }
         }
     }
 }
@@ -190,7 +252,7 @@ async function handleClickApplyBtn() {
  * Main operation function for input fields. This fills answers or saves answers based on 'command' parameter
  * @param {string} command -  'fill_answer' or 'save_answers'
  */
-const operateAllInputFields = async (command) => {
+const operateAllInputFields = async (command, exceptionCase = '') => {
     try {
         const userAnswers = [];
         let previousGroupLabel = '';
@@ -199,20 +261,26 @@ const operateAllInputFields = async (command) => {
         for (const input of $(selectors.question)) {
             const fieldset = input.closest("fieldset");
             const legend = fieldset ? fieldset.querySelector("legend") : null;
-            const originGroupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : findLabelForInput(input) ?? '';
-            const isOptional = originGroupLabel.includes("(optional)");
-            const groupLabel = window.cleanString(originGroupLabel);
+            let originGroupLabel = '';
+
+            if (exceptionCase === 'demographic-questions') {
+                originGroupLabel = findClosestLegendEl(input);
+            } else {
+                originGroupLabel = legend && !currentUrl.includes(urlSelectors.workExp) ? legend.textContent.trim() : window.findLabelForInput(input);
+            }
+
+            const isOptional = Boolean(originGroupLabel) ? originGroupLabel.includes("(optional)") : false;
+            const groupLabel = Boolean(originGroupLabel) ? window.cleanString(originGroupLabel) : '';
 
             if (groupLabel === previousGroupLabel || groupLabel == "" || !window.isElementVisible(input) || window.hasHiddenParent(input)) {
                 continue;
             }
 
             previousGroupLabel = groupLabel;
-
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
-
-            if (command === "fill_answer" && window.retrieveUserInputAnswer(input, inputType) == null) {
+            const noAnswerExisted = inputType === 'select' ? true : !Boolean(window.retrieveUserInputAnswer(input, inputType));
+            if (command === "fill_answer" && noAnswerExisted) {
                 if (dateQuestionList.indexOf(groupLabel) > -1) {
                     window.autoFillAnswer(input, inputType, label, input.placeholder);
                     continue;
@@ -232,6 +300,7 @@ const operateAllInputFields = async (command) => {
                 }
             }
         }
+
         if (fetchAnswerPromises.length > 0) {
             await Promise.all(fetchAnswerPromises).then(() => {
                 // All fetch requests have completed
@@ -243,6 +312,7 @@ const operateAllInputFields = async (command) => {
         }
 
         if (command === "save_answers") {
+            console.log(userAnswers);
             await saveAnswersForQuestions(userAnswers);
         }
 
@@ -259,7 +329,6 @@ const operateAllInputFields = async (command) => {
         console.error('Error operating input fields:', error);
     }
 };
-
 
 /**
  * Main function to start the observer
@@ -296,8 +365,13 @@ const operateAllInputFields = async (command) => {
             case url.includes(urlSelectors.workExp) ||
                 url.includes(urlSelectors.contactInfo) ||
                 url.includes(urlSelectors.questions) ||
+                url.includes(urlSelectors.documents) ||
                 url.includes(urlSelectors.qualificationQuestions):
                 await handleInputFieldsPage();
+                break;
+
+            case url.includes(urlSelectors.demographicQuestion):
+                await handleInputFieldsPage('demographic-questions');
                 break;
 
             case url.includes(urlSelectors.review):
