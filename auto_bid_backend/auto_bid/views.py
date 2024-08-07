@@ -146,8 +146,7 @@ def get_answer(request):
 
                 message = chat_completion.choices[0].message.content
                 answer['answer'] = message
-            else:
-                answer['answer'] = None
+                
         print('*answer =>', answer['answer'])
         answer['standard_question'] = standard_question.id if standard_question else None
 

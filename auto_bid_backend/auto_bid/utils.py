@@ -10,7 +10,10 @@ def get_similar_question(question):
     standard_question = None
     
     if similar_question:
-        standard_question = StandardQuestion.objects.get(standard_question=similar_question)
+        standard_questions = StandardQuestion.objects.filter(standard_question=question)
+        
+        if standard_questions.exists():
+            standard_question = standard_questions.first()
     
     return standard_question
 
