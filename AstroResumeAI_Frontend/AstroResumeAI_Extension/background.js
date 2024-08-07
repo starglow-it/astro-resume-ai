@@ -56,6 +56,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       });
       break;
 
+    case 'autoBidStop':
+      chrome.tabs.sendMessage(sender.tab.id, { action: 'autoBidStopReceived' });
+      break;
+
     default:
       break;
   }
