@@ -273,11 +273,6 @@ const operateAllInputFields = async (command, exceptionCase = '') => {
             const groupLabel = Boolean(originGroupLabel) ? window.cleanString(originGroupLabel) : '';
 
             if (groupLabel === previousGroupLabel || groupLabel == "" || !window.isElementVisible(input) || window.hasHiddenParent(input)) {
-                console.log('in continue ===');
-                console.log(input);
-                console.log(originGroupLabel);
-                console.log(!window.isElementVisible(input));
-                console.log(window.hasHiddenParent(input));
                 continue;
             }
 
@@ -285,7 +280,6 @@ const operateAllInputFields = async (command, exceptionCase = '') => {
             const label = input.type === "radio" || input.type === "checkbox" ? window.findLabelForInput(input) : originGroupLabel;
             const inputType = input.tagName.toLowerCase() === "input" ? input.type : input.tagName.toLowerCase();
             const noAnswerExisted = inputType === 'select' ? true : !Boolean(window.retrieveUserInputAnswer(input, inputType));
-            console.log(groupLabel);
             if (command === "fill_answer" && noAnswerExisted) {
                 if (dateQuestionList.indexOf(groupLabel) > -1) {
                     window.autoFillAnswer(input, inputType, label, input.placeholder);
@@ -296,7 +290,6 @@ const operateAllInputFields = async (command, exceptionCase = '') => {
             } else if (command === "save_answers") {
                 const existingAnswer = userAnswers.find(userAnswer => userAnswer.question === groupLabel);
                 if (!existingAnswer) {
-                    console.log(window.retrieveUserInputAnswer(input, inputType));
                     userAnswers.push({
                         question: groupLabel,
                         isOptional: isOptional,

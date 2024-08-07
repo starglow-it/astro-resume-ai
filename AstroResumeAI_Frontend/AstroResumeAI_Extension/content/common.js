@@ -84,7 +84,6 @@
         if (id) {
             let explicitLabel = $(`label[for='${id}']`);
             if (explicitLabel.length) {
-                console.log(explicitLabel);
                 return explicitLabel.text().trim();
             } else {
                 id = id.replace(/"/g, "'");
