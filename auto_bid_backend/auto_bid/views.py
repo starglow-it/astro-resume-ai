@@ -171,3 +171,64 @@ def get_answer(request):
             'message': 'An unexpected error occurred',
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+@api_view(["GET"])
+def get_answers(request):
+    try:
+        answers = Answer.objects.all()
+        answer_list = []
+
+        for answer in answers:
+            answer_list.append({
+                'id': answer.id,
+                'profile': answer.profile.name,
+                'question': answer.standard_question.standard_question,
+                'inputType': answer.inputType,
+                'answer': answer.answer,
+            })
+
+        return Response({
+            'message': 'Answers successfully retrieved',
+            'answers': answer_list
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(str(e))
+        return Response({
+            'message': 'An unexpected error occurred',
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+def update_answers(request):
+    try:
+        answers_data = request.data.get('answers', [])
+
+        for answer_data in answers_data:
+            answer_id = answer_data.get('id')
+            new_answer = answer_data.get('answer')
+
+            if not answer_id or new_answer is None:
+                return Response({
+                    'message': 'Invalid data in request'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                answer = Answer.objects.get(id=answer_id)
+                answer.answer = new_answer
+                answer.save()
+            except Answer.DoesNotExist:
+                return Response({
+                    'message': f'Answer with id {answer_id} not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            'message': 'Successfully updated'
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(str(e))
+        return Response({
+            'message': 'An unexpected error occurred',
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
