@@ -18,13 +18,14 @@ function openNextUrl() {
 
 // Message listener for handling different actions
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  console.log(message.action)
   switch (message.action) {
     case 'autoBidUrlLoad':
       autoBidUrls = message.autoBidUrls;
       break;
-
     case 'autoBidStart':
     case 'autoBidSkipped':
+    case 'noUrlChange':
       openNextUrl();
       break;
 

@@ -251,6 +251,7 @@ const operateAllInputFields = async (command) => {
                 handleClickContinueBtn(selectors.continueButton2);
             } else {
                 console.log('-!- CEASE auto bidding. Complete missing answers and click auto bid button to proceed. -!-');
+                clearTimeout(timer);
                 chrome.runtime.sendMessage({ action: 'autoBidSkipped' });
             }
         }
@@ -268,6 +269,16 @@ const operateAllInputFields = async (command) => {
         profileId = result.currentId;
         console.log("Profile ID retrieved: ", profileId);
     });
+    let timer;
+    const timeout = 120000; // 2 minute
+    const resetTimer = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            console.log('No URL change for 1 minute');
+            // Trigger the action you want to perform after 1 minute of no URL change
+            chrome.runtime.sendMessage({ action: 'noUrlChange' });
+        }, timeout);
+    };
 
     const pageChangeHandler = async () => {
         const url = location.href;
@@ -309,6 +320,7 @@ const operateAllInputFields = async (command) => {
                 console.log('No matching URL found');
                 break;
         }
+        resetTimer();
     };
 
     window.onUrlChange(pageChangeHandler);
