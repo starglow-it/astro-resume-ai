@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.db import transaction
+from django.db import transaction, IntegrityError
+from django.core.exceptions import MultipleObjectsReturned
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -89,6 +90,74 @@ def save_answers(request):
     return Response(response_data, status=status.HTTP_207_MULTI_STATUS if failure_count else status.HTTP_201_CREATED)
 
 @api_view(["POST"])
+def create_answers(request):
+    profile_id = request.query_params.get('profile')
+    answers_data = request.data.get('answers', [])
+
+    profile = get_object_or_404(Profile, id=profile_id)
+
+    success_count = 0
+    failure_count = 0
+    errors = []
+
+    for answer_data in answers_data:
+        question_text = answer_data.get('question')
+        input_type = answer_data.get('inputType', 'text')
+        answer_text = answer_data.get('answer', '')
+
+        if not answer_text:
+            continue  # Skip if answer is empty or null
+
+        try:
+            with transaction.atomic():
+                # Get or create the standard question
+                try:
+                    standard_question, created = StandardQuestion.objects.get_or_create(
+                        standard_question=question_text
+                    )
+                except MultipleObjectsReturned:
+                    # Handle multiple values returned
+                    standard_question = StandardQuestion.objects.filter(
+                        standard_question=question_text
+                    ).first()
+
+                # Check if the answer already exists
+                existing_answer = Answer.objects.filter(
+                    profile=profile,
+                    standard_question=standard_question,
+                    inputType=input_type
+                ).first()
+
+                if existing_answer:
+                    # If an answer already exists, skip creation
+                    continue
+
+                # Create the answer
+                Answer.objects.create(
+                    profile=profile,
+                    standard_question=standard_question,
+                    inputType=input_type,
+                    answer=answer_text
+                )
+                success_count += 1
+
+        except IntegrityError as e:
+            errors.append({'error': str(e)})
+            failure_count += 1
+        except Exception as e:
+            errors.append({'error': str(e), 'field': answer_data})
+            failure_count += 1
+
+    response_data = {
+        'message': 'Processing completed',
+        'success_count': success_count,
+        'failure_count': failure_count,
+        'errors': errors
+    }
+
+    return Response(response_data, status=status.HTTP_201_CREATED if not errors else status.HTTP_207_MULTI_STATUS)
+
+@api_view(["POST"])
 def get_answer(request):
     try:
         profile_id = request.data.get('profile_id', None)
@@ -175,9 +244,20 @@ def get_answer(request):
 @api_view(["GET"])
 def get_answers(request):
     try:
-        answers = Answer.objects.all()
-        answer_list = []
+        profile_id = request.query_params.get('profile')
+        
+        # Filter answers by profile if profile_id is provided, otherwise return all answers
+        if profile_id:
+            answers = Answer.objects.filter(profile_id=profile_id)
+        else:
+            answers = Answer.objects.all()
+        
+        if not answers.exists():
+            return Response({
+                'message': 'No answers found for the specified profile' if profile_id else 'No answers found'
+            }, status=status.HTTP_404_NOT_FOUND)
 
+        answer_list = []
         for answer in answers:
             answer_list.append({
                 'id': answer.id,
@@ -192,6 +272,11 @@ def get_answers(request):
             'answers': answer_list
         }, status=status.HTTP_200_OK)
 
+    except Profile.DoesNotExist:
+        return Response({
+            'message': 'Profile not found'
+        }, status=status.HTTP_404_NOT_FOUND)
+        
     except Exception as e:
         print(str(e))
         return Response({

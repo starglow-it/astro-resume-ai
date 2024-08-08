@@ -2,7 +2,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Profile
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, ProfileIdUsernameSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ProfileCreateAPIView(APIView):
@@ -47,3 +47,12 @@ class UserProfileListView(generics.ListAPIView):
         """
         user = self.request.user
         return Profile.objects.filter(user=user)
+    
+class AllProfilesListView(generics.ListAPIView):
+    serializer_class = ProfileIdUsernameSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all profiles in the system.
+        """
+        return Profile.objects.values('id', 'name')
