@@ -27,7 +27,6 @@ export const AuthProvider: React.FC = ({ children }) => {
   // Use effect to read the token from local storage or cookies when the app loads
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
-    console.log(storedToken);
     if (storedToken) {
       setToken(storedToken)
     } else {

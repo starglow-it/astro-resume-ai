@@ -13,7 +13,7 @@ import CardActions from '@mui/material/CardActions'
 import Pagination from '@mui/material/Pagination'
 import CircularProgress from '@mui/material/CircularProgress'
 import { API_BASE_URL } from 'src/configs/apiConfig'
-import { Alert, AlertTitle } from '@mui/material'
+import { Alert, AlertTitle, Select, MenuItem, FormControl, InputLabel } from '@mui/material'
 
 interface AnswerType {
     id: number;
@@ -21,6 +21,11 @@ interface AnswerType {
     inputType: string;
     question: string;
     answer: string;
+}
+
+interface ProfileType {
+    id: number;
+    name: string;
 }
 
 interface Error {
@@ -31,21 +36,39 @@ const AutoBidAnswers = () => {
     const [values, setValues] = useState<AnswerType[]>([]);
     const [initialValues, setInitialValues] = useState<AnswerType[]>([]);
     const [updatedValues, setUpdatedValues] = useState<Partial<AnswerType>[]>([]);
-    const [message, setMessage] = useState<string>('')
-    const [error, setError] = useState<Error | null>(null)
-    const [alertIsOpen, setAlertOpen] = useState<boolean>(false)
-    const [loading, setLoading] = useState<boolean>(true)
-    const { token } = useAuth()
+    const [profiles, setProfiles] = useState<ProfileType[]>([]);
+    const [selectedFromProfile, setSelectedFromProfile] = useState<number | ''>('');
+    const [selectedToProfile, setSelecteToProfile] = useState<number | ''>('');
+    const [message, setMessage] = useState<string>('');
+    const [error, setError] = useState<Error | null>(null);
+    const [alertIsOpen, setAlertOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const { token } = useAuth();
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
     useEffect(() => {
+        const fetchProfiles = async () => {
+            try {
+                const response = await Axios.get(`${API_BASE_URL}/profile/get-profiles-list/`);
+                setProfiles(response.data);
+            } catch (error) {
+                console.error('Error fetching profiles:', error);
+            }
+        };
+
+        fetchProfiles();
+    }, []);
+
+    useEffect(() => {
         const fetchAnswers = async () => {
+            if (selectedFromProfile === '') return;
+
             setLoading(true);
             try {
-                const response = await Axios.get(`${API_BASE_URL}/auto-bid/get-answers`);
+                const response = await Axios.get(`${API_BASE_URL}/auto-bid/get-answers?profile=${selectedFromProfile}`);
                 if (response.data?.answers && response.data.answers.length > 0) {
                     const sortedAnswers = response.data.answers.sort((a: AnswerType, b: AnswerType) => a.id - b.id);
                     setValues(sortedAnswers);
@@ -68,7 +91,21 @@ const AutoBidAnswers = () => {
         };
 
         fetchAnswers();
-    }, [token]);
+    }, [selectedFromProfile]);
+
+    const handleFromProfileChange = (event: ChangeEvent<{ value: unknown }>) => {
+        setError(null);
+        setValues([]);
+        setInitialValues([]);
+        setUpdatedValues([]);
+
+        setSelectedFromProfile(event.target.value as number);
+        setCurrentPage(1);
+    };
+
+    const handleToProfileChange = (event: ChangeEvent<{ value: unknown }>) => {
+        setSelecteToProfile(event.target.value as number);
+    };
 
     const handleChange = (id: number) => (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -95,12 +132,21 @@ const AutoBidAnswers = () => {
         event.preventDefault();
 
         try {
-            const response = await Axios.post(`${API_BASE_URL}/auto-bid/update-answers/`, { answers: updatedValues });
+            if (selectedFromProfile === selectedToProfile) {
+                const response = await Axios.post(`${API_BASE_URL}/auto-bid/update-answers/`, { answers: updatedValues });
 
-            setMessage(response.data.message);
-            setAlertOpen(true);
-            setTimeout(() => setAlertOpen(false), 3000); // Close alert after 3 seconds
-            setUpdatedValues([]); // Reset updated values after successful submission
+                setMessage(response.data.message);
+                setAlertOpen(true);
+                setTimeout(() => setAlertOpen(false), 5000);
+                setUpdatedValues([]);
+            } else {
+                const response = await Axios.post(`${API_BASE_URL}/auto-bid/create-answers/?profile=${selectedToProfile}`, { answers: values });
+
+                setMessage(response.data.message);
+                setAlertOpen(true);
+                setTimeout(() => setAlertOpen(false), 5000);
+                setUpdatedValues([]);
+            }
         } catch (error) {
             if (Axios.isAxiosError(error) && error.response) {
                 setError(error.response.data);
@@ -140,6 +186,49 @@ const AutoBidAnswers = () => {
                 </CardContent>
             ) : (
                 <>
+                    <CardContent>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth sx={{ mb: 3 }}>
+                                    <InputLabel>From</InputLabel>
+                                    <Select
+                                        value={selectedFromProfile}
+                                        onChange={handleFromProfileChange}
+                                        label="From"
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        {profiles.map(profile => (
+                                            <MenuItem key={profile.id} value={profile.id}>
+                                                {profile.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth sx={{ mb: 3 }}>
+                                    <InputLabel>To</InputLabel>
+                                    <Select
+                                        value={selectedToProfile}
+                                        onChange={handleToProfileChange}
+                                        label="To"
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        {profiles.map(profile => (
+                                            <MenuItem key={profile.id} value={profile.id}>
+                                                {profile.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                    <Divider sx={{ margin: 0 }} />
                     <form onSubmit={e => e.preventDefault()}>
                         <CardContent>
                             <Grid container spacing={2}>
@@ -170,7 +259,7 @@ const AutoBidAnswers = () => {
                                 sx={{ mr: 2 }}
                                 variant='contained'
                                 onClick={handleSubmit}
-                                disabled={updatedValues.length === 0}
+                                disabled={(updatedValues.length === 0 && selectedFromProfile === selectedToProfile) || selectedToProfile === ""}
                             >
                                 Save
                             </Button>
